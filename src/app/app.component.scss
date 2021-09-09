@@ -1,0 +1,18 @@
+h2 {
+    font-size: 14px;
+    font-weight: normal;
+    margin: 0px;
+}
+
+.container {
+    padding-top: 6px;
+    padding-left: 26px;
+    padding-right: 26px;
+    padding-bottom: 0px;
+}
+
+.content {
+    width: 100%;
+    height: calc(100vh - 94px);
+    overflow-y: auto;
+}
