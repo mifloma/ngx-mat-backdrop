@@ -1,6 +1,6 @@
 import { Component, TemplateRef, ViewChild } from '@angular/core';
-import { Backdrop } from './backdrop2/backdrop';
-import { FrontLayerRef, FrontLayerState } from './backdrop2/front-layer-ref';
+import { Backdrop } from './backdrop/backdrop';
+import { FrontLayerRef, FrontLayerState } from './backdrop/front-layer-ref';
 
 @Component({
   selector: 'app-root',

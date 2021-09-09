@@ -12,7 +12,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { FrontLayerContainer } from './backdrop2/front-layer-container';
+import { FrontLayerContainer } from './backdrop/front-layer-container';
 
 @NgModule({
   declarations: [
