@@ -2,6 +2,7 @@ import { BasePortalOutlet, CdkPortalOutlet, ComponentPortal, TemplatePortal } fr
 import { Component, ComponentRef, Directive, EmbeddedViewRef, EventEmitter, ViewChild, ViewEncapsulation } from '@angular/core';
 import { BackdropAnimations } from './backdrop-animations';
 import { AnimationEvent } from '@angular/animations';
+import { FrontLayerConfig } from './front-layer-config';
 
 /** Event that captures the state of dialog container animations. */
 interface FrontLayerAnimationEvent {
@@ -32,9 +33,16 @@ export abstract class _FrontLayerContainerBase extends BasePortalOutlet {
   /** The portal outlet inside of this container into which the dialog content will be loaded. */
   @ViewChild(CdkPortalOutlet, { static: true }) _portalOutlet!: CdkPortalOutlet;
 
+  constructor(
+    /** The dialog configuration. */
+    public _config: FrontLayerConfig
+  ) {
+    super();
+  }
+
   /**
-  * Attach a ComponentPortal as content to this dialog container.
-  * @param portal Portal to be attached as the dialog content.
+  * Attach a ComponentPortal as content to this front-layer container.
+  * @param portal Portal to be attached as the front-layer content.
   */
   attachComponentPortal<T>(portal: ComponentPortal<T>): ComponentRef<T> {
     if (this._portalOutlet.hasAttached()) {
@@ -45,8 +53,8 @@ export abstract class _FrontLayerContainerBase extends BasePortalOutlet {
   }
 
   /**
-   * Attach a TemplatePortal as content to this dialog container.
-   * @param portal Portal to be attached as the dialog content.
+   * Attach a TemplatePortal as content to this front-layer container.
+   * @param portal Portal to be attached as the front-layer content.
    */
   attachTemplatePortal<C>(portal: TemplatePortal<C>): EmbeddedViewRef<C> {
     if (this._portalOutlet.hasAttached()) {
@@ -60,7 +68,7 @@ export abstract class _FrontLayerContainerBase extends BasePortalOutlet {
 @Component({
   selector: 'front-layer-container',
   templateUrl: './front-layer-container.html',
-  styleUrls: ['./front-layer-container.scss'],
+  styleUrls: ['./backdrop.scss'],
   encapsulation: ViewEncapsulation.None,
   animations: [BackdropAnimations.frontLayerContainer],
   host: {

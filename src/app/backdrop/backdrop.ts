@@ -1,13 +1,9 @@
 import { ComponentType, Overlay, OverlayConfig, OverlayRef } from '@angular/cdk/overlay';
 import { ComponentPortal, TemplatePortal } from '@angular/cdk/portal';
-import { Directive, Inject, Injectable, InjectionToken, Injector, Optional, TemplateRef, Type } from '@angular/core';
+import { Directive, EmbeddedViewRef, Inject, Injectable, InjectionToken, Injector, Optional, TemplateRef, Type } from '@angular/core';
 import { FrontLayerConfig } from './front-layer-config';
 import { FrontLayerContainer, _FrontLayerContainerBase } from './front-layer-container';
 import { FrontLayerRef } from './front-layer-ref';
-
-/** Injection token that can be used to specify default dialog options. */
-export const FRONT_LAYER_DEFAULT_OPTIONS =
-  new InjectionToken<FrontLayerConfig>('front-layer-default-options');
 
 /**
  * Base class for backdrop services.
@@ -18,7 +14,6 @@ export abstract class _BackdropBase<C extends _FrontLayerContainerBase> {
   constructor(
     private _overlay: Overlay,
     private _injector: Injector,
-    private _defaultOptions: FrontLayerConfig | undefined,
     private _dialogContainerType: Type<C>
     // private _frontLayerRefConstructor: Type<FrontLayerRef2<any>>
   ) { }
@@ -31,9 +26,9 @@ export abstract class _BackdropBase<C extends _FrontLayerContainerBase> {
   open<T, D = any>(componentOrTemplateRef: ComponentType<T> | TemplateRef<T>,
     config?: FrontLayerConfig<D>): FrontLayerRef<T> {
 
-    config = _applyConfigDefaults(config, this._defaultOptions || new FrontLayerConfig());
+    config = config || new FrontLayerConfig();
 
-    const overlayRef = this._createOverlay();
+    const overlayRef = this._createOverlay(config);
     const frontLayerContainer = this._attachFrontLayerContainer(overlayRef, config);
 
     const frontLayerRef = this._attachFrontLayerContent<T>(componentOrTemplateRef,
@@ -48,8 +43,8 @@ export abstract class _BackdropBase<C extends _FrontLayerContainerBase> {
    * Creates the overlay into which the front-layer will be loaded.
    * @returns A promise resolving to the OverlayRef for the created overlay.
    */
-  private _createOverlay(): OverlayRef {
-    const overlayConfig = this._getOverlayConfig();
+  private _createOverlay(config: FrontLayerConfig): OverlayRef {
+    const overlayConfig = this._getOverlayConfig(config);
     return this._overlay.create(overlayConfig);
   }
 
@@ -57,10 +52,11 @@ export abstract class _BackdropBase<C extends _FrontLayerContainerBase> {
    * Creates an default overlay config.
    * @returns The overlay configuration.
    */
-  private _getOverlayConfig(): OverlayConfig {
+  private _getOverlayConfig(frontLayerConfig: FrontLayerConfig): OverlayConfig {
     return new OverlayConfig({
       width: '100%',
-      positionStrategy: this._overlay.position().global().top('56px'),
+      height: 'calc(100vh - ' + frontLayerConfig.top + ')',
+      positionStrategy: this._overlay.position().global().top(frontLayerConfig.top),
       scrollStrategy: this._overlay.scrollStrategies.block()
     });
   }
@@ -99,19 +95,20 @@ export abstract class _BackdropBase<C extends _FrontLayerContainerBase> {
     overlayRef: OverlayRef,
     config: FrontLayerConfig): FrontLayerRef<T> {
 
-    // const frontLayerRef = new this._frontLayerRefConstructor(overlayRef, frontLayerContainer);
     const frontLayerRef = new FrontLayerRef<T>(overlayRef, frontLayerContainer);
 
     if (componentOrTemplateRef instanceof TemplateRef) {
-      frontLayerContainer.attachTemplatePortal(
+      const viewRef = frontLayerContainer.attachTemplatePortal(
         new TemplatePortal<T>(componentOrTemplateRef, null!,
           <any>{ $implicit: config.data, frontLayerRef }));
+      frontLayerRef.viewRef = viewRef;
     } else {
       // TODO: Testen und ViewContainerRef holen und Datenübergabe mit Injector - Frage: Wo kommt die Default Config her?
       // const injector = this._createInjector<T>(config, frontLayerRef, frontLayerContainer);
       const contentRef = frontLayerContainer.attachComponentPortal<T>(
         new ComponentPortal(componentOrTemplateRef, config.viewContainerRef, null));
       frontLayerRef.componentInstance = contentRef.instance;
+      frontLayerRef.viewRef = contentRef.hostView as EmbeddedViewRef<T>; // Does this work?
     }
 
     return frontLayerRef;
@@ -127,19 +124,7 @@ export class Backdrop extends _BackdropBase<FrontLayerContainer> {
   constructor(
     overlay: Overlay,
     injector: Injector,
-    @Optional() @Inject(FRONT_LAYER_DEFAULT_OPTIONS) defaultOptions: FrontLayerConfig
   ) {
-    super(overlay, injector, defaultOptions, FrontLayerContainer);
+    super(overlay, injector, FrontLayerContainer);
   }
-}
-
-/**
- * Applies default options to the dialog config.
- * @param config Config to be modified.
- * @param defaultOptions Default options provided.
- * @returns The new configuration object.
- */
-function _applyConfigDefaults(config?: FrontLayerConfig,
-  defaultOptions?: FrontLayerConfig): FrontLayerConfig {
-  return { ...defaultOptions, ...config };
 }

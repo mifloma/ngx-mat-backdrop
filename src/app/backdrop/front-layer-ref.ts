@@ -1,6 +1,7 @@
 import { OverlayRef } from "@angular/cdk/overlay";
-import { _FrontLayerContainerBase } from "./front-layer-container";
+import { EmbeddedViewRef, ViewRef } from "@angular/core";
 import { filter, take } from 'rxjs/operators';
+import { _FrontLayerContainerBase } from "./front-layer-container";
 
 /** Possible states of the lifecycle of a front-layer. */
 export const enum FrontLayerState { OPEN, DROPED, CLOSING, CLOSED }
@@ -9,6 +10,9 @@ export class FrontLayerRef<T> {
 
     /** The instance of component opened into the front-layer. */
     componentInstance!: T;
+
+    /** A viewRef of the component opened into the front-layer  */
+    viewRef!: EmbeddedViewRef<T>;
 
     /** Current state of the front-layer. */
     private _state = FrontLayerState.CLOSED;
@@ -31,33 +35,50 @@ export class FrontLayerRef<T> {
      * @param disable Specifies whether the front-layer should be diabled
      */
     drop(offset: number, disable: boolean): void {
-        // this._overlayRef.overlayElement.style.setProperty('--s', '56px');
-        // this._overlayRef.overlayElement.style.setProperty('--e', (56 + offset).toString() + 'px');
-        // this._overlayRef.overlayElement.style.animation = 'drop 0.25s ease-in-out';
-        // this._overlayRef.overlayElement.style.marginTop = (56 + offset).toString() + 'px';
-
-        this._containerInstance._startDropAnimation();
+        const top = this._containerInstance._config.top ? this._containerInstance._config.top : '0px';
+        this._overlayRef.overlayElement.style.setProperty('--s', top);
+        this._overlayRef.overlayElement.style.setProperty('--e', this.addOffset(offset));
+        this._overlayRef.overlayElement.style.animation = 'drop 0.25s ease-in-out';
+        this._overlayRef.overlayElement.style.marginTop = this.addOffset(offset);
 
         setTimeout(() => {
             if (disable) {
-                this._overlayRef.overlayElement.style.opacity = '50%';
-                this._overlayRef.overlayElement.style.pointerEvents = 'none';
+                this.viewRef.rootNodes.forEach((el: HTMLElement) => {
+                    el.style.opacity = '50%';
+                    el.style.pointerEvents = 'none';
+                });
             }
             this._state = FrontLayerState.DROPED;
         }, 250);
+    }
+
+    private addOffset(offset: number): string {
+        var top = 0;
+        if (this._containerInstance._config.top) {
+            var matches = this._containerInstance._config.top.match(/([0-9])+/g);
+            if (matches && matches.length >= 1) {
+                top = Number.apply(matches[0]);
+            }
+        }
+        return (top + offset).toString().concat('px');
     }
 
     /**
      * Move the front-layer back to its original position
      */
     lift() {
+        const top = this._containerInstance._config.top ? this._containerInstance._config.top : '0px';
         const offset = this._overlayRef.overlayElement.style.marginTop;
         this._overlayRef.overlayElement.style.setProperty('--s', offset);
-        this._overlayRef.overlayElement.style.setProperty('--e', '56px');
+        this._overlayRef.overlayElement.style.setProperty('--e', top);
         this._overlayRef.overlayElement.style.animation = 'lift 0.25s ease-in-out';
-        this._overlayRef.overlayElement.style.marginTop = '56px';
-        this._overlayRef.overlayElement.style.opacity = '';
-        this._overlayRef.overlayElement.style.pointerEvents = '';
+        this._overlayRef.overlayElement.style.marginTop = top;
+
+        this.viewRef.rootNodes.forEach((el: HTMLElement) => {
+            el.style.opacity = '';
+            el.style.pointerEvents = '';
+        });
+
         setTimeout(() => {
             this._state = FrontLayerState.OPEN;
         }, 250);

@@ -13,11 +13,14 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { FrontLayerContainer } from './backdrop/front-layer-container';
+import { FrontLayerContent, FrontLayerTitle } from './backdrop/front-layer-directives';
 
 @NgModule({
   declarations: [
     AppComponent,
-    FrontLayerContainer
+    FrontLayerContainer,
+    FrontLayerContent,
+    FrontLayerTitle
   ],
   imports: [
     BrowserModule,

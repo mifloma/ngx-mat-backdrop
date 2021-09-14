@@ -15,4 +15,7 @@ export class FrontLayerConfig<D = any> {
 
     /** Data being injected into the child component. */
     data?: D | null = null;
+
+    /** Override for the dialog's top position. */
+    top?: string = '56px';
 }

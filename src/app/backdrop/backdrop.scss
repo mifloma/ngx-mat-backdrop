@@ -1,0 +1,38 @@
+$border-radius: 20px;
+$padding-top: 6px;
+$padding-side: 26px;
+$padding-bottom: 0px;
+
+.front-layer-container {
+    background-color: white;
+    border-top-left-radius: $border-radius;
+    border-top-right-radius: $border-radius;
+    padding-top: $padding-top;
+    padding-left: $padding-side;
+    padding-right: $padding-side;
+    padding-bottom: $padding-bottom;
+    height: auto;
+    display: flex;
+    flex-direction: column;
+}
+
+@keyframes drop {
+    from { margin-top: var(--s, 56px) }
+    to { margin-top: var(--e, 256px); opacity: 50%; pointer-events: none; }
+}
+
+@keyframes lift {
+    from { margin-top: var(--s, 256px) }
+    to { margin-top: var(--e, 56px) }
+}
+
+.front-layer-content {
+    display: block;
+    flex: 1;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+.front-layer-title {
+    display: block;
+}
