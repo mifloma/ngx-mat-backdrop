@@ -1,5 +1,6 @@
 import { Component, TemplateRef, ViewChild } from '@angular/core';
 import { Backdrop } from './backdrop/backdrop';
+import { FrontLayerConfig } from './backdrop/front-layer-config';
 import { FrontLayerRef, FrontLayerState } from './backdrop/front-layer-ref';
 
 @Component({
@@ -11,7 +12,9 @@ export class AppComponent {
 
   @ViewChild('frontLayer', { read: TemplateRef })
   private frontLayerContent!: TemplateRef<any>;
+
   private frontLayerRef!: FrontLayerRef<any>;
+  private popupLayerRef!: FrontLayerRef<any>;
 
   title = 'backdrop-poc';
   disabledList = false;
@@ -33,11 +36,20 @@ export class AppComponent {
   }
 
   open3() {
-    if (this.frontLayerRef) {
+    if (this.frontLayerRef && !this.popupLayerRef) {
       this.frontLayerRef.close();
       this.frontLayerRef = null!;
-    } else {
+    } else if (!this.popupLayerRef) {
       this.frontLayerRef = this.backdrop.open(this.frontLayerContent);
+    }
+  }
+
+  openPopup() {
+    if (this.popupLayerRef) {
+      this.popupLayerRef.close();
+      this.popupLayerRef = null!;
+    } else if (this.frontLayerRef && this.frontLayerRef.getState() === FrontLayerState.OPEN) {
+      this.popupLayerRef = this.backdrop.open(this.frontLayerContent, { top: '94px' });
     }
   }
 

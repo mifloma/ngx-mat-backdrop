@@ -27,6 +27,8 @@ export abstract class _FrontLayerContainerBase extends BasePortalOutlet {
 
   abstract _startDropAnimation(): void;
 
+  abstract _setPopup(value: boolean): void;
+
   /** Emits when an animation state changes. */
   _animationStateChanged = new EventEmitter<FrontLayerAnimationEvent>();
 
@@ -73,6 +75,7 @@ export abstract class _FrontLayerContainerBase extends BasePortalOutlet {
   animations: [BackdropAnimations.frontLayerContainer],
   host: {
     'class': 'front-layer-container',
+    '[class.front-layer-popup]': '_isPopup',
     '[@frontLayerContainer]': '_state',
     '(@frontLayerContainer.start)': '_onAnimationStart($event)',
     '(@frontLayerContainer.done)': '_onAnimationDone($event)',
@@ -82,6 +85,12 @@ export class FrontLayerContainer extends _FrontLayerContainerBase {
 
   /** State of the dialog animation. */
   _state: 'void' | 'enter' | 'droped' | 'exit' = 'enter';
+
+  _isPopup: boolean = false;
+
+  _setPopup(value: boolean) {
+    this._isPopup = true;
+  }
 
   /** Callback, invoked whenever an animation on the host completes. */
   _onAnimationDone(event: AnimationEvent) {

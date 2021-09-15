@@ -11,6 +11,8 @@ import { FrontLayerRef } from './front-layer-ref';
 @Directive()
 export abstract class _BackdropBase<C extends _FrontLayerContainerBase> {
 
+  private _lastFrontLayerRef!: FrontLayerRef<any>;
+
   constructor(
     private _overlay: Overlay,
     private _injector: Injector,
@@ -35,6 +37,14 @@ export abstract class _BackdropBase<C extends _FrontLayerContainerBase> {
       frontLayerContainer,
       overlayRef,
       config);
+
+    if (this._lastFrontLayerRef) {
+      frontLayerContainer._setPopup(true);
+      frontLayerRef.parentRef = this._lastFrontLayerRef;
+      this._lastFrontLayerRef.popupRef = frontLayerRef;
+    } else {
+      this._lastFrontLayerRef = frontLayerRef;
+    }
 
     return frontLayerRef;
   }

@@ -14,6 +14,9 @@ export class FrontLayerRef<T> {
     /** A viewRef of the component opened into the front-layer  */
     viewRef!: EmbeddedViewRef<T>;
 
+    popupRef!: FrontLayerRef<any>;
+    parentRef!: FrontLayerRef<any>;
+
     /** Current state of the front-layer. */
     private _state = FrontLayerState.CLOSED;
 
@@ -35,21 +38,23 @@ export class FrontLayerRef<T> {
      * @param disable Specifies whether the front-layer should be diabled
      */
     drop(offset: number, disable: boolean): void {
-        const top = this._containerInstance._config.top ? this._containerInstance._config.top : '0px';
-        this._overlayRef.overlayElement.style.setProperty('--s', top);
-        this._overlayRef.overlayElement.style.setProperty('--e', this.addOffset(offset));
-        this._overlayRef.overlayElement.style.animation = 'drop 0.25s ease-in-out';
-        this._overlayRef.overlayElement.style.marginTop = this.addOffset(offset);
+        if (!this.popupRef) {
+            const top = this._containerInstance._config.top ? this._containerInstance._config.top : '0px';
+            this._overlayRef.overlayElement.style.setProperty('--s', top);
+            this._overlayRef.overlayElement.style.setProperty('--e', this.addOffset(offset));
+            this._overlayRef.overlayElement.style.animation = 'drop 0.25s ease-in-out';
+            this._overlayRef.overlayElement.style.marginTop = this.addOffset(offset);
 
-        setTimeout(() => {
-            if (disable) {
-                this.viewRef.rootNodes.forEach((el: HTMLElement) => {
-                    el.style.opacity = '50%';
-                    el.style.pointerEvents = 'none';
-                });
-            }
-            this._state = FrontLayerState.DROPED;
-        }, 250);
+            setTimeout(() => {
+                if (disable) {
+                    this.viewRef.rootNodes.forEach((el: HTMLElement) => {
+                        el.style.opacity = '50%';
+                        el.style.pointerEvents = 'none';
+                    });
+                }
+                this._state = FrontLayerState.DROPED;
+            }, 250);
+        }
     }
 
     private addOffset(offset: number): string {
@@ -67,38 +72,49 @@ export class FrontLayerRef<T> {
      * Move the front-layer back to its original position
      */
     lift() {
-        const top = this._containerInstance._config.top ? this._containerInstance._config.top : '0px';
-        const offset = this._overlayRef.overlayElement.style.marginTop;
-        this._overlayRef.overlayElement.style.setProperty('--s', offset);
-        this._overlayRef.overlayElement.style.setProperty('--e', top);
-        this._overlayRef.overlayElement.style.animation = 'lift 0.25s ease-in-out';
-        this._overlayRef.overlayElement.style.marginTop = top;
+        if (!this.popupRef) {
+            const top = this._containerInstance._config.top ? this._containerInstance._config.top : '0px';
+            const offset = this._overlayRef.overlayElement.style.marginTop;
+            this._overlayRef.overlayElement.style.setProperty('--s', offset);
+            this._overlayRef.overlayElement.style.setProperty('--e', top);
+            this._overlayRef.overlayElement.style.animation = 'lift 0.25s ease-in-out';
+            this._overlayRef.overlayElement.style.marginTop = top;
 
-        this.viewRef.rootNodes.forEach((el: HTMLElement) => {
-            el.style.opacity = '';
-            el.style.pointerEvents = '';
-        });
+            this.viewRef.rootNodes.forEach((el: HTMLElement) => {
+                el.style.opacity = '';
+                el.style.pointerEvents = '';
+            });
 
-        setTimeout(() => {
-            this._state = FrontLayerState.OPEN;
-        }, 250);
+            setTimeout(() => {
+                this._state = FrontLayerState.OPEN;
+            }, 250);
+        }
     }
 
     /**
     * Close the front-layer.
     */
     close() {
-        this._containerInstance._animationStateChanged.pipe(
-            filter(event => event.state === 'closing'),
-            take(1)
-        ).subscribe(event => {
-            console.log('detach backdrop');
-            this._overlayRef.detachBackdrop();
-            setTimeout(() => this._finishFrontLayerClose(), event.totalTime);
-        });
+        if (this.popupRef) {
+            this.popupRef.close();
+            this.popupRef = null!;
+        } else {
 
-        this._state = FrontLayerState.CLOSING;
-        this._containerInstance._startExitAnimation();
+            this._containerInstance._animationStateChanged.pipe(
+                filter(event => event.state === 'closing'),
+                take(1)
+            ).subscribe(event => {
+                this._overlayRef.detachBackdrop();
+                setTimeout(() => this._finishFrontLayerClose(), event.totalTime);
+            });
+
+            this._state = FrontLayerState.CLOSING;
+            this._containerInstance._startExitAnimation();
+
+            if (this.parentRef) {
+                this.parentRef.popupRef = null!;
+            }
+        }
     }
 
     private _finishFrontLayerClose() {
