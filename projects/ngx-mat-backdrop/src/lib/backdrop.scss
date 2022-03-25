@@ -1,0 +1,114 @@
+$border-radius: 20px;
+$padding-top: 6px;
+$padding-side: 26px;
+$padding-bottom: 0px;
+
+.front-layer-container {
+  background-color: white;
+  border-top-left-radius: $border-radius;
+  border-top-right-radius: $border-radius;
+  width: 100%;
+  height: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.front-layer-container-elevation {
+  -webkit-box-shadow: 0px 0px 5px 2px rgba(0, 0, 0, 0.15);
+  box-shadow: 0px 0px 5px 2px rgba(0, 0, 0, 0.15);
+}
+
+.front-layer-container-transparency {
+  background-color: transparent;
+}
+
+@keyframes drop {
+  from {
+    margin-top: var(--s, 56px)
+  }
+
+  to {
+    margin-top: var(--e, 256px);
+  }
+}
+
+@keyframes lift {
+  from {
+    margin-top: var(--s, 256px)
+  }
+
+  to {
+    margin-top: var(--e, 56px)
+  }
+}
+
+.front-layer-content {
+  display: block;
+  flex: 1;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.front-layer-title {
+  width: 100%;
+  display: flex;
+  box-sizing: border-box;
+
+  flex-direction: row;
+  align-items: center;
+  white-space: nowrap;
+
+  padding-top: $padding-top;
+  padding-left: $padding-side;
+  padding-right: $padding-side;
+  padding-bottom: $padding-bottom;
+
+  h2 {
+    font-size: 14px;
+    font-weight: normal;
+    margin: 0px;
+  }
+}
+
+.backdrop-container {
+
+  // TODO: Hier sollte Secondary-Color genutzt werden -> Theme erstellen
+  // background: mat-color($arco-grey-palette, 500);
+  color: white;
+  // END TODO --------------
+
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.backdrop-title {
+  flex: 0 0 56px;
+  padding-top: 16px;
+  padding-bottom: 16px;
+  padding-left: $padding-side;
+  padding-right: $padding-side;
+
+  width: 100%;
+  display: flex;
+  box-sizing: border-box;
+
+  flex-direction: row;
+  align-items: center;
+
+  white-space: nowrap;
+
+  // mat-icon {
+  //     width: 24px;
+  //     height: 24px;
+  // }
+}
+
+.backdrop-context-menu {
+  // flex: 0 0 auto;
+  width: 100%;
+
+  // padding-left: $padding-side;
+  // padding-right: $padding-side;
+}

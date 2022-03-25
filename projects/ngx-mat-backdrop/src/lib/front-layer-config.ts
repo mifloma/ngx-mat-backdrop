@@ -10,6 +10,9 @@ export class FrontLayerConfig<D = any> {
     */
     viewContainerRef?: ViewContainerRef;
 
+    /** ID for the front-layer. If omitted, a unique one will be generated. */
+    id?: string;
+
     /** Alternate `ComponentFactoryResolver` to use when resolving the associated component. */
     componentFactoryResolver?: ComponentFactoryResolver;
 
@@ -18,4 +21,10 @@ export class FrontLayerConfig<D = any> {
 
     /** Override for the dialog's top position. */
     top?: string = '56px';
+
+    /** Show the front-layer with elevation throwing a shadow on the underlying surface. */
+    elevation?: boolean = false;
+
+    /** Show the front-layer with transparent background. **/
+    transparent?: boolean = false;
 }

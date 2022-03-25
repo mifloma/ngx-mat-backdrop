@@ -19,15 +19,18 @@ export function throwFrontLayerContentAlreadyAttachedError() {
   throw Error('Attempting to attach front-layer content after content is already attached');
 }
 
+export function throwNoFrontLayerContentAttachedError() {
+  throw Error('Attempting to detach front-layer content before any content has attached');
+}
+
 @Directive()
 export abstract class _FrontLayerContainerBase extends BasePortalOutlet {
 
-  /** Starts the dialog exit animation. */
+  /** Starts the front-layer exit animation. */
   abstract _startExitAnimation(): void;
 
+  /** Starts the front-layer drop animation  **/
   abstract _startDropAnimation(): void;
-
-  abstract _setPopup(value: boolean): void;
 
   /** Emits when an animation state changes. */
   _animationStateChanged = new EventEmitter<FrontLayerAnimationEvent>();
@@ -65,6 +68,14 @@ export abstract class _FrontLayerContainerBase extends BasePortalOutlet {
 
     return this._portalOutlet.attachTemplatePortal(portal);
   }
+
+  override detach(): void {
+    if (!this._portalOutlet.hasAttached()) {
+      throwNoFrontLayerContentAttachedError();
+    }
+
+    this._portalOutlet.detach();
+  }
 }
 
 @Component({
@@ -75,7 +86,8 @@ export abstract class _FrontLayerContainerBase extends BasePortalOutlet {
   animations: [BackdropAnimations.frontLayerContainer],
   host: {
     'class': 'front-layer-container',
-    '[class.front-layer-popup]': '_isPopup',
+    '[class.front-layer-container-elevation]': '_config.elevation',
+    '[class.front-layer-container-transparency]': '_config.transparent',
     '[@frontLayerContainer]': '_state',
     '(@frontLayerContainer.start)': '_onAnimationStart($event)',
     '(@frontLayerContainer.done)': '_onAnimationDone($event)',
@@ -85,12 +97,6 @@ export class FrontLayerContainer extends _FrontLayerContainerBase {
 
   /** State of the dialog animation. */
   _state: 'void' | 'enter' | 'droped' | 'exit' = 'enter';
-
-  _isPopup: boolean = false;
-
-  _setPopup(value: boolean) {
-    this._isPopup = true;
-  }
 
   /** Callback, invoked whenever an animation on the host completes. */
   _onAnimationDone(event: AnimationEvent) {
@@ -118,4 +124,5 @@ export class FrontLayerContainer extends _FrontLayerContainerBase {
   _startDropAnimation(): void {
     this._state = 'droped';
   }
+
 }

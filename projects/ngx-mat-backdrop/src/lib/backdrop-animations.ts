@@ -1,4 +1,4 @@
-import { animate, AnimationTriggerMetadata, query, state, style, transition, trigger } from "@angular/animations";
+import { animate, AnimationTriggerMetadata, state, style, transition, trigger } from "@angular/animations";
 
 export const BackdropAnimations: {
     readonly frontLayerContainer: AnimationTriggerMetadata;
@@ -10,7 +10,7 @@ export const BackdropAnimations: {
         transition('* => enter', animate('500ms ease-in-out',
             style({ transform: 'none' }))),
         transition('* => void, * => exit',
-            animate('500ms ease-in-out')),
+            animate('500ms ease-in-out'))
 
         // transition('* => droped', [
         //     query('.container', [
