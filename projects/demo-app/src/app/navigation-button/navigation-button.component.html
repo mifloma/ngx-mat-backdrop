@@ -1,0 +1,13 @@
+<ng-container *ngIf="!isContextMenuOpened() else closeButton">
+    <!-- FIXME: Wenn Burger-Menu eigenes Verhalten haben soll, muss bei else ein anderer Button mit anderem Click-Event eingehängt werden -->
+    <button mat-icon-button class="small-icon-button" [@rotate]="state === 'opened' ? 'opened' : 'closed'"
+        (click)="onOpen()">
+        <mat-icon>menu</mat-icon>
+    </button>
+</ng-container>
+<ng-template #closeButton>
+    <button mat-icon-button class="small-icon-button" [@rotate]="state === 'opened' ? 'opened' : 'closed'"
+        (click)="onClose()">
+        <mat-icon>close</mat-icon>
+    </button>
+</ng-template>

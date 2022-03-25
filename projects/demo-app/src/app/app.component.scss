@@ -1,3 +1,25 @@
 backdrop-container {
-    background-color: purple;
+    background-color: grey;
+    color: white;
+}
+
+front-layer-content {
+    padding-top: 26px;
+    padding-left: 48px;
+    padding-right: 48px;
+}
+
+.list-item:hover {
+    cursor: pointer;
+}
+
+.example-form {
+    padding-top: 80px;
+    min-width: 150px;
+    max-width: 500px;
+    width: 100%;
+}
+  
+.example-full-width {
+    width: 100%;
 }
