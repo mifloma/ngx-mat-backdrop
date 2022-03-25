@@ -1,3 +1,7 @@
+import { OverlayModule } from '@angular/cdk/overlay';
+import { PortalModule } from '@angular/cdk/portal';
+import { CommonModule } from '@angular/common';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ModuleWithProviders, NgModule } from '@angular/core';
 import { Backdrop } from './backdrop';
 import { BackdropContainer, BackdropContextMenu, BackdropTitle } from './backdrop-directives';
@@ -15,6 +19,10 @@ import { FrontLayerContent, FrontLayerTitle } from './front-layer-directives';
     FrontLayerTitle
   ],
   imports: [
+    CommonModule,
+    BrowserAnimationsModule,
+    OverlayModule,
+    PortalModule
   ],
   exports: [
     BackdropContainer,
