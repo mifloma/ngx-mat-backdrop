@@ -20,7 +20,6 @@ import { FrontLayerContent, FrontLayerTitle } from './front-layer-directives';
   ],
   imports: [
     CommonModule,
-    BrowserAnimationsModule,
     OverlayModule,
     PortalModule
   ],
@@ -31,13 +30,8 @@ import { FrontLayerContent, FrontLayerTitle } from './front-layer-directives';
     FrontLayerContainer,
     FrontLayerContent,
     FrontLayerTitle,
-  ]
+  ],
+  providers: [Backdrop]
 })
 export class NgxMatBackdropModule {
-  static forRoot(): ModuleWithProviders<NgxMatBackdropModule> {
-    return {
-      ngModule: NgxMatBackdropModule,
-      providers: [Backdrop]
-    }
-  }
 }

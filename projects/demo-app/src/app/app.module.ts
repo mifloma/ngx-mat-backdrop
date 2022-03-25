@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgxMatBackdropModule } from 'ngx-mat-backdrop';
 
 import { AppComponent } from './app.component';
@@ -10,7 +11,8 @@ import { AppComponent } from './app.component';
   ],
   imports: [
     BrowserModule,
-    NgxMatBackdropModule.forRoot()
+    BrowserAnimationsModule,
+    NgxMatBackdropModule
   ],
   providers: [],
   bootstrap: [AppComponent]
