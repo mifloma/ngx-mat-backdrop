@@ -29,7 +29,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     MatIconModule,
     MatListModule,
     MatInputModule,
-    MatBackdropModule
+    MatBackdropModule.forRoot()
   ],
   providers: [],
   bootstrap: [AppComponent]

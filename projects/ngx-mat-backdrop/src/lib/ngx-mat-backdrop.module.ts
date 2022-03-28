@@ -1,7 +1,6 @@
 import { OverlayModule } from '@angular/cdk/overlay';
 import { PortalModule } from '@angular/cdk/portal';
 import { CommonModule } from '@angular/common';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ModuleWithProviders, NgModule } from '@angular/core';
 import { Backdrop } from './backdrop';
 import { BackdropContainer, BackdropContextMenu, BackdropTitle } from './backdrop-directives';
@@ -27,11 +26,15 @@ import { FrontLayerContent, FrontLayerTitle } from './front-layer-directives';
     BackdropContainer,
     BackdropTitle,
     BackdropContextMenu,
-    // FrontLayerContainer,
     FrontLayerContent,
     FrontLayerTitle,
-  ],
-  providers: [Backdrop]
+  ]
 })
 export class MatBackdropModule {
+  static forRoot(): ModuleWithProviders<MatBackdropModule> {
+    return {
+      ngModule: MatBackdropModule,
+      providers: [Backdrop]
+    }
+  }
 }
