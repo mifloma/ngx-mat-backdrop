@@ -1,5 +1,4 @@
 backdrop-container {
-    background-color: grey;
     color: white;
 }
 
@@ -12,14 +11,9 @@ front-layer-content {
 .list-item:hover {
     cursor: pointer;
 }
-
-.example-form {
-    padding-top: 80px;
-    min-width: 150px;
-    max-width: 500px;
-    width: 100%;
-}
   
-.example-full-width {
-    width: 100%;
+.search-input {
+    padding-top: 80px;
+    min-width: 500px;
+    width: 500px;
 }

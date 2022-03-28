@@ -1,21 +1,19 @@
-<backdrop-container>
+<backdrop-container color="primary">
   <backdrop-title>
     <arco-navigation-button (open)="onOpenContextMenu()" (close)="onCloseContextMenu()"></arco-navigation-button>
   </backdrop-title>
   <backdrop-context-menu fxLayoutAlign="center center">
-    <form class="example-form">
-      <mat-form-field class="example-full-width" appearance="fill">
-        <mat-label>Search</mat-label>
-        <input matInput type="text" (keypress)="onInput($event)">
-      </mat-form-field>
-    </form>
+    <mat-form-field class="search-input" appearance="fill" color="accent">
+      <mat-label>Search</mat-label>
+      <input #searchInput matInput [formControl]="filter" autocomplete="off" (keydown.enter)="onEnter($event)">
+    </mat-form-field>
   </backdrop-context-menu>
 </backdrop-container>
 
 <ng-template #content>
   <front-layer-title>Items</front-layer-title>
   <front-layer-content>
-    <ng-container *ngIf="documents$ | async as documents">
+    <ng-container *ngIf="filteredDocuments$ | async as documents">
       <mat-list>
         <mat-list-item class="list-item" *ngFor="let document of documents" (click)="onOpenItem(document)">
           <mat-icon mat-list-icon>description</mat-icon>

@@ -27,11 +27,11 @@ import { FrontLayerContent, FrontLayerTitle } from './front-layer-directives';
     BackdropContainer,
     BackdropTitle,
     BackdropContextMenu,
-    FrontLayerContainer,
+    // FrontLayerContainer,
     FrontLayerContent,
     FrontLayerTitle,
   ],
   providers: [Backdrop]
 })
-export class NgxMatBackdropModule {
+export class MatBackdropModule {
 }

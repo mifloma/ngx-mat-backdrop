@@ -9,7 +9,12 @@ import { Backdrop } from "./backdrop";
         <ng-content select="backdrop-title"></ng-content>
         <ng-content select="backdrop-context-menu" *ngIf="showContextMenu"></ng-content>
     `,
-    host: { 'class': 'backdrop-container' }
+    inputs: ['color'],
+    host: {
+        'class': 'backdrop-container',
+        '[class.backdrop-container-primary]': 'color === "primary"',
+        '[class.backdrop-container-accent]': 'color === "accent"'
+    }
 })
 export class BackdropContainer implements OnInit, OnDestroy {
 

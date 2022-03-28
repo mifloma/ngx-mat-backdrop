@@ -6,12 +6,12 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatListModule } from '@angular/material/list';
 import { MatInputModule } from '@angular/material/input';
-import { NgxMatBackdropModule } from 'ngx-mat-backdrop';
+import { MatBackdropModule } from 'ngx-mat-backdrop';
 
 import { AppComponent } from './app.component';
 import { NavigationButtonComponent } from './navigation-button/navigation-button.component';
 import { ItemDetailsComponent } from './item-details/item-details.component';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -23,12 +23,13 @@ import { FormsModule } from '@angular/forms';
     BrowserModule,
     BrowserAnimationsModule,
     FormsModule,
+    ReactiveFormsModule,
     FlexLayoutModule,
     MatButtonModule,
     MatIconModule,
     MatListModule,
     MatInputModule,
-    NgxMatBackdropModule
+    MatBackdropModule
   ],
   providers: [],
   bootstrap: [AppComponent]

@@ -1,7 +1,21 @@
-import { AfterViewInit, Component, TemplateRef, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, TemplateRef, ViewChild } from '@angular/core';
+import { FormControl } from '@angular/forms';
 import { Backdrop, FrontLayerRef } from 'ngx-mat-backdrop';
-import { BehaviorSubject, combineLatest, map, Observable } from 'rxjs';
+import { BehaviorSubject, combineLatest, map, Observable, startWith } from 'rxjs';
 import { ItemDetailsComponent } from './item-details/item-details.component';
+
+const ITEMS: Document[] = [
+  { title: 'Customer Report 2020', date: new Date(2008, 11, 12) },
+  { title: 'Tax Calculation', date: new Date(2011, 1, 1) },
+  { title: 'Invoices List Foo Company', date: new Date(2021, 7, 12) },
+  { title: 'Pricing Calculation 2022', date: new Date(2021, 8, 2) },
+  { title: 'Pricing Calculation 2020', date: new Date(2019, 11, 1) },
+  { title: 'Email Template Customer Info', date: new Date(2008, 5, 27) },
+  { title: 'Customer Report 2019', date: new Date(2018, 7, 21) },
+  { title: 'Copy Email Mr. Doe', date: new Date(2018, 7, 21) },
+  { title: 'Curriculum Vitae Mrs. Smith', date: new Date(2020, 1, 12) },
+  { title: 'Payroll Aug. 2020', date: new Date(2020, 8, 24) },
+];
 
 export interface Document {
   title: string,
@@ -17,39 +31,33 @@ export class AppComponent implements AfterViewInit {
 
   title = 'demo-app';
 
+  @ViewChild('searchInput') searchInput!: ElementRef;
   @ViewChild('content', { read: TemplateRef })
   private _frontLayerContent!: TemplateRef<any>;
   private _frontLayerRef: FrontLayerRef<any> = null!;
   private _detailsFrontLayerRef: FrontLayerRef<any> = null!;
 
-  items: Document[] = [
-    { title: 'My Document 1', date: new Date(2008, 11, 12) },
-    { title: 'My Document 2', date: new Date(2011, 1, 1) },
-    { title: 'My Document 3', date: new Date(2021, 7, 12) },
-    { title: 'My Document 4', date: new Date(2021, 8, 2) },
-    { title: 'My Document 5', date: new Date(2029, 11, 1) },
-    { title: 'My Document 6', date: new Date(2008, 5, 27) },
-    { title: 'My Document 7', date: new Date(2018, 7, 21) },
-    { title: 'My Document 8', date: new Date(2018, 7, 21) },
-    { title: 'My Document 9', date: new Date(2020, 1, 12) },
-    { title: 'My Document 10', date: new Date(2020, 8, 24) },
-  ];
+  private _documents: BehaviorSubject<Document[]> = new BehaviorSubject<Document[]>(ITEMS);
 
-  private _documents: BehaviorSubject<Document[]> = new BehaviorSubject<Document[]>(this.items);
-  private _search: BehaviorSubject<string> = new BehaviorSubject<string>('');
+  public filter: FormControl;
+  private _filter$: Observable<string>;
 
-  public documents$: Observable<Document[]> = combineLatest([this._documents.asObservable(), this._search]).pipe(
-    map(([documents, search]) => documents.filter(document => document.title.includes(search)))
-  );
+  public filteredDocuments$: Observable<Document[]>;
 
   constructor(
     private _backdrop: Backdrop
-  ) { }
+  ) {
+    this.filter = new FormControl('');
+    this._filter$ = this.filter.valueChanges.pipe(startWith(''));
+    this.filteredDocuments$ = combineLatest([this._documents.asObservable(), this._filter$]).pipe(
+      map(([documents, filterString]) => documents.filter(document => document.title.toLowerCase().indexOf(filterString.toLowerCase()) !== -1))
+    );
+  }
 
   ngAfterViewInit(): void {
     this._frontLayerRef = this._backdrop.open(
       this._frontLayerContent,
-      { id: 'test', top: '56px' }
+      { id: 'documents-list', top: '56px' }
     );
   }
 
@@ -58,26 +66,25 @@ export class AppComponent implements AfterViewInit {
       this._detailsFrontLayerRef.close();
     }
     this._frontLayerRef.drop(250, true);
+    this.searchInput.nativeElement.focus();
   }
 
   onCloseContextMenu(): void {
     this._frontLayerRef.lift();
   }
 
-  onOpenItem(item: Document) {
+  onOpenItem(document: Document) {
     this._detailsFrontLayerRef = this._backdrop.open(
       ItemDetailsComponent,
-      { id: 'details', top: '96px', elevation: true }
+      { id: 'document-details', top: '96px', elevation: true }
     );
 
-    this._detailsFrontLayerRef.componentInstance.item = item;
+    this._detailsFrontLayerRef.componentInstance.item = document;
     this._detailsFrontLayerRef.componentInstance.close.subscribe(() => this._detailsFrontLayerRef.close());
   }
 
-  onInput(event: any) {
-    if (event.target.value) {
-      this._search.next(event.target.value);
-    }
+  onEnter(event: any) {
+    this._frontLayerRef.lift();
   }
 
 }
