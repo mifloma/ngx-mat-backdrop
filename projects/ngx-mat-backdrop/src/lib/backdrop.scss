@@ -108,3 +108,16 @@ $padding-bottom: 0px;
   // padding-left: $padding-side;
   // padding-right: $padding-side;
 }
+
+.mat-backdrop-button {
+  color: unset;
+  background-color: transparent;
+  background-repeat: no-repeat;
+  border: none;
+  overflow: hidden;
+  outline: none;
+}
+
+.mat-backdrop-button:hover {
+  cursor: pointer;
+}

@@ -9,14 +9,12 @@ import { MatInputModule } from '@angular/material/input';
 import { MatBackdropModule } from 'ngx-mat-backdrop';
 
 import { AppComponent } from './app.component';
-import { NavigationButtonComponent } from './navigation-button/navigation-button.component';
 import { ItemDetailsComponent } from './item-details/item-details.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
     AppComponent,
-    NavigationButtonComponent,
     ItemDetailsComponent
   ],
   imports: [

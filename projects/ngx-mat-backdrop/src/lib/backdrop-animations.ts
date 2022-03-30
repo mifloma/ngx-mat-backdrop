@@ -2,6 +2,7 @@ import { animate, AnimationTriggerMetadata, state, style, transition, trigger } 
 
 export const BackdropAnimations: {
     readonly frontLayerContainer: AnimationTriggerMetadata;
+    readonly backdropButton: AnimationTriggerMetadata;
 } = {
     frontLayerContainer: trigger('frontLayerContainer', [
         state('void, exit', style({ transform: 'translateY(100%)' })),
@@ -17,5 +18,10 @@ export const BackdropAnimations: {
         //         animate('250ms ease-in-out')
         //     ])
         // ])
+    ]),
+    backdropButton: trigger('rotate', [
+        state('closed', style({ transform: 'none' })),
+        state('opened', style({ transform: 'rotate(0.75turn)' })),
+        transition('closed <=> opened', animate('250ms'))
     ])
 }

@@ -65,12 +65,7 @@ export class AppComponent implements AfterViewInit {
     if (this._detailsFrontLayerRef) {
       this._detailsFrontLayerRef.close();
     }
-    this._frontLayerRef.drop(250, true);
     this.searchInput.nativeElement.focus();
-  }
-
-  onCloseContextMenu(): void {
-    this._frontLayerRef.lift();
   }
 
   onOpenItem(document: Document) {

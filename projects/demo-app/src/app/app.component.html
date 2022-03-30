@@ -1,6 +1,8 @@
 <backdrop-container color="primary">
   <backdrop-title>
-    <arco-navigation-button (open)="onOpenContextMenu()" (close)="onCloseContextMenu()"></arco-navigation-button>
+    <button mat-backdrop-button [offset]="250" (open)="onOpenContextMenu()">
+      <mat-icon>menu</mat-icon>
+    </button>
   </backdrop-title>
   <backdrop-context-menu fxLayoutAlign="center center">
     <mat-form-field class="search-input" appearance="fill" color="accent">

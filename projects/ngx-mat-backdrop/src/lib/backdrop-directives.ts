@@ -1,7 +1,10 @@
-import { Component, Directive, OnDestroy, OnInit } from "@angular/core";
+import { animate, state, style, transition, trigger } from "@angular/animations";
+import { Component, Directive, Input, OnDestroy, OnInit } from "@angular/core";
 import { Subscription } from "rxjs";
-import { delay } from "rxjs/operators";
+import { delay, take } from "rxjs/operators";
 import { Backdrop } from "./backdrop";
+import { BackdropAnimations } from "./backdrop-animations";
+import { FrontLayerRef, FrontLayerState } from "./front-layer-ref";
 
 @Component({
     selector: 'backdrop-container, [backdrop-container], [backdropContainer]',
