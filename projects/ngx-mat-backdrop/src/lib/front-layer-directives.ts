@@ -13,7 +13,7 @@ export class FrontLayerContent { }
  * Title of a front-layer element. Stays fixed to the top of the dialog when scrolling.
  */
 @Directive({
-    selector: `[front-layer-title], front-layer-title, [frontLayerTitle]`,
+    selector: `[front-layer-title], [frontLayerTitle]`,
     host: { 'class': 'front-layer-title' }
 })
 export class FrontLayerTitle { }

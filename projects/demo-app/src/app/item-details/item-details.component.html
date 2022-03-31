@@ -1,12 +1,12 @@
-<front-layer-title>
-    <span>Item Details</span>
+<div front-layer-title>
+    <h2>Document Details</h2>
     <div fxFlex="1 1 auto"></div>
     <div>
         <button mat-icon-button class="small-icon-button" (click)="onClose()">
             <mat-icon>expand_more</mat-icon>
         </button>
     </div>
-</front-layer-title>
+</div>
 <front-layer-content>
     {{ item.title }} - {{ item.date | date }}
 </front-layer-content>
