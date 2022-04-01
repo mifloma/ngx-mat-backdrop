@@ -7,15 +7,15 @@
     $primary-palette: map.get($color-config, 'primary');
     $accent-palette: map.get($color-config, 'accent');
 
-    .backdrop-container {
+    .mat-backlayer {
         background: mat.get-color-from-palette($primary-palette, 500);
     }
 
-    .backdrop-container-primary {
+    .mat-backlayer-primary {
         background: mat.get-color-from-palette($primary-palette, 500);
     }
 
-    .backdrop-container-accent {
+    .mat-backlayer-accent {
         background: mat.get-color-from-palette($accent-palette, 500);
     }
   }
@@ -24,10 +24,11 @@
     
     $typography-config: mat.get-typography-config($theme);
 
-    .backdrop-title, 
-    .backdrop-context-menu,
-    .front-layer-title,
-    .front-layer-content {
+    .mat-backlayer,
+    .mat-backlayer-title, 
+    .mat-backlayer-content,
+    .mat-frontlayer-title,
+    .mat-frontlayer-content {
         font-family: mat.font-family($typography-config);
     }
 }

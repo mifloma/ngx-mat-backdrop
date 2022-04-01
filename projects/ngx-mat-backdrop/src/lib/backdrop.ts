@@ -4,7 +4,7 @@ import { Directive, EmbeddedViewRef, Injectable, Injector, TemplateRef, Type } f
 import { Observable, Subject } from 'rxjs';
 import { filter, take } from 'rxjs/operators';
 import { FrontLayerConfig } from './front-layer-config';
-import { FrontLayerContainer, _FrontLayerContainerBase } from './front-layer-container';
+import { MatFrontLayerContainer, _FrontLayerContainerBase } from './front-layer-container';
 import { FrontLayerRef } from './front-layer-ref';
 
 /**
@@ -235,12 +235,12 @@ export abstract class _BackdropBase<C extends _FrontLayerContainerBase> {
 }
 
 @Injectable()
-export class Backdrop extends _BackdropBase<FrontLayerContainer> {
+export class Backdrop extends _BackdropBase<MatFrontLayerContainer> {
 
   constructor(
     overlay: Overlay,
     injector: Injector,
   ) {
-    super(overlay, injector, FrontLayerContainer);
+    super(overlay, injector, MatFrontLayerContainer);
   }
 }

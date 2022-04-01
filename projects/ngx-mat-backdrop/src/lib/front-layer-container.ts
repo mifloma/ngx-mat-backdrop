@@ -79,21 +79,21 @@ export abstract class _FrontLayerContainerBase extends BasePortalOutlet {
 }
 
 @Component({
-  selector: 'front-layer-container',
+  selector: 'mat-frontlayer-container',
   templateUrl: './front-layer-container.html',
   styleUrls: ['./backdrop.scss'],
   encapsulation: ViewEncapsulation.None,
   animations: [BackdropAnimations.frontLayerContainer],
   host: {
-    'class': 'front-layer-container',
-    '[class.front-layer-container-elevation]': '_config.elevation',
-    '[class.front-layer-container-transparency]': '_config.transparent',
+    'class': 'mat-frontlayer-container',
+    '[class.mat-frontlayer-container-elevation]': '_config.elevation',
+    '[class.mat-frontlayer-container-transparency]': '_config.transparent',
     '[@frontLayerContainer]': '_state',
     '(@frontLayerContainer.start)': '_onAnimationStart($event)',
     '(@frontLayerContainer.done)': '_onAnimationDone($event)',
   }
 })
-export class FrontLayerContainer extends _FrontLayerContainerBase {
+export class MatFrontLayerContainer extends _FrontLayerContainerBase {
 
   /** State of the dialog animation. */
   _state: 'void' | 'enter' | 'droped' | 'exit' = 'enter';

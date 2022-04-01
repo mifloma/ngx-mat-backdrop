@@ -55,10 +55,10 @@ export class AppComponent implements AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    this._frontLayerRef = this._backdrop.open(
-      this._frontLayerContent,
-      { id: 'documents-list', top: '56px' }
-    );
+    // this._frontLayerRef = this._backdrop.open(
+    //   this._frontLayerContent,
+    //   { id: 'documents-list', top: '56px' }
+    // );
   }
 
   onOpenContextMenu(): void {
@@ -79,7 +79,7 @@ export class AppComponent implements AfterViewInit {
   }
 
   onEnter(event: any) {
-    this._frontLayerRef.lift();
+    this._backdrop.getOpenedFrontLayer()?.lift();
   }
 
 }

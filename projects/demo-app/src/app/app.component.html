@@ -1,28 +1,29 @@
-<backdrop-container color="primary">
-  <backdrop-title>
-    <button mat-backdrop-button [offset]="250" (open)="onOpenContextMenu()">
-      <mat-icon>menu</mat-icon>
-    </button>
-  </backdrop-title>
-  <backdrop-context-menu fxLayoutAlign="center center">
-    <mat-form-field class="search-input" appearance="fill" color="accent">
-      <mat-label>Search</mat-label>
-      <input #searchInput matInput [formControl]="filter" autocomplete="off" (keydown.enter)="onEnter($event)">
-    </mat-form-field>
-  </backdrop-context-menu>
-</backdrop-container>
-
-<ng-template #content>
-  <h2 front-layer-title>Documents</h2>
-  <front-layer-content>
-    <ng-container *ngIf="filteredDocuments$ | async as documents">
-      <mat-list>
-        <mat-list-item class="list-item" *ngFor="let document of documents" (click)="onOpenItem(document)">
-          <mat-icon mat-list-icon>description</mat-icon>
-          <div mat-line>{{document.title}}</div>
-          <div mat-line>{{document.date | date}}</div>
-        </mat-list-item>
-      </mat-list>
-    </ng-container>
-  </front-layer-content>
-</ng-template>
+<mat-backdrop [matBackdropTriggerFor]="frontLayer">
+  <mat-backlayer color="primary">
+    <mat-backlayer-title>
+      <button mat-backdrop-open [size]="250" (open)="onOpenContextMenu()">
+        <mat-icon>menu</mat-icon>
+      </button>
+    </mat-backlayer-title>
+    <mat-backlayer-content fxLayoutAlign="center center">
+      <mat-form-field class="search-input" appearance="fill" color="accent">
+        <mat-label>Search</mat-label>
+        <input #searchInput matInput [formControl]="filter" autocomplete="off" (keydown.enter)="onEnter($event)">
+      </mat-form-field>
+    </mat-backlayer-content>
+  </mat-backlayer>
+  <mat-frontlayer #frontLayer name="documents-list" topPosition="56px">
+    <h2 mat-frontlayer-title>Documents</h2>
+    <mat-frontlayer-content>
+      <ng-container *ngIf="filteredDocuments$ | async as documents">
+        <mat-list>
+          <mat-list-item class="list-item" *ngFor="let document of documents" (click)="onOpenItem(document)">
+            <mat-icon mat-list-icon>description</mat-icon>
+            <div mat-line>{{document.title}}</div>
+            <div mat-line>{{document.date | date}}</div>
+          </mat-list-item>
+        </mat-list>
+      </ng-container>
+    </mat-frontlayer-content>
+  </mat-frontlayer>
+</mat-backdrop>

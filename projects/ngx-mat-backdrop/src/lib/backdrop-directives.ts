@@ -1,25 +1,66 @@
-import { animate, state, style, transition, trigger } from "@angular/animations";
-import { Component, Directive, Input, OnDestroy, OnInit } from "@angular/core";
+import { AfterViewInit, Component, Directive, Input, OnDestroy, OnInit, TemplateRef, ViewChild } from "@angular/core";
+import { FrontLayerConfig } from "./front-layer-config";
 import { Subscription } from "rxjs";
-import { delay, take } from "rxjs/operators";
+import { delay } from "rxjs/operators";
 import { Backdrop } from "./backdrop";
-import { BackdropAnimations } from "./backdrop-animations";
-import { FrontLayerRef, FrontLayerState } from "./front-layer-ref";
 
 @Component({
-    selector: 'backdrop-container, [backdrop-container], [backdropContainer]',
+    selector: 'mat-backdrop',
+    template: `<ng-content select="mat-backlayer"></ng-content>`,
+})
+export class MatBackdrop { }
+
+@Directive({
+    selector: `mat-backdrop[matBackdropTriggerFor], mat-backdrop[mat-backdrop-trigger-for]`,
+    exportAs: 'matBackdropTriggerFor'
+})
+export class MatBackdropTrigger implements AfterViewInit {
+
+    private _frontLayer: MatFrontlayer | null = null;
+
+    /** References the front layer instance that the trigger is associated with. */
+    @Input('matBackdropTriggerFor')
+    get frontLayer(): MatFrontlayer | null {
+        return this._frontLayer;
+    }
+    set frontLayer(frontLayer: MatFrontlayer | null) {
+        this._frontLayer = frontLayer;
+    }
+
+    constructor(
+        private _backdrop: Backdrop
+    ) { }
+
+    ngAfterViewInit(): void {
+        if (this._frontLayer?.templateRef) {
+            let _config: FrontLayerConfig = new FrontLayerConfig();
+
+            if (this._frontLayer.name) {
+                _config.id = this._frontLayer.name;
+            }
+            if (this._frontLayer.topPosition) {
+                _config.top = this._frontLayer.topPosition;
+            }
+
+            this._backdrop.open(this._frontLayer.templateRef, _config);
+        }
+    }
+}
+
+@Component({
+    selector: 'mat-backlayer',
     template: `
-        <ng-content select="backdrop-title"></ng-content>
-        <ng-content select="backdrop-context-menu" *ngIf="showContextMenu"></ng-content>
+        <ng-content select="mat-backlayer-title"></ng-content>
+        <ng-content select="mat-backlayer-content" *ngIf="showContextMenu"></ng-content>
     `,
     inputs: ['color'],
     host: {
-        'class': 'backdrop-container',
-        '[class.backdrop-container-primary]': 'color === "primary"',
-        '[class.backdrop-container-accent]': 'color === "accent"'
+        'class': 'mat-backlayer',
+        '[class.mat-backlayer-primary]': 'color === "primary"',
+        '[class.mat-backlayer-accent]': 'color === "accent"'
     }
 })
-export class BackdropContainer implements OnInit, OnDestroy {
+export class MatBacklayer implements OnInit, OnDestroy {
 
     showContextMenu: boolean = false;
 
@@ -52,13 +93,23 @@ export class BackdropContainer implements OnInit, OnDestroy {
 }
 
 @Directive({
-    selector: 'backdrop-title, [backdrop-title], [backdropTitle]',
-    host: { 'class': 'backdrop-title' }
+    selector: 'mat-backlayer-title, [mat-backlayer-title], [matBacklayerTitle]',
+    host: { 'class': 'mat-backlayer-title' }
 })
-export class BackdropTitle { }
+export class MatBacklayerTitle { }
 
 @Directive({
-    selector: 'backdrop-context-menu, [backdrop-context-menu], [backdropContextMenu]',
-    host: { 'class': 'backdrop-context-menu' }
+    selector: 'mat-backlayer-content, [mat-backlayer-content], [matBacklayerContent]',
+    host: { 'class': 'mat-backlayer-content' }
 })
-export class BackdropContextMenu { }
+export class MatBacklayerContent { }
+
+@Component({
+    selector: 'mat-frontlayer',
+    template: `<ng-template><ng-content></ng-content></ng-template>`
+})
+export class MatFrontlayer {
+    @ViewChild(TemplateRef) templateRef!: TemplateRef<any>;
+    @Input() name: string = 'tmp';
+    @Input() topPosition: string = '56px';
+}

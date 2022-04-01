@@ -5,7 +5,7 @@ import { BackdropAnimations } from './backdrop-animations';
 import { FrontLayerRef, FrontLayerState } from './front-layer-ref';
 
 @Component({
-  selector: 'button[mat-backdrop-button]',
+  selector: 'button[mat-backdrop-open]',
   templateUrl: './backdrop-button.html',
   animations: [BackdropAnimations.backdropButton],
   host: {
@@ -15,7 +15,7 @@ import { FrontLayerRef, FrontLayerState } from './front-layer-ref';
 })
 export class MatBackdropButton implements OnInit {
 
-  @Input() offset: number = 200;
+  @Input() size: number = 200;
   @Input() disable: boolean = true;
 
   @Output() open: EventEmitter<void> = new EventEmitter<void>();
@@ -55,7 +55,7 @@ export class MatBackdropButton implements OnInit {
 
   _onClick(): void {
     if (this._state === 'void') {
-      this._frontLayerRef?.drop(this.offset, this.disable);
+      this._frontLayerRef?.drop(this.size, this.disable);
       this.open.emit();
     } else {
       this._frontLayerRef?.lift();

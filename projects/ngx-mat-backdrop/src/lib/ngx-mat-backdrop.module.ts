@@ -3,21 +3,24 @@ import { PortalModule } from '@angular/cdk/portal';
 import { CommonModule } from '@angular/common';
 import { ModuleWithProviders, NgModule } from '@angular/core';
 import { Backdrop } from './backdrop';
-import { BackdropContainer, BackdropContextMenu, BackdropTitle } from './backdrop-directives';
-import { FrontLayerContainer } from './front-layer-container';
-import { FrontLayerContent, FrontLayerTitle } from './front-layer-directives';
+import { MatBacklayer, MatBacklayerContent, MatBacklayerTitle, MatBackdrop, MatFrontlayer, MatBackdropTrigger } from './backdrop-directives';
+import { MatFrontLayerContainer } from './front-layer-container';
+import { MatFrontlayerContent, MatFrontlayerTitle } from './front-layer-directives';
 import { MatBackdropButton } from './backdrop-button';
 
 
 @NgModule({
   declarations: [
-    BackdropContainer,
-    BackdropTitle,
-    BackdropContextMenu,
-    FrontLayerContainer,
-    FrontLayerContent,
-    FrontLayerTitle,
-    MatBackdropButton
+    MatBackdrop,
+    MatBackdropTrigger,
+    MatBacklayer,
+    MatBacklayerTitle,
+    MatBackdropButton,
+    MatBacklayerContent,
+    MatFrontlayer,
+    MatFrontLayerContainer,
+    MatFrontlayerContent,
+    MatFrontlayerTitle
   ],
   imports: [
     CommonModule,
@@ -25,12 +28,15 @@ import { MatBackdropButton } from './backdrop-button';
     PortalModule
   ],
   exports: [
-    BackdropContainer,
-    BackdropTitle,
-    BackdropContextMenu,
-    FrontLayerContent,
-    FrontLayerTitle,
-    MatBackdropButton
+    MatBacklayer,
+    MatBackdropTrigger,
+    MatBacklayerTitle,
+    MatBacklayerContent,
+    MatFrontlayerContent,
+    MatFrontlayerTitle,
+    MatBackdropButton,
+    MatBackdrop,
+    MatFrontlayer
   ],
   providers: [Backdrop]
 })
