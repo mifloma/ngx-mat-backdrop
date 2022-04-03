@@ -6,6 +6,8 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatListModule } from '@angular/material/list';
 import { MatInputModule } from '@angular/material/input';
+import { MatDividerModule } from '@angular/material/divider';
+import { MatRadioModule } from '@angular/material/radio';
 import { MatBackdropModule } from 'ngx-mat-backdrop';
 
 import { AppComponent } from './app.component';
@@ -27,6 +29,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     MatIconModule,
     MatListModule,
     MatInputModule,
+    MatDividerModule,
+    MatRadioModule,
     MatBackdropModule.forRoot()
   ],
   providers: [],

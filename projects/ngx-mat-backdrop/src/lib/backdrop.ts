@@ -2,7 +2,7 @@ import { ComponentType, Overlay, OverlayConfig, OverlayRef } from '@angular/cdk/
 import { ComponentPortal, TemplatePortal } from '@angular/cdk/portal';
 import { Directive, EmbeddedViewRef, Injectable, Injector, TemplateRef, Type } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
-import { filter, take } from 'rxjs/operators';
+import { filter } from 'rxjs/operators';
 import { FrontLayerConfig } from './front-layer-config';
 import { MatFrontLayerContainer, _FrontLayerContainerBase } from './front-layer-container';
 import { FrontLayerRef } from './front-layer-ref';
@@ -195,7 +195,7 @@ export abstract class _BackdropBase<C extends _FrontLayerContainerBase> {
     overlayRef: OverlayRef,
     config: FrontLayerConfig): FrontLayerRef<T> {
 
-    const frontLayerRef = new FrontLayerRef<T>(overlayRef, frontLayerContainer, config.id);
+    const frontLayerRef = new FrontLayerRef<T>(overlayRef, config, frontLayerContainer, config.id);
 
     if (componentOrTemplateRef instanceof TemplateRef) {
       const viewRef = frontLayerContainer.attachTemplatePortal(
@@ -222,11 +222,17 @@ export abstract class _BackdropBase<C extends _FrontLayerContainerBase> {
   }
 
   /**
-   * Removes a front-layer from the array of open front-layers.
+   * Removes a front layer from the array of open front layers.
    * @param dialogRef Dialog to be removed.
    */
   private _removeOpenDialog(frontLayerRef: FrontLayerRef<any>) {
-    const index = this._openFrontLayers.indexOf(frontLayerRef);
+    let index = this._openFrontLayers.indexOf(frontLayerRef);
+
+    // reactivate next layer on the stack, if closing layer was a popover
+    if (frontLayerRef._config.elevation === true && index >= 1) {
+      this._lastFrontLayerRef = this._openFrontLayers[index - 1];
+    }
+
     if (index > -1) {
       this._openFrontLayers.splice(index, 1);
     }

@@ -27,4 +27,7 @@ export class FrontLayerConfig<D = any> {
 
     /** Show the front-layer with transparent background. **/
     transparent?: boolean = false;
+
+    /** When the back layer is revealed, the front layer content becomes inactive. */
+    disableOnDrop?: boolean = true;
 }

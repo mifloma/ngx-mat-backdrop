@@ -5,7 +5,7 @@ import { ModuleWithProviders, NgModule } from '@angular/core';
 import { Backdrop } from './backdrop';
 import { MatBacklayer, MatBacklayerContent, MatBacklayerTitle, MatBackdrop, MatFrontlayer, MatBackdropTrigger } from './backdrop-directives';
 import { MatFrontLayerContainer } from './front-layer-container';
-import { MatFrontlayerContent, MatFrontlayerTitle } from './front-layer-directives';
+import { MatFrontLayerButton, MatFrontlayerContent, MatFrontlayerTitle } from './front-layer-directives';
 import { MatBackdropButton } from './backdrop-button';
 
 
@@ -20,7 +20,8 @@ import { MatBackdropButton } from './backdrop-button';
     MatFrontlayer,
     MatFrontLayerContainer,
     MatFrontlayerContent,
-    MatFrontlayerTitle
+    MatFrontlayerTitle,
+    MatFrontLayerButton
   ],
   imports: [
     CommonModule,
@@ -36,7 +37,8 @@ import { MatBackdropButton } from './backdrop-button';
     MatFrontlayerTitle,
     MatBackdropButton,
     MatBackdrop,
-    MatFrontlayer
+    MatFrontlayer,
+    MatFrontLayerButton
   ],
   providers: [Backdrop]
 })

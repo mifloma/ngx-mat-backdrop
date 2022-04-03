@@ -2,6 +2,8 @@ import { OverlayRef } from "@angular/cdk/overlay";
 import { EmbeddedViewRef } from "@angular/core";
 import { Observable, Subject } from "rxjs";
 import { filter, take } from 'rxjs/operators';
+import { AnimationCurves, AnimationDurations } from "./backdrop-animations";
+import { FrontLayerConfig } from "./front-layer-config";
 import { _FrontLayerContainerBase } from "./front-layer-container";
 
 // Counter for unique dialog ids.
@@ -22,10 +24,16 @@ export class FrontLayerRef<T> {
     private readonly _afterClosed = new Subject<void>();
 
     /** Subject for notifying that the front-layer has started droping down. */
-    private readonly _beforeDroped = new Subject<void>()
+    private readonly _beforeDroped = new Subject<void>();
 
-    /** Subject for notifying that the front-layer has started lifting down. */
-    private readonly _beforeLift = new Subject<void>()
+    /** Subject for notifying that the front-layer has finished droping down. */
+    private readonly _afterDroped = new Subject<void>();
+
+    /** Subject for notifying that the front-layer has started lifting up. */
+    private readonly _beforeLift = new Subject<void>();
+
+    /** Subject for notifying that the front-layer has finished lifting up. */
+    private readonly _afterLift = new Subject<void>();
 
     /** Current state of the front-layer. */
     private _state = FrontLayerState.CLOSED;
@@ -33,8 +41,12 @@ export class FrontLayerRef<T> {
     /** CDK Overlay Wrapper element of the front-layer */
     private _overlayWrapper: HTMLElement;
 
+    /** Config of this front layer */
+    // private _config: FrontLayerConfig;
+
     constructor(
         private _overlayRef: OverlayRef,
+        public _config: FrontLayerConfig,
         public _containerInstance: _FrontLayerContainerBase,
         readonly id: string = `front-layer-${uniqueId++}`
     ) {
@@ -49,41 +61,53 @@ export class FrontLayerRef<T> {
             this._afterClosed.next();
         });
 
+        // this._config = _config;
         this._overlayWrapper = _overlayRef.hostElement;
     }
 
     /**
      * Move the front-layer by the specified offset
      * @param offset The distance by which the plane is to be moved
-     * @param disable Specifies whether the front-layer should be diabled
      */
-    drop(offset: number, disable: boolean): void {
+    drop(offset: string): void {
         this._beforeDroped.next();
 
-        if (disable) {
+        if (this._config.disableOnDrop) {
             this.viewRef.rootNodes.forEach((el: HTMLElement) => {
                 if (el.style) {
                     el.style.opacity = '50%';
                     el.style.pointerEvents = 'none';
                 }
             });
+            // Es werden zu viele eventListener registriert -> z.B. man klickt mehrmals die Buttons
+            // FIXME: Nach diesem Lift wirft der Button oben links das close-Event nicht -> Könnte es helfen, wenn es ein _afterList Observable gäbe?
+            this._overlayRef.overlayElement.addEventListener('click', () => {
+                this.lift();
+            }, { once: true });
         }
 
         const top = this._containerInstance._config.top ? this._containerInstance._config.top : '0px';
         this._overlayRef.overlayElement.style.setProperty('--s', top);
-        this._overlayRef.overlayElement.style.setProperty('--e', this._addOffset(offset));
-        this._overlayRef.overlayElement.style.animation = 'drop 0.25s ease-in-out';
-        this._overlayRef.overlayElement.style.marginTop = this._addOffset(offset);
+        this._overlayRef.overlayElement.style.setProperty('--e', offset);
+        this._overlayRef.overlayElement.style.animation = `drop ${AnimationDurations.ENTERING} ${AnimationCurves.STANDARD_CURVE}`;
+        this._overlayRef.overlayElement.style.marginTop = offset;
 
         setTimeout(() => {
             this._state = FrontLayerState.DROPED;
-        }, 250);
+            this._afterDroped.next();
+        }, 225);
     }
 
-    updateDropPosition(offset: number): void {
+    updateDropPosition(offset: string): void {
         if (this._state == FrontLayerState.DROPED) {
-            const top = this._containerInstance._config.top ? this._containerInstance._config.top : '0px';
-            this._overlayRef.overlayElement.style.marginTop = this._addOffset(offset);
+            const top = this._overlayRef.overlayElement.style.marginTop ? this._overlayRef.overlayElement.style.marginTop : '0px';
+            this._overlayRef.overlayElement.style.setProperty('--s', top);
+            this._overlayRef.overlayElement.style.setProperty('--e', offset);
+            this._overlayRef.overlayElement.style.animation = `move ${AnimationDurations.EXITING} ${AnimationCurves.STANDARD_CURVE}`;
+            this._overlayRef.overlayElement.style.marginTop = offset;
+
+            // setTimeout(() => {
+            // }, 195);
         }
     }
 
@@ -122,7 +146,7 @@ export class FrontLayerRef<T> {
         const offset = this._overlayRef.overlayElement.style.marginTop;
         this._overlayRef.overlayElement.style.setProperty('--s', offset);
         this._overlayRef.overlayElement.style.setProperty('--e', top);
-        this._overlayRef.overlayElement.style.animation = 'lift 0.25s ease-in-out';
+        this._overlayRef.overlayElement.style.animation = `lift ${AnimationDurations.EXITING} ${AnimationCurves.STANDARD_CURVE}`;
         this._overlayRef.overlayElement.style.marginTop = top;
 
         setTimeout(() => {
@@ -133,7 +157,8 @@ export class FrontLayerRef<T> {
                 }
             });
             this._state = FrontLayerState.OPEN;
-        }, 250);
+            this._afterLift.next();
+        }, 195);
     }
 
     /**
@@ -177,9 +202,23 @@ export class FrontLayerRef<T> {
     }
 
     /**
+    * Gets an observable that is notified when the front-layer has finished droping down.
+    */
+    afterDroped(): Observable<void> {
+        return this._afterDroped;
+    }
+
+    /**
     * Gets an observable that is notified when the front-layer has started lifting up.
     */
     beforeLift(): Observable<void> {
         return this._beforeLift;
+    }
+
+    /**
+    * Gets an observable that is notified when the front-layer has finished lifting up.
+    */
+    afterLift(): Observable<void> {
+        return this._afterLift;
     }
 }

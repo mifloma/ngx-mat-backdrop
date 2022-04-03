@@ -90,7 +90,7 @@ export abstract class _FrontLayerContainerBase extends BasePortalOutlet {
     '[class.mat-frontlayer-container-transparency]': '_config.transparent',
     '[@frontLayerContainer]': '_state',
     '(@frontLayerContainer.start)': '_onAnimationStart($event)',
-    '(@frontLayerContainer.done)': '_onAnimationDone($event)',
+    '(@frontLayerContainer.done)': '_onAnimationDone($event)'
   }
 })
 export class MatFrontLayerContainer extends _FrontLayerContainerBase {

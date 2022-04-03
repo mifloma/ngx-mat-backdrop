@@ -4,6 +4,7 @@ import { Backdrop } from './backdrop';
 import { BackdropAnimations } from './backdrop-animations';
 import { FrontLayerRef, FrontLayerState } from './front-layer-ref';
 
+
 @Component({
   selector: 'button[mat-backdrop-open]',
   templateUrl: './backdrop-button.html',
@@ -15,8 +16,8 @@ import { FrontLayerRef, FrontLayerState } from './front-layer-ref';
 })
 export class MatBackdropButton implements OnInit {
 
-  @Input() size: number = 200;
-  @Input() disable: boolean = true;
+  @Input() size: string = '200px';
+  @Input() maxSize: boolean = false;
 
   @Output() open: EventEmitter<void> = new EventEmitter<void>();
   @Output() close: EventEmitter<void> = new EventEmitter<void>();
@@ -39,9 +40,21 @@ export class MatBackdropButton implements OnInit {
           this._state = 'opened';
         });
 
+        this._frontLayerRef?.afterDroped().subscribe(() => {
+          this.open.emit();
+        });
+
         this._frontLayerRef?.beforeLift().subscribe(() => {
           this._state = 'void';
         });
+
+        this._frontLayerRef?.afterLift().subscribe(() => {
+          this.close.emit();
+        });
+
+        if (this.maxSize) {
+          this.size = 'calc(100vh - 56px)';
+        }
       });
   }
 
@@ -55,11 +68,11 @@ export class MatBackdropButton implements OnInit {
 
   _onClick(): void {
     if (this._state === 'void') {
-      this._frontLayerRef?.drop(this.size, this.disable);
-      this.open.emit();
+      this._frontLayerRef?.drop(this.size);
+      // this.open.emit();
     } else {
       this._frontLayerRef?.lift();
-      this.close.emit();
+      // this.close.emit();
     }
   }
 

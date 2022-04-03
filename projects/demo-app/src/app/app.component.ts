@@ -44,6 +44,9 @@ export class AppComponent implements AfterViewInit {
 
   public filteredDocuments$: Observable<Document[]>;
 
+  backlayerColor: 'primary' | 'accent' = 'primary';
+  settingsOpened: boolean = false;
+
   constructor(
     private _backdrop: Backdrop
   ) {
@@ -61,7 +64,16 @@ export class AppComponent implements AfterViewInit {
     // );
   }
 
-  onOpenContextMenu(): void {
+  onOpenSearch(): void {
+    this._focusFrontLayer();
+  }
+
+  onOpenSettings(): void {
+    this.settingsOpened = true;
+    this._focusFrontLayer();
+  }
+
+  private _focusFrontLayer() {
     if (this._detailsFrontLayerRef) {
       this._detailsFrontLayerRef.close();
     }
@@ -71,15 +83,20 @@ export class AppComponent implements AfterViewInit {
   onOpenItem(document: Document) {
     this._detailsFrontLayerRef = this._backdrop.open(
       ItemDetailsComponent,
-      { id: 'document-details', top: '96px', elevation: true }
+      { id: 'document-details', top: '105px', elevation: true }
     );
 
     this._detailsFrontLayerRef.componentInstance.item = document;
     this._detailsFrontLayerRef.componentInstance.close.subscribe(() => this._detailsFrontLayerRef.close());
   }
 
+  onClose() {
+    this.settingsOpened = false;
+  }
+
   onEnter(event: any) {
     this._backdrop.getOpenedFrontLayer()?.lift();
+    this.settingsOpened = false;
   }
 
 }
