@@ -6,7 +6,7 @@ import { Backdrop } from './backdrop';
 import { MatBackdropButton } from './backdrop-button';
 import { MatBackdrop, MatBackdropTrigger, MatBacklayer, MatBacklayerContent, MatBacklayerTitle, MatFrontlayer } from './backdrop-directives';
 import { MatFrontLayerContainer } from './front-layer-container';
-import { MatFrontLayerButton, MatFrontlayerContent, MatFrontlayerTitle } from './front-layer-directives';
+import { MatFrontLayerButton, MatFrontLayerClose, MatFrontlayerContent, MatFrontlayerTitle } from './front-layer-directives';
 
 
 @NgModule({
@@ -21,7 +21,8 @@ import { MatFrontLayerButton, MatFrontlayerContent, MatFrontlayerTitle } from '.
     MatFrontLayerContainer,
     MatFrontlayerContent,
     MatFrontlayerTitle,
-    MatFrontLayerButton
+    MatFrontLayerButton,
+    MatFrontLayerClose
   ],
   imports: [
     CommonModule,
@@ -38,7 +39,8 @@ import { MatFrontLayerButton, MatFrontlayerContent, MatFrontlayerTitle } from '.
     MatBackdropButton,
     MatBackdrop,
     MatFrontlayer,
-    MatFrontLayerButton
+    MatFrontLayerButton,
+    MatFrontLayerClose
   ],
   providers: [Backdrop]
 })

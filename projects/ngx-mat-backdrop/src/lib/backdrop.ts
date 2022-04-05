@@ -157,7 +157,7 @@ export abstract class _BackdropBase<C extends _FrontLayerContainerBase> {
 
     let _config = new OverlayConfig({
       width: '100%',
-      height: 'calc(100vh - ' + frontLayerConfig.top + ')',
+      height: 'calc(100vh - ' + top + ')',
       positionStrategy: this._overlay.position().global().top(top),
       scrollStrategy: this._overlay.scrollStrategies.block()
     });

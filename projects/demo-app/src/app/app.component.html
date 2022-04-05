@@ -30,10 +30,10 @@
   </mat-backlayer>
 
   <mat-frontlayer #frontLayer>
-    <!-- <h2 mat-frontlayer-title>Documents</h2> -->
-    <div mat-frontlayer-title>
+    <h2 mat-frontlayer-title>Documents</h2>
+    <!-- <div mat-frontlayer-title>
       <h2>Documents</h2>
-    </div>
+    </div> -->
     <mat-frontlayer-content>
       <ng-container *ngIf="filteredDocuments$ | async as documents">
         <mat-list>

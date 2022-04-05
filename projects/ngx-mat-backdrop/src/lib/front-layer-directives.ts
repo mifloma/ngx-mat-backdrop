@@ -71,3 +71,27 @@ export class MatFrontLayerButton implements OnInit {
     }
 }
 
+@Directive({
+    selector: 'button[mat-frontlayer-close], button[matfrontlayerClose]',
+    host: {
+        'class': 'mat-frontlayer-close',
+        '(click)': '_onClick()'
+    }
+})
+export class MatFrontLayerClose {
+
+    @Output() close: EventEmitter<void> = new EventEmitter<void>();
+
+    constructor(
+        private _backdrop: Backdrop
+    ) { }
+
+    _onClick(): void {
+        let _frontLayerRef = this._backdrop.getOpenedFrontLayer();
+        if (_frontLayerRef) {
+            _frontLayerRef.close();
+            this.close.emit();
+        }
+    }
+}
+
