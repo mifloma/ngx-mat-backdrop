@@ -65,7 +65,7 @@ export abstract class _BackdropBase<C extends _FrontLayerContainerBase> {
   open<T, D = any>(componentOrTemplateRef: ComponentType<T> | TemplateRef<T>,
     config?: FrontLayerConfig<D>): FrontLayerRef<T> {
 
-    config = config || new FrontLayerConfig();
+    config = config ? FrontLayerConfig.merge(config) : new FrontLayerConfig();
 
     if (config.id) {
       const frontLayerRef = this.getFrontLayerById(config.id);
@@ -153,10 +153,12 @@ export abstract class _BackdropBase<C extends _FrontLayerContainerBase> {
    * @returns The overlay configuration.
    */
   private _getOverlayConfig(frontLayerConfig: FrontLayerConfig): OverlayConfig {
+    let top = frontLayerConfig.elevation ? `calc(${this.getOpenedFrontLayer()?._config.top} + ${frontLayerConfig.top})` : frontLayerConfig.top;
+
     let _config = new OverlayConfig({
       width: '100%',
       height: 'calc(100vh - ' + frontLayerConfig.top + ')',
-      positionStrategy: this._overlay.position().global().top(frontLayerConfig.top),
+      positionStrategy: this._overlay.position().global().top(top),
       scrollStrategy: this._overlay.scrollStrategies.block()
     });
 

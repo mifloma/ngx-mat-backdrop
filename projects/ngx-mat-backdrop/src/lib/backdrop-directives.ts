@@ -110,6 +110,6 @@ export class MatBacklayerContent { }
 })
 export class MatFrontlayer {
     @ViewChild(TemplateRef) templateRef!: TemplateRef<any>;
-    @Input() name: string = 'tmp';
-    @Input() topPosition: string = '56px';
+    @Input() name!: string;
+    @Input() topPosition!: string;
 }

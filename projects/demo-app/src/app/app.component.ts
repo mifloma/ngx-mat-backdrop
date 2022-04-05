@@ -1,8 +1,13 @@
-import { AfterViewInit, Component, ElementRef, TemplateRef, ViewChild } from '@angular/core';
+import { Component, ElementRef, ViewChild } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { Backdrop, FrontLayerRef } from 'ngx-mat-backdrop';
 import { BehaviorSubject, combineLatest, map, Observable, startWith } from 'rxjs';
 import { ItemDetailsComponent } from './item-details/item-details.component';
+
+export interface Document {
+  title: string,
+  date: Date
+}
 
 const ITEMS: Document[] = [
   { title: 'Customer Report 2020', date: new Date(2008, 11, 12) },
@@ -17,24 +22,17 @@ const ITEMS: Document[] = [
   { title: 'Payroll Aug. 2020', date: new Date(2020, 8, 24) },
 ];
 
-export interface Document {
-  title: string,
-  date: Date
-}
-
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
-export class AppComponent implements AfterViewInit {
+export class AppComponent {
 
   title = 'demo-app';
 
-  @ViewChild('searchInput') searchInput!: ElementRef;
-  @ViewChild('content', { read: TemplateRef })
-  private _frontLayerContent!: TemplateRef<any>;
-  private _frontLayerRef: FrontLayerRef<any> = null!;
+  @ViewChild('searchInput')
+  searchInput!: ElementRef;
   private _detailsFrontLayerRef: FrontLayerRef<any> = null!;
 
   private _documents: BehaviorSubject<Document[]> = new BehaviorSubject<Document[]>(ITEMS);
@@ -52,16 +50,12 @@ export class AppComponent implements AfterViewInit {
   ) {
     this.filter = new FormControl('');
     this._filter$ = this.filter.valueChanges.pipe(startWith(''));
-    this.filteredDocuments$ = combineLatest([this._documents.asObservable(), this._filter$]).pipe(
-      map(([documents, filterString]) => documents.filter(document => document.title.toLowerCase().indexOf(filterString.toLowerCase()) !== -1))
-    );
-  }
 
-  ngAfterViewInit(): void {
-    // this._frontLayerRef = this._backdrop.open(
-    //   this._frontLayerContent,
-    //   { id: 'documents-list', top: '56px' }
-    // );
+    this.filteredDocuments$ = combineLatest([this._documents.asObservable(), this._filter$]).pipe(
+      map(([documents, filterString]) =>
+        documents.filter(document =>
+          document.title.toLowerCase().indexOf(filterString.toLowerCase()) !== -1))
+    );
   }
 
   onOpenSearch(): void {
@@ -79,12 +73,11 @@ export class AppComponent implements AfterViewInit {
 
   onOpenItem(document: Document) {
     this._detailsFrontLayerRef = this._backdrop.open(
-      ItemDetailsComponent,
-      { id: 'document-details', top: '105px', elevation: true }
-    );
+      ItemDetailsComponent, { elevation: true });
 
     this._detailsFrontLayerRef.componentInstance.item = document;
-    this._detailsFrontLayerRef.componentInstance.close.subscribe(() => this._detailsFrontLayerRef.close());
+    this._detailsFrontLayerRef.componentInstance.close
+      .subscribe(() => this._detailsFrontLayerRef.close());
   }
 
   onClose() {
