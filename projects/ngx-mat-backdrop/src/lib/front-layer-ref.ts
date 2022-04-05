@@ -41,8 +41,8 @@ export class FrontLayerRef<T> {
     /** CDK Overlay Wrapper element of the front-layer */
     private _overlayWrapper: HTMLElement;
 
-    /** Config of this front layer */
-    // private _config: FrontLayerConfig;
+    /** This listener reacts on clicks on a droped front layer to lift it */
+    private _clickEventListener: EventListener = () => this.lift();
 
     constructor(
         private _overlayRef: OverlayRef,
@@ -61,7 +61,6 @@ export class FrontLayerRef<T> {
             this._afterClosed.next();
         });
 
-        // this._config = _config;
         this._overlayWrapper = _overlayRef.hostElement;
     }
 
@@ -81,9 +80,7 @@ export class FrontLayerRef<T> {
             });
             // Es werden zu viele eventListener registriert -> z.B. man klickt mehrmals die Buttons
             // FIXME: Nach diesem Lift wirft der Button oben links das close-Event nicht -> Könnte es helfen, wenn es ein _afterList Observable gäbe?
-            this._overlayRef.overlayElement.addEventListener('click', () => {
-                this.lift();
-            }, { once: true });
+            this._overlayRef.overlayElement.addEventListener('click', this._clickEventListener);
         }
 
         const top = this._containerInstance._config.top ? this._containerInstance._config.top : '0px';
@@ -148,6 +145,8 @@ export class FrontLayerRef<T> {
         this._overlayRef.overlayElement.style.setProperty('--e', top);
         this._overlayRef.overlayElement.style.animation = `lift ${AnimationDurations.EXITING} ${AnimationCurves.STANDARD_CURVE}`;
         this._overlayRef.overlayElement.style.marginTop = top;
+
+        this._overlayRef.overlayElement.removeEventListener('click', this._clickEventListener);
 
         setTimeout(() => {
             this.viewRef.rootNodes.forEach((el: HTMLElement) => {

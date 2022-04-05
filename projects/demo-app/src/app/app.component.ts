@@ -74,9 +74,6 @@ export class AppComponent implements AfterViewInit {
   }
 
   private _focusFrontLayer() {
-    if (this._detailsFrontLayerRef) {
-      this._detailsFrontLayerRef.close();
-    }
     this.searchInput.nativeElement.focus();
   }
 

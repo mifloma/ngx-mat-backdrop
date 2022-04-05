@@ -153,12 +153,19 @@ export abstract class _BackdropBase<C extends _FrontLayerContainerBase> {
    * @returns The overlay configuration.
    */
   private _getOverlayConfig(frontLayerConfig: FrontLayerConfig): OverlayConfig {
-    return new OverlayConfig({
+    let _config = new OverlayConfig({
       width: '100%',
       height: 'calc(100vh - ' + frontLayerConfig.top + ')',
       positionStrategy: this._overlay.position().global().top(frontLayerConfig.top),
       scrollStrategy: this._overlay.scrollStrategies.block()
     });
+
+    if (frontLayerConfig.elevation) {
+      _config.hasBackdrop = true;
+      _config.backdropClass = 'cdk-overlay-transparent-backdrop';
+    }
+
+    return _config;
   }
 
   /**

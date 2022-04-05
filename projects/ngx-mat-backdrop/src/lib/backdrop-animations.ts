@@ -32,13 +32,6 @@ export const BackdropAnimations: {
         //         animate('250ms ease-in-out')
         //     ])
         // ])
-
-        transition('* => droped',
-            group([
-                animate(`${AnimationDurations.COMPLEX} ${AnimationCurves.ACCELERATION_CURVE}`),
-                query('@*', animateChild(), { optional: true })
-            ])
-        )
     ]),
     backdropButton: trigger('rotate', [
         state('closed', style({ transform: 'none' })),
