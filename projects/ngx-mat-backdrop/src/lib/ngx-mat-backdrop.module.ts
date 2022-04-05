@@ -3,10 +3,10 @@ import { PortalModule } from '@angular/cdk/portal';
 import { CommonModule } from '@angular/common';
 import { ModuleWithProviders, NgModule } from '@angular/core';
 import { Backdrop } from './backdrop';
-import { MatBacklayer, MatBacklayerContent, MatBacklayerTitle, MatBackdrop, MatFrontlayer, MatBackdropTrigger } from './backdrop-directives';
+import { MatBackdropButton } from './backdrop-button';
+import { MatBackdrop, MatBackdropTrigger, MatBacklayer, MatBacklayerContent, MatBacklayerTitle, MatFrontlayer } from './backdrop-directives';
 import { MatFrontLayerContainer } from './front-layer-container';
 import { MatFrontLayerButton, MatFrontlayerContent, MatFrontlayerTitle } from './front-layer-directives';
-import { MatBackdropButton } from './backdrop-button';
 
 
 @NgModule({
