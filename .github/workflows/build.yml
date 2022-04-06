@@ -31,4 +31,4 @@ jobs:
         run: npm install
           
       - name: build and test
-        run: npm build --no-watch --no-progress
+        run: npm build -- --no-watch --no-progress
