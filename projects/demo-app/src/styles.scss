@@ -1,6 +1,5 @@
 @use '@angular/material' as mat;
-@use '../../ngx-mat-backdrop/src/lib/backdrop-theme' as backdrop;
-// @use 'ngx-mat-backdrop/backdrop-theme' as backdrop;
+@use '../../ngx-mat-backdrop/theming' as backdrop;
 
 @include mat.core();
 
@@ -21,7 +20,7 @@ $my-theme: mat.define-light-theme((
 @include mat.all-component-themes($my-theme);
 
 // Include theme styles for ngx-mat-backdrop components.
-@include backdrop.theme($my-theme);
+@include backdrop.backdrop-theme($my-theme);
 
 
 html,

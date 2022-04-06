@@ -1,6 +1,6 @@
 {
   "name": "ngx-mat-backdrop",
-  "version": "0.9.2",
+  "version": "0.9.3",
   "description": "Implementation of Material Design Backdrop for Angular",
   "author": {
     "name": "Michael Flottmann",
@@ -13,13 +13,20 @@
   "homepage": "https://github.com/mifloma/ngx-mat-backdrop",
   "bugs": "https://github.com/mifloma/ngx-mat-backdrop/issues",
   "keywords": [
-    "backdrop",
+    "angular",
     "material",
     "material design",
-    "material-ui",
-    "angular"
+    "backdrop"
   ],
   "license": "MIT",
+  "exports": {
+    "./theming": {
+      "sass": "./_theming.scss"
+    },
+    "./_theming": {
+      "sass": "./_theming.scss"
+    }
+  },
   "peerDependencies": {
     "@angular/common": "^13.1.0",
     "@angular/core": "^13.1.0"
