@@ -3,5 +3,9 @@
   "dest": "../../dist/ngx-mat-backdrop",
   "lib": {
     "entryFile": "src/public-api.ts"
-  }
+  },
+  "assets": [
+    "_theming.scss",
+    "./src/lib/_backdrop-theme.scss"
+  ]
 }
