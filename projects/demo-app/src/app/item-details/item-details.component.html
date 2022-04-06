@@ -1,0 +1,61 @@
+<div mat-frontlayer-title>
+    <h2>Document Details</h2>
+    <div fxFlex="1 1 auto"></div>
+    <button mat-frontlayer-close (close)="onClose()">
+        <mat-icon>expand_more</mat-icon>
+    </button>
+</div>
+<mat-frontlayer-content>
+    <div class="document-title">{{ item.title }} - {{ item.date | date }}</div>
+    <div>
+        <p>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin condimentum sapien sed libero auctor congue.
+            Nam
+            egestas dignissim ex non ultrices. Proin lectus augue, efficitur a commodo quis, tristique nec enim. Fusce
+            iaculis est odio, et iaculis nulla luctus eget. Duis non odio nec augue convallis sollicitudin. Vivamus
+            libero
+            dolor, mattis sit amet auctor ac, tempus ac nunc. Quisque justo massa, mattis sit amet sapien sit amet,
+            ornare
+            dictum nulla.
+        </p>
+        <p>
+            Aenean maximus non mi convallis aliquam. In nibh eros, convallis quis dui in, efficitur sollicitudin quam.
+            Phasellus non malesuada nulla, sit amet fermentum massa. Maecenas eget libero tempus, condimentum sem sit
+            amet,
+            sagittis augue. Mauris quis posuere sem, non viverra nibh. Suspendisse eget tellus facilisis, dignissim mi
+            aliquam, euismod nisi. Nullam tincidunt non felis quis luctus.
+        </p>
+        <p>
+            Quisque molestie imperdiet metus, sed tincidunt augue elementum eget. Aenean lacinia diam vel maximus
+            ullamcorper. Pellentesque porta condimentum neque a cursus. Nullam convallis leo quam, ac mattis neque
+            vehicula
+            quis. Cras interdum euismod placerat. Fusce tempor, elit et egestas tincidunt, dolor tortor suscipit dui,
+            quis
+            ultricies nunc nisl at arcu. In hac habitasse platea dictumst. Pellentesque vitae blandit nisi. Sed
+            dignissim
+            eleifend finibus. Donec aliquam, erat et consectetur sagittis, dui nisl blandit ligula, varius fermentum
+            purus
+            enim nec augue. Nulla id facilisis leo.
+        </p>
+        <p>
+            Morbi et justo nunc. Nam id scelerisque sem. Nunc in lacinia enim, tempus aliquam lorem. Phasellus turpis
+            magna,
+            vulputate at consectetur non, sollicitudin ac dui. Duis sem massa, molestie id pellentesque vitae, maximus
+            fringilla nibh. Etiam diam justo, accumsan eget risus eget, tincidunt vehicula nunc. Pellentesque quis nulla
+            est. Donec viverra sapien eget mi sollicitudin, sed volutpat tellus convallis. Suspendisse vitae dictum
+            augue.
+            Maecenas lacus diam, convallis non consequat ac, viverra quis ex. Mauris lacinia rhoncus luctus. Maecenas
+            quis
+            consectetur lacus, nec finibus neque.
+        </p>
+        <p>
+            In vel purus et sem dapibus sagittis in imperdiet ligula. Proin varius, nibh et fermentum egestas, mauris
+            elit
+            iaculis erat, maximus iaculis velit odio non ex. Curabitur faucibus risus eu nunc semper, ac faucibus lectus
+            iaculis. Nullam eu dui ornare, consectetur urna eu, malesuada erat. Donec vehicula semper dolor, vel aliquam
+            quam condimentum eu. Phasellus convallis lorem in ante imperdiet gravida. Aliquam malesuada hendrerit
+            dapibus.
+            Nunc nulla nisi, facilisis quis sem at, dictum pretium nulla.
+        </p>
+    </div>
+</mat-frontlayer-content>

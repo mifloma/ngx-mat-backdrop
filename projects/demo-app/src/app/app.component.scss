@@ -1,0 +1,46 @@
+mat-backlayer {
+    color: white;
+}
+
+h2 {
+    margin-top: 5px !important;
+}
+
+.list-item:hover {
+    cursor: pointer;
+}
+  
+.search-input {
+    padding-top: 80px;
+    min-width: 250px;
+    width: 250px;
+}
+
+::ng-deep .mat-form-field-flex {
+    background-color: rgba($color: #FFFFFF, $alpha: 0.12) !important;
+}
+
+::ng-deep .mat-focused .mat-form-field-label {
+    color: white !important;
+}
+
+::ng-deep .mat-form-field-ripple {
+    background-color: white !important;
+}
+
+.divider {
+    margin-top: 40px;
+    margin-bottom: 40px;
+    border-top-color: rgba($color: #FFFFFF, $alpha: 0.12);
+}
+
+.example-radio-group {
+    display: flex;
+    flex-direction: column;
+    margin: 15px 0;
+    align-items: flex-start;
+  }
+  
+  .example-radio-button {
+    margin: 5px;
+  }

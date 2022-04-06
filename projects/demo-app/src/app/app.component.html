@@ -1,0 +1,50 @@
+<mat-backdrop [matBackdropTriggerFor]="frontLayer">
+
+  <mat-backlayer [color]="backlayerColor">
+    <mat-backlayer-title>
+      <button mat-backdrop-open [size]="'250px'" (open)="onOpenSearch()" (close)="onClose()">
+        <mat-icon>menu</mat-icon>
+      </button>
+      <div style="flex: 1 1 auto;"></div>
+      <button *ngIf="!settingsOpened" mat-frontlayer-move [maxSize]="true" (move)="onOpenSettings()">
+        <mat-icon>tune</mat-icon>
+      </button>
+    </mat-backlayer-title>
+    <mat-backlayer-content fxLayout="column">
+      <div fxLayoutAlign="center center">
+        <mat-form-field class="search-input" appearance="fill" color="accent">
+          <mat-label>Search</mat-label>
+          <input #searchInput matInput [formControl]="filter" autocomplete="off" (keydown.enter)="onEnter($event)">
+          <mat-icon matSuffix>search</mat-icon>
+        </mat-form-field>
+      </div>
+      <mat-divider class="divider"></mat-divider>
+      <div>
+        <label>Pick the Backlayer Color:</label>
+        <mat-radio-group class="example-radio-group" [(ngModel)]="backlayerColor">
+          <mat-radio-button class="example-radio-button" [value]="'primary'">Primary</mat-radio-button>
+          <mat-radio-button class="example-radio-button" [value]="'accent'">Accent</mat-radio-button>
+        </mat-radio-group>
+      </div>
+    </mat-backlayer-content>
+  </mat-backlayer>
+
+  <mat-frontlayer #frontLayer>
+    <h2 mat-frontlayer-title>Documents</h2>
+    <!-- <div mat-frontlayer-title>
+      <h2>Documents</h2>
+    </div> -->
+    <mat-frontlayer-content>
+      <ng-container *ngIf="filteredDocuments$ | async as documents">
+        <mat-list>
+          <mat-list-item class="list-item" *ngFor="let document of documents" (click)="onOpenItem(document)">
+            <mat-icon mat-list-icon>description</mat-icon>
+            <div mat-line>{{document.title}}</div>
+            <div mat-line>{{document.date | date}}</div>
+          </mat-list-item>
+        </mat-list>
+      </ng-container>
+    </mat-frontlayer-content>
+  </mat-frontlayer>
+
+</mat-backdrop>

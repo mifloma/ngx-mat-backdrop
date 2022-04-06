@@ -1,0 +1,38 @@
+@use '@angular/material' as mat;
+@use '../../ngx-mat-backdrop/src/lib/backdrop-theme' as backdrop;
+// @use 'ngx-mat-backdrop/backdrop-theme' as backdrop;
+
+@include mat.core();
+
+$my-primary: mat.define-palette(mat.$deep-purple-palette, 500);
+$my-accent: mat.define-palette(mat.$amber-palette, A200, A100, A400);
+
+$my-theme: mat.define-light-theme((
+ color: (
+   primary: $my-primary,
+   accent: $my-accent
+ ),
+ typography: mat.define-typography-config(
+    $font-family: 'Roboto',
+  )
+));
+
+// Include theme styles for Angular Material components.
+@include mat.all-component-themes($my-theme);
+
+// Include theme styles for ngx-mat-backdrop components.
+@include backdrop.theme($my-theme);
+
+
+html,
+body {
+  height: 100%;
+  margin: 0;
+  scroll-behavior: smooth;
+}
+
+h2 {
+  font-size: 16px;
+  font-weight: 400;
+  letter-spacing: 0.3px;
+}
