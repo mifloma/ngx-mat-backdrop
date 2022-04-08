@@ -1,27 +1,42 @@
 # NgxMatBackdrop
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 13.1.1.
+Implementation of Material Design [Backdrop](https://material.io/components/backdrop) for Angular.  
 
-## Development server
+![Backdrop Example](./docs/backdrop-example.png)
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+### Installation
 
-## Code scaffolding
+`npm install ngx-mat-backdrop --save`
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+### Usage
 
-## Build
+Import `MatBackdropModule` into your application:
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+```typescript
+@NgModule({
+  declarations: [
+    AppComponent
+  ],
+  imports: [
+    MatBackdropModule
+  ],
+  providers: [],
+  bootstrap: [AppComponent]
+})
+export class AppModule { }
+```
 
-## Running unit tests
+The `MatBackdrop` consist of three elements: The `Backdrop-Container`, a `Backlayer` and a `Frontlayer`:
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+```html
+<mat-backdrop [matBackdropTriggerFor]="frontlayer">
+  <mat-backlayer>
+    ... <-- Place your backlayer content here
+  </mat-backlayer>
 
-## Running end-to-end tests
+  <mat-frontlayer #frontlayer>
+    ... <-- Place your frontlayer content here
+  </mat-frontlayer>
+</mat-backdrop>
+```
 
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
-
-## Further help
-
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.

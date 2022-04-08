@@ -78,9 +78,6 @@ export class FrontLayerRef<T> {
                     el.style.pointerEvents = 'none';
                 }
             });
-            // Es werden zu viele eventListener registriert -> z.B. man klickt mehrmals die Buttons
-            // FIXME: Nach diesem Lift wirft der Button oben links das close-Event nicht -> Könnte es helfen, wenn es ein _afterList Observable gäbe?
-            this._overlayRef.overlayElement.addEventListener('click', this._clickEventListener);
         }
 
         const top = this._containerInstance._config.top ? this._containerInstance._config.top : '0px';
@@ -92,6 +89,8 @@ export class FrontLayerRef<T> {
         setTimeout(() => {
             this._state = FrontLayerState.DROPED;
             this._afterDroped.next();
+            // lift frontlayer if user clicks on it
+            this._overlayRef.overlayElement.addEventListener('click', this._clickEventListener);
         }, 225);
     }
 
@@ -106,17 +105,6 @@ export class FrontLayerRef<T> {
             // setTimeout(() => {
             // }, 195);
         }
-    }
-
-    private _addOffset(offset: number): string {
-        var top = 0;
-        if (this._containerInstance._config.top) {
-            var matches = this._containerInstance._config.top.match(/([0-9])+/g);
-            if (matches && matches.length >= 1) {
-                top = Number.apply(matches[0]);
-            }
-        }
-        return (top + offset).toString().concat('px');
     }
 
     /**
