@@ -1,6 +1,6 @@
 {
   "name": "ngx-mat-backdrop",
-  "version": "0.9.6",
+  "version": "0.10.0",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",

@@ -1,8 +1,10 @@
-import { AfterViewInit, Component, Directive, Input, OnDestroy, OnInit, TemplateRef, ViewChild } from "@angular/core";
+import { AfterViewInit, Component, Directive, EventEmitter, Input, OnDestroy, OnInit, Output, TemplateRef, ViewChild } from "@angular/core";
 import { FrontLayerConfig } from "./front-layer-config";
 import { Subscription } from "rxjs";
-import { delay } from "rxjs/operators";
+import { delay, take } from "rxjs/operators";
 import { Backdrop } from "./backdrop";
+import { FrontLayerRef, FrontLayerState } from "./front-layer-ref";
+import { BackdropAnimations } from "./backdrop-animations";
 
 @Component({
     selector: 'mat-backdrop',
@@ -112,4 +114,199 @@ export class MatFrontlayer {
     @ViewChild(TemplateRef) templateRef!: TemplateRef<any>;
     @Input() name!: string;
     @Input() topPosition!: string;
+}
+
+@Component({
+    selector: 'button[mat-backlayer-toggle]',
+    animations: [BackdropAnimations.backdropButton],
+    template: `
+        <ng-container *ngIf="!_opened(); else close">
+        <div class="mat-backdrop-button-wrapper" [@rotate]="_state === 'opened' ? 'opened' : 'closed'">
+            <ng-content></ng-content>
+        </div>
+        </ng-container>
+        <ng-template #close>
+            <div class="mat-backdrop-button-wrapper" [@rotate]="_state === 'opened' ? 'opened' : 'closed'">
+                <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="currentColor">
+                    <path d="M0 0h24v24H0z" fill="none" />
+                    <path
+                        d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z" />
+                </svg>
+            </div>
+        </ng-template>
+    `,
+    host: {
+        'class': 'mat-backdrop-button',
+        '(click)': '_onClick()'
+    }
+})
+export class MatBacklayerToggle implements OnInit {
+
+    @Input() offset: string | 'full' = '200px';
+
+    @Output() open: EventEmitter<void> = new EventEmitter<void>();
+    @Output() close: EventEmitter<void> = new EventEmitter<void>();
+
+    _state: 'void' | 'opened' = 'void';
+
+    private _frontLayerRef: FrontLayerRef<any> | undefined;
+
+    constructor(
+        private _backdrop: Backdrop
+    ) { }
+
+    ngOnInit(): void {
+        this._backdrop.afterOpened()
+            .pipe(take(1))
+            .subscribe(() => {
+                this._frontLayerRef = this._backdrop.getOpenedFrontLayer();
+
+                this._frontLayerRef?.beforeDroped().subscribe(() => {
+                    this._state = 'opened';
+                });
+
+                this._frontLayerRef?.afterDroped().subscribe(() => {
+                    this.open.emit();
+                });
+
+                this._frontLayerRef?.beforeLift().subscribe(() => {
+                    this._state = 'void';
+                });
+
+                this._frontLayerRef?.afterLift().subscribe(() => {
+                    this.close.emit();
+                });
+
+                if (this.offset === 'full') {
+                    this.offset = 'calc(100vh - 56px)';
+                }
+            });
+    }
+
+    protected _getFrontLayer(): FrontLayerRef<any> | undefined {
+        return this._frontLayerRef;
+    }
+
+    _opened(): boolean {
+        if (this._frontLayerRef && this._frontLayerRef.getState() === FrontLayerState.DROPED) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    _onClick(): void {
+        if (this._state === 'void') {
+            this._frontLayerRef?.drop(this.offset);
+        } else {
+            this._frontLayerRef?.lift();
+        }
+    }
+}
+
+@Component({
+    selector: 'button[mat-backlayer-close]',
+    animations: [BackdropAnimations.backdropButton],
+    template: `
+        <ng-container *ngIf="!_opened(); else close">
+        <div class="mat-backdrop-button-wrapper" [@rotate]="_state === 'opened' ? 'opened' : 'closed'">
+            <ng-content></ng-content>
+        </div>
+        </ng-container>
+        <ng-template #close>
+            <div class="mat-backdrop-button-wrapper" [@rotate]="_state === 'opened' ? 'opened' : 'closed'">
+                <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="currentColor">
+                    <path d="M0 0h24v24H0z" fill="none" />
+                    <path
+                        d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z" />
+                </svg>
+            </div>
+        </ng-template>
+    `,
+    host: {
+        'class': 'mat-backdrop-button',
+        '(click)': '_onClick()'
+    }
+})
+export class MatBacklayerClose implements OnInit {
+
+    @Output() close: EventEmitter<void> = new EventEmitter<void>();
+
+    _state: 'void' | 'opened' = 'void';
+
+    private _frontLayerRef: FrontLayerRef<any> | undefined;
+
+    constructor(
+        private _backdrop: Backdrop
+    ) { }
+
+    ngOnInit(): void {
+        this._backdrop.afterOpened()
+            .pipe(take(1))
+            .subscribe(() => {
+                this._frontLayerRef = this._backdrop.getOpenedFrontLayer();
+
+                this._frontLayerRef?.beforeDroped().subscribe(() => {
+                    this._state = 'opened';
+                });
+
+                this._frontLayerRef?.beforeLift().subscribe(() => {
+                    this._state = 'void';
+                });
+
+                this._frontLayerRef?.afterLift().subscribe(() => {
+                    this.close.emit();
+                });
+            });
+    }
+
+    _opened(): boolean {
+        if (this._frontLayerRef && this._frontLayerRef.getState() === FrontLayerState.DROPED) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    _onClick(): void {
+        if (this._state === 'opened') {
+            this._frontLayerRef?.lift();
+        }
+    }
+}
+
+@Directive({
+    selector: `button[mat-backlayer-move], button[matBacklayerMove]`,
+    host: {
+        'class': 'mat-backlayer-move',
+        '(click)': '_onClick()'
+    }
+})
+export class MatBacklayerMove implements OnInit {
+
+    @Input() offset: string | 'full' = '200px';
+
+    @Output() move: EventEmitter<void> = new EventEmitter<void>();
+
+    constructor(
+        private _backdrop: Backdrop
+    ) { }
+
+    ngOnInit(): void {
+        if (this.offset === 'full') {
+            this.offset = 'calc(100vh - 56px)';
+        }
+    }
+
+    _onClick(): void {
+        let _frontLayerRef = this._backdrop.getOpenedFrontLayer();
+        if (_frontLayerRef) {
+            if (_frontLayerRef.getState() === FrontLayerState.DROPED) {
+                _frontLayerRef.updateDropPosition(this.offset);
+            } else {
+                _frontLayerRef.drop(this.offset);
+            }
+            this.move.emit();
+        }
+    }
 }
