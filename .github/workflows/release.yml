@@ -25,6 +25,8 @@ jobs:
         run: npm run build
         
       - name: publish
-        run: npm publish
+        run: |
+          cd dist/ngx-mat-backdrop
+          npm publish
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

@@ -10,7 +10,7 @@ Implementation of Material Design [Backdrop](https://material.io/components/back
 
 ### Usage
 
-Import `MatBackdropModule` into your application:
+Import `BrowserModule`, `BrowserAnimationsModule` and `MatBackdropModule` into your application:
 
 ```typescript
 @NgModule({
@@ -18,6 +18,8 @@ Import `MatBackdropModule` into your application:
     AppComponent
   ],
   imports: [
+    BrowserModule,
+    BrowserAnimationsModule,
     MatBackdropModule
   ],
   providers: [],
