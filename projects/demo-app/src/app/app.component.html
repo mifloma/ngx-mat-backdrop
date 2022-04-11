@@ -2,11 +2,11 @@
 
   <mat-backlayer [color]="backlayerColor">
     <mat-backlayer-title>
-      <button mat-backdrop-open [size]="'250px'" (open)="onOpenSearch()" (close)="onClose()">
+      <button mat-backlayer-toggle [offset]="'250px'" (open)="onOpenSearch()" (close)="onClose()">
         <mat-icon>menu</mat-icon>
       </button>
       <div style="flex: 1 1 auto;"></div>
-      <button *ngIf="!settingsOpened" mat-frontlayer-move [maxSize]="true" (move)="onOpenSettings()">
+      <button *ngIf="!settingsOpened" mat-backlayer-move [offset]="'full'" (move)="onOpenSettings()">
         <mat-icon>tune</mat-icon>
       </button>
     </mat-backlayer-title>
