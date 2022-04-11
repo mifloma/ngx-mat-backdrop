@@ -1,6 +1,24 @@
 {
   "name": "ngx-mat-backdrop",
   "version": "0.10.0",
+  "description": "Implementation of Material Design Backdrop for Angular",
+  "author": {
+    "name": "Michael Flottmann",
+    "url": "https://github.com/mifloma"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mifloma/ngx-mat-backdrop.git"
+  },
+  "homepage": "https://github.com/mifloma/ngx-mat-backdrop",
+  "bugs": "https://github.com/mifloma/ngx-mat-backdrop/issues",
+  "keywords": [
+    "angular",
+    "material",
+    "material design",
+    "backdrop"
+  ],
+  "license": "MIT",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
