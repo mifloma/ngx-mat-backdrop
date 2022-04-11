@@ -2,7 +2,7 @@
 
 Implementation of Material Design [Backdrop](https://material.io/components/backdrop) for Angular.  
 
-![Backdrop Example](./docs/backdrop-example.png)
+![Backdrop Example](https://github.com/mifloma/ngx-mat-backdrop/blob/main/docs/backdrop-example.png)
 
 ### Installation
 
