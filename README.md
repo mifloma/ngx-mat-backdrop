@@ -123,7 +123,7 @@ The `[offset]`-Parameter defines the new position of the `Frontlayer` after butt
 
 The `<mat-backlayer-move>` -Directive enriches a user defined button with the ability to change the position of the `Frontlayer` after `<mat-backlayer-content>`-section has been concealed.  
 
-__Recommendation:__ Use `<mat-backlayer-move>`-Directive and set the `[offset]`-Parameter to `'full'` to reveal a second `Backlayer`-section, e.g. for showing some user settings.
+__ProTip:__ Use `<mat-backlayer-move>`-Directive and set the `[offset]`-Parameter to `'full'` to reveal a second `Backlayer`-section, e.g. for showing some user settings.
 
 #### Backlayer events
 
@@ -136,3 +136,31 @@ A `Backlayer` button directive notifies you when it has finished concealing or r
   </button>
 </mat-backlayer-title>
 ```
+
+### Angular Routing
+
+If you use Angular Routing in your application there are two possibly strategies to deal with `Backdrops`:
+
+#### 1. Close `Frontlayer` before navigation
+
+Use this approach if you navigate to a different context, e.g. from customer-view to listing-view. Closing the `Frontlayer` before navigation conveys to the user that they are changing the view. The current `Frontlayer` fades out and a new one fades in:
+
+```typescript
+constructor(
+  private _backdrop: Backdrop,
+  private _router: Router
+) {}
+
+onClick() {
+  this._backdrop.getOpenedFrontlayer()?.close();
+  this._router.navigate(['/home']);
+}
+```
+
+#### 2. Create a stack of `Frontlayers`
+
+Use this approach of you navigate to a different view within a context, e.g. from customer-list-view to customer-details-view. Opening a new `Frontlayer` without closing the current stacks up the different layers. When leaving the details-view you can close the opened layers one by one.
+
+### Angular Lazy Loading
+
+For navigating 
