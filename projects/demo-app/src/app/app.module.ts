@@ -13,15 +13,26 @@ import { MatBackdropModule } from 'ngx-mat-backdrop';
 import { AppComponent } from './app.component';
 import { ItemDetailsComponent } from './item-details/item-details.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { DocumentDetailsComponent } from './document-details/document-details.component';
+import { RouterModule, Routes } from '@angular/router';
+import { DocumentListComponent } from './document-list/document-list.component';
+
+const routes: Routes = [
+  { path: '', component: DocumentListComponent },
+  { path: 'details', component: DocumentDetailsComponent },
+];
 
 @NgModule({
   declarations: [
     AppComponent,
-    ItemDetailsComponent
+    ItemDetailsComponent,
+    DocumentDetailsComponent,
+    DocumentListComponent
   ],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
+    RouterModule.forRoot(routes),
     FormsModule,
     ReactiveFormsModule,
     FlexLayoutModule,

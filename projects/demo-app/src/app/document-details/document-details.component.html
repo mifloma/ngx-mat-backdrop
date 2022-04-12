@@ -1,0 +1,20 @@
+<mat-backdrop [matBackdropTriggerFor]="frontLayer">
+
+    <mat-backlayer>
+        <mat-backlayer-title>
+            <button mat-backlayer-close (click)="onBack()">
+                <mat-icon>arrow_back</mat-icon>
+            </button>
+        </mat-backlayer-title>
+        <mat-backlayer-content>
+        </mat-backlayer-content>
+    </mat-backlayer>
+
+    <mat-frontlayer #frontLayer name="details">
+        <h2 mat-frontlayer-title>Document</h2>
+        <mat-frontlayer-content>
+            bla
+        </mat-frontlayer-content>
+    </mat-frontlayer>
+
+</mat-backdrop>

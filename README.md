@@ -143,7 +143,7 @@ If you use Angular Routing in your application there are two possibly strategies
 
 #### 1. Close `Frontlayer` before navigation
 
-Use this approach if you navigate to a different context, e.g. from customer-view to listing-view. Closing the `Frontlayer` before navigation conveys to the user that they are changing the view. The current `Frontlayer` fades out and a new one fades in:
+Use this approach if you navigate to a different context, e.g. from customers-view to products-view. Closing the `Frontlayer` before navigation conveys to the user that they are changing the view. The current `Frontlayer` fades out and a new one fades in:
 
 ```typescript
 constructor(
@@ -159,8 +159,37 @@ onClick() {
 
 #### 2. Create a stack of `Frontlayers`
 
-Use this approach of you navigate to a different view within a context, e.g. from customer-list-view to customer-details-view. Opening a new `Frontlayer` without closing the current stacks up the different layers. When leaving the details-view you can close the opened layers one by one.
+Use this approach of you navigate to a different view within a context, e.g. from customer-list-view to customer-details-view. Opening a new `Frontlayer` without closing the current stacks up the different layers. When leaving the details-view you can close the opened layers one by one. To do this, you must import the `MatBackdropModule` with `forRoot()` in your module:
 
-### Angular Lazy Loading
+```typescript
+@NgModule({
+  declarations: [CustomerListComponent, CustomerDetailsComponent],
+  imports: [MatBackdropModule.forRoot()]
+})
+export class CustomersModule { }
+```
 
-For navigating 
+### Angular Routing between (lazy loading) modules
+
+For navigation between views of different (lazy loading) modules, you must import the `MatBackdropModule` with `forRoot()` in your app-module and additionally in every other module:
+
+```typescript
+@NgModule({
+  declarations: [AppComponent],
+  imports: [MatBackdropModule.forRoot()],
+  bootstrap: [AppComponent]
+})
+export class AppModule { }
+
+@NgModule({
+  declarations: [CustomerListComponent, CustomerDetailsComponent],
+  imports: [MatBackdropModule]
+})
+export class CustomersModule { }
+
+@NgModule({
+  declarations: [ProductListComponent, ProductDetailsComponent],
+  imports: [MatBackdropModule]
+})
+export class ProductsModule { }
+```

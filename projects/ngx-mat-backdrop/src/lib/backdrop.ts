@@ -15,6 +15,8 @@ export abstract class _BackdropBase<C extends _FrontLayerContainerBase> {
 
   private _openFrontLayers: FrontLayerRef<any>[] = [];
   private _lastFrontLayerRef!: FrontLayerRef<any>;
+  private _overlayRef!: OverlayRef;
+  private _containerRef!: C;
 
   /** Subject for notifying the user that the front-layer has finished opening. */
   private readonly _afterOpened = new Subject<void>();
@@ -67,13 +69,23 @@ export abstract class _BackdropBase<C extends _FrontLayerContainerBase> {
 
     config = config ? FrontLayerConfig.merge(config) : new FrontLayerConfig();
 
-    if (config.id) {
-      const frontLayerRef = this.getFrontLayerById(config.id);
-      if (frontLayerRef) {
-        this._lastFrontLayerRef = frontLayerRef;
-        this._afterOpened.next();
-        return frontLayerRef;
-      }
+    // if (config.id) {
+    //   const frontLayerRef = this.getFrontLayerById(config.id);
+    //   if (frontLayerRef) {
+    //     this._lastFrontLayerRef = frontLayerRef;
+    //     this._afterOpened.next();
+    //     return frontLayerRef;
+    //   }
+    // }
+
+    if (this._lastFrontLayerRef) {
+      this._lastFrontLayerRef._containerInstance.detach(); // FIXME: Wirft exception wenn nicht attached
+      const frontLayerRef = this._attachFrontLayerContent<T>(componentOrTemplateRef,
+        this._containerRef,
+        this._overlayRef,
+        config);
+      this._lastFrontLayerRef = frontLayerRef;
+      return frontLayerRef;
     }
 
     const overlayRef = this._createOverlay(config);
@@ -104,6 +116,8 @@ export abstract class _BackdropBase<C extends _FrontLayerContainerBase> {
       overlayRef,
       config);
 
+    this._overlayRef = overlayRef;
+    this._containerRef = frontLayerContainer;
     this._lastFrontLayerRef = frontLayerRef;
     this._openFrontLayers.push(frontLayerRef);
     frontLayerRef.afterClosed().subscribe(() => this._removeOpenDialog(frontLayerRef));

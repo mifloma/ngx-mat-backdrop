@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { Document } from '../app.component';
+import { Document } from '../document-list/document-list.component';
 
 @Component({
   selector: 'app-item-details',
