@@ -2,7 +2,8 @@
 
     <mat-backlayer>
         <mat-backlayer-title>
-            <button mat-backlayer-close (click)="onBack()">
+            <button mat-backlayer-close style="border-radius: 50%;" matRipple [matRippleCentered]="true"
+                [matRippleUnbounded]="true" [matRippleColor]="'rgba(255, 255, 255, 0.5)'" (click)="onBack()">
                 <mat-icon>arrow_back</mat-icon>
             </button>
         </mat-backlayer-title>

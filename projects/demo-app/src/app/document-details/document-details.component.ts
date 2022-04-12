@@ -20,7 +20,7 @@ export class DocumentDetailsComponent implements OnInit {
   onBack() {
     // let _frontlayer = this._backdrop.getOpenedFrontLayer()
     // _frontlayer?.close();
-    this._router.navigate(['']);
+    setTimeout(() => this._router.navigate(['']), 200);
   }
 
 }

@@ -16,6 +16,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { DocumentDetailsComponent } from './document-details/document-details.component';
 import { RouterModule, Routes } from '@angular/router';
 import { DocumentListComponent } from './document-list/document-list.component';
+import { MatRippleModule } from '@angular/material/core';
 
 const routes: Routes = [
   { path: '', component: DocumentListComponent },
@@ -42,6 +43,7 @@ const routes: Routes = [
     MatInputModule,
     MatDividerModule,
     MatRadioModule,
+    MatRippleModule,
     MatBackdropModule.forRoot()
   ],
   providers: [],

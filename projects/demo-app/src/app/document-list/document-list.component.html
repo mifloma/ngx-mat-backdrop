@@ -38,7 +38,8 @@
         <mat-frontlayer-content>
             <ng-container *ngIf="filteredDocuments$ | async as documents">
                 <mat-list>
-                    <mat-list-item class="list-item" *ngFor="let document of documents" (click)="onOpenItem(document)">
+                    <mat-list-item matRipple class="list-item" *ngFor="let document of documents"
+                        (click)="onOpenItem(document)">
                         <mat-icon mat-list-icon>description</mat-icon>
                         <div mat-line>{{document.title}}</div>
                         <div mat-line>{{document.date | date}}</div>
