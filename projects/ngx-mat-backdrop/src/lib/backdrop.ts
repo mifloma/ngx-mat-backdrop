@@ -18,11 +18,14 @@ export abstract class _BackdropBase<C extends _FrontLayerContainerBase> {
   private _overlayRef!: OverlayRef;
   private _containerRef!: C;
 
-  /** Subject for notifying the user that the front-layer has finished opening. */
+  /** Subject for notifying the user that the frontlayer has finished opening. */
   private readonly _afterOpened = new Subject<void>();
 
-  /** Subject for notifying the user that the front-layer has started closing. */
+  /** Subject for notifying the user that the frontlayer has started closing. */
   private readonly _beforeClosed = new Subject<void>();
+
+  /** Subject for notifiying the user that the content of the frontlayer has been replaced. */
+  private readonly _afterContentChanged = new Subject<void>();
 
   /** Subject for notifying the user that one of multiple opened font-layers got focused */
   private readonly _afterFocusChanged = new Subject<FrontLayerRef<any>>();
@@ -47,6 +50,13 @@ export abstract class _BackdropBase<C extends _FrontLayerContainerBase> {
   }
 
   /**
+   * Gets an observable that is notified when the content the frontlayer has been changed.
+   */
+  afterContentChanged(): Observable<void> {
+    return this._afterContentChanged;
+  }
+
+  /**
    * Gets an obserable that is notified when one of multiple opened front-layers got focused.
    */
   afterFocusChanged(): Observable<FrontLayerRef<any>> {
@@ -59,6 +69,11 @@ export abstract class _BackdropBase<C extends _FrontLayerContainerBase> {
     private _dialogContainerType: Type<C>
   ) { }
 
+  private _focus(frontLayerRef: FrontLayerRef<any>): void {
+    frontLayerRef.focus();
+    this._openFrontLayers.filter(layer => layer.id != frontLayerRef.id).forEach(e => e.removeFocus());
+  }
+
   /**
   * Opens a front-layer containing the given component type or template.
   * @param componentOrTemplateRef ComponentType or TemplateRef to instantiate as the front-layer content.
@@ -69,23 +84,21 @@ export abstract class _BackdropBase<C extends _FrontLayerContainerBase> {
 
     config = config ? FrontLayerConfig.merge(config) : new FrontLayerConfig();
 
-    // if (config.id) {
-    //   const frontLayerRef = this.getFrontLayerById(config.id);
-    //   if (frontLayerRef) {
-    //     this._lastFrontLayerRef = frontLayerRef;
-    //     this._afterOpened.next();
-    //     return frontLayerRef;
-    //   }
-    // }
-
     if (this._lastFrontLayerRef) {
-      this._lastFrontLayerRef._containerInstance.detach(); // FIXME: Wirft exception wenn nicht attached
-      const frontLayerRef = this._attachFrontLayerContent<T>(componentOrTemplateRef,
-        this._containerRef,
-        this._overlayRef,
-        config);
-      this._lastFrontLayerRef = frontLayerRef;
-      return frontLayerRef;
+      this._containerRef._animationStateChanged.pipe(
+        filter(event => event.state === 'fading')
+      ).subscribe(() => {
+        this._lastFrontLayerRef._containerInstance.detach(); // FIXME: Wirft exception wenn nicht attached
+        const frontLayerRef = this._attachFrontLayerContent<T>(componentOrTemplateRef,
+          this._containerRef,
+          this._overlayRef,
+          this._lastFrontLayerRef._config); // Warum nicht neue Config?
+        this._lastFrontLayerRef = frontLayerRef; // Warum?
+        this._afterContentChanged.next();
+      });
+
+      this._containerRef._startFadingAnimation();
+      return this._lastFrontLayerRef;
     }
 
     const overlayRef = this._createOverlay(config);

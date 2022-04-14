@@ -6,7 +6,7 @@ import { FrontLayerConfig } from './front-layer-config';
 
 /** Event that captures the state of dialog container animations. */
 interface FrontLayerAnimationEvent {
-  state: 'opened' | 'opening' | 'closing' | 'closed';
+  state: 'opened' | 'opening' | 'closing' | 'closed' | 'fading';
   totalTime: number;
 }
 
@@ -31,6 +31,11 @@ export abstract class _FrontLayerContainerBase extends BasePortalOutlet {
 
   /** Starts the front-layer drop animation  **/
   abstract _startDropAnimation(): void;
+
+  /** Starts the front-layer fading animation (fade out)  **/
+  abstract _startFadingAnimation(): void;
+
+  abstract _startEnterAnimation(): void;
 
   /** Emits when an animation state changes. */
   _animationStateChanged = new EventEmitter<FrontLayerAnimationEvent>();
@@ -83,7 +88,7 @@ export abstract class _FrontLayerContainerBase extends BasePortalOutlet {
   templateUrl: './front-layer-container.html',
   styleUrls: ['./backdrop.scss'],
   encapsulation: ViewEncapsulation.None,
-  animations: [BackdropAnimations.frontLayerContainer],
+  animations: [BackdropAnimations.frontLayerContainer, BackdropAnimations.frontLayerContainerOverlay],
   host: {
     'class': 'mat-frontlayer-container',
     '[class.mat-frontlayer-container-elevation]': '_config.elevation',
@@ -96,7 +101,7 @@ export abstract class _FrontLayerContainerBase extends BasePortalOutlet {
 export class MatFrontLayerContainer extends _FrontLayerContainerBase {
 
   /** State of the dialog animation. */
-  _state: 'void' | 'enter' | 'droped' | 'exit' = 'enter';
+  _state: 'void' | 'enter' | 'droped' | 'fading' | 'exit' = 'enter';
 
   /** Callback, invoked whenever an animation on the host completes. */
   _onAnimationDone(event: AnimationEvent) {
@@ -104,6 +109,9 @@ export class MatFrontLayerContainer extends _FrontLayerContainerBase {
       this._animationStateChanged.next({ state: 'opened', totalTime: event.totalTime });
     } else if (event.toState === 'exit') {
       this._animationStateChanged.next({ state: 'closed', totalTime: event.totalTime });
+    } else if (event.toState === 'fading') {
+      this._animationStateChanged.next({ state: 'fading', totalTime: event.totalTime });
+      this._state = 'enter';
     }
   }
 
@@ -123,6 +131,14 @@ export class MatFrontLayerContainer extends _FrontLayerContainerBase {
 
   _startDropAnimation(): void {
     this._state = 'droped';
+  }
+
+  _startFadingAnimation(): void {
+    this._state = 'fading';
+  }
+
+  _startEnterAnimation(): void {
+    this._state = 'enter';
   }
 
 }

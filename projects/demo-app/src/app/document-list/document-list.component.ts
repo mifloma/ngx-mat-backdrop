@@ -73,7 +73,7 @@ export class DocumentListComponent {
   }
 
   onOpenItem(document: Document) {
-    setTimeout(() => this._router.navigate(['details']), 200);
+    this._router.navigate(['details']);
     // this._detailsFrontLayerRef = this._backdrop.open(
     //   ItemDetailsComponent, { elevation: true });
 

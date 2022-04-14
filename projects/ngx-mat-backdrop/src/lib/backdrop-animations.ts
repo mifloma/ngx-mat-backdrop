@@ -16,22 +16,21 @@ export class AnimationDurations {
 
 export const BackdropAnimations: {
     readonly frontLayerContainer: AnimationTriggerMetadata;
+    readonly frontLayerContainerOverlay: AnimationTriggerMetadata;
     readonly backdropButton: AnimationTriggerMetadata;
 } = {
     frontLayerContainer: trigger('frontLayerContainer', [
         state('void, exit', style({ transform: 'translateY(100%)' })),
         state('enter', style({ transform: 'none' })),
-        state('droped', style({ transform: 'translateY(50%)' })),
         transition('* => enter', animate(`${AnimationDurations.EXITING} ${AnimationCurves.DECELERATION_CURVE}`,
             style({ transform: 'none' }))),
         transition('* => void, * => exit',
             animate(`${AnimationDurations.COMPLEX} ${AnimationCurves.ACCELERATION_CURVE}`)),
-
-        // transition('* => droped', [
-        //     query('.container', [
-        //         animate('250ms ease-in-out')
-        //     ])
-        // ])
+        transition('* => fading', query('@fade', [
+            animate(`${AnimationDurations.EXITING} ${AnimationCurves.STANDARD_CURVE}`, style({ opacity: 1 }))
+        ]))
+    ]),
+    frontLayerContainerOverlay: trigger('fade', [
     ]),
     backdropButton: trigger('rotate', [
         state('closed', style({ transform: 'none' })),
