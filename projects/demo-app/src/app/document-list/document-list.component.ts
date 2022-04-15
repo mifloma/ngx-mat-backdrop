@@ -2,9 +2,8 @@
 import { Component, ElementRef, ViewChild } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { Router } from '@angular/router';
-import { Backdrop, FrontLayerRef } from 'ngx-mat-backdrop';
+import { Backdrop } from 'ngx-mat-backdrop';
 import { BehaviorSubject, combineLatest, map, Observable, startWith } from 'rxjs';
-import { ItemDetailsComponent } from '../item-details/item-details.component';
 
 export interface Document {
   title: string,
@@ -33,13 +32,11 @@ export class DocumentListComponent {
 
   @ViewChild('searchInput')
   searchInput!: ElementRef;
-  private _detailsFrontLayerRef: FrontLayerRef<any> = null!;
 
   private _documents: BehaviorSubject<Document[]> = new BehaviorSubject<Document[]>(ITEMS);
-
-  public filter: FormControl;
   private _filter$: Observable<string>;
 
+  public filter: FormControl;
   public filteredDocuments$: Observable<Document[]>;
 
   backlayerColor: 'primary' | 'accent' = 'primary';
@@ -74,12 +71,6 @@ export class DocumentListComponent {
 
   onOpenItem(document: Document) {
     this._router.navigate(['details']);
-    // this._detailsFrontLayerRef = this._backdrop.open(
-    //   ItemDetailsComponent, { elevation: true });
-
-    // this._detailsFrontLayerRef.componentInstance.item = document;
-    // this._detailsFrontLayerRef.componentInstance.close
-    //   .subscribe(() => this._detailsFrontLayerRef.close());
   }
 
   onClose() {

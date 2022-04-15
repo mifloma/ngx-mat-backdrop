@@ -13,10 +13,7 @@ import { FrontLayerRef } from './front-layer-ref';
 @Directive()
 export abstract class _BackdropBase<C extends _FrontLayerContainerBase> {
 
-  private _openFrontLayers: FrontLayerRef<any>[] = [];
-  private _lastFrontLayerRef!: FrontLayerRef<any>;
-  private _overlayRef!: OverlayRef;
-  private _containerRef!: C;
+  private _frontLayerRef!: FrontLayerRef<any>;
 
   /** Subject for notifying the user that the frontlayer has finished opening. */
   private readonly _afterOpened = new Subject<void>();
@@ -26,14 +23,6 @@ export abstract class _BackdropBase<C extends _FrontLayerContainerBase> {
 
   /** Subject for notifiying the user that the content of the frontlayer has been replaced. */
   private readonly _afterContentChanged = new Subject<void>();
-
-  /** Subject for notifying the user that one of multiple opened font-layers got focused */
-  private readonly _afterFocusChanged = new Subject<FrontLayerRef<any>>();
-
-  /** Keeps track of the currently-open front-layers. */
-  get openFrontLayers(): FrontLayerRef<any>[] {
-    return this._openFrontLayers;
-  }
 
   /**
    * Gets an observable that is notified when the front-layer is finished opening.
@@ -56,114 +45,66 @@ export abstract class _BackdropBase<C extends _FrontLayerContainerBase> {
     return this._afterContentChanged;
   }
 
-  /**
-   * Gets an obserable that is notified when one of multiple opened front-layers got focused.
-   */
-  afterFocusChanged(): Observable<FrontLayerRef<any>> {
-    return this._afterFocusChanged;
-  }
-
   constructor(
     private _overlay: Overlay,
     private _injector: Injector,
     private _dialogContainerType: Type<C>
   ) { }
 
-  private _focus(frontLayerRef: FrontLayerRef<any>): void {
-    frontLayerRef.focus();
-    this._openFrontLayers.filter(layer => layer.id != frontLayerRef.id).forEach(e => e.removeFocus());
-  }
-
   /**
-  * Opens a front-layer containing the given component type or template.
-  * @param componentOrTemplateRef ComponentType or TemplateRef to instantiate as the front-layer content.
-  * @returns Reference to the newly-opened front-layer.
+  * Opens a frontlayer containing the given component type or template. If there is already a frontlayer opened, 
+  * its content will get replaced with the given component type or template.
+  * @param componentOrTemplateRef ComponentType or TemplateRef to instantiate as the frontlayer content.
+  * @param config Configuration
+  * @returns Reference to the newly-opened frontlayer.
   */
   open<T, D = any>(componentOrTemplateRef: ComponentType<T> | TemplateRef<T>,
     config?: FrontLayerConfig<D>): FrontLayerRef<T> {
 
-    config = config ? FrontLayerConfig.merge(config) : new FrontLayerConfig();
+    // merge config or create default config
+    let _config = config ? FrontLayerConfig.merge(config) : new FrontLayerConfig();
 
-    if (this._lastFrontLayerRef) {
-      this._containerRef._animationStateChanged.pipe(
+    if (this._frontLayerRef) {
+      this._frontLayerRef._containerInstance._animationStateChanged.pipe(
         filter(event => event.state === 'fading')
       ).subscribe(() => {
-        this._lastFrontLayerRef._containerInstance.detach(); // FIXME: Wirft exception wenn nicht attached
-        const frontLayerRef = this._attachFrontLayerContent<T>(componentOrTemplateRef,
-          this._containerRef,
-          this._overlayRef,
-          this._lastFrontLayerRef._config); // Warum nicht neue Config?
-        this._lastFrontLayerRef = frontLayerRef; // Warum?
+        this._frontLayerRef._containerInstance.detach();
+        this._attachFrontLayerContent(componentOrTemplateRef, this._frontLayerRef);
+
+        this._frontLayerRef._config = _config;
+        this._frontLayerRef.updatePosition(_config.top!);
+
         this._afterContentChanged.next();
       });
 
-      this._containerRef._startFadingAnimation();
-      return this._lastFrontLayerRef;
+      this._frontLayerRef._containerInstance._startFadingAnimation();
+      return this._frontLayerRef;
     }
 
-    const overlayRef = this._createOverlay(config);
-    const frontLayerContainer = this._attachFrontLayerContainer(overlayRef, config);
+    const overlayRef = this._createOverlay(_config);
+    const frontLayerContainer = this._attachFrontLayerContainer(overlayRef, _config);
 
     const animationStateSubscription = frontLayerContainer._animationStateChanged.pipe(
       filter(event => event.state === 'opened' || event.state === 'closing'),
     ).subscribe(frontLayerAnimationEvent => {
       if (frontLayerAnimationEvent.state === 'opened') {
-        if (!config?.elevation) {
-          // Don`t hide other front layers if the new layer is a popover to see elevation effect
-          this._hideNoneFocusedFrontLayers<T>(frontLayerRef);
-        }
         this._afterOpened.next();
       } else if (frontLayerAnimationEvent.state === 'closing') {
-        if (!config?.elevation) {
-          // Don`t throw beforeClosed event if the new layer is a popover because there is at least one more front layer left
-          // FIXME: Not a good solution -> better use different event type 
-          this._unhideNextFrontLayerOnStack<T>(frontLayerRef);
-          this._beforeClosed.next();
-        }
+        this._beforeClosed.next();
         animationStateSubscription.unsubscribe();
       }
     });
 
-    const frontLayerRef = this._attachFrontLayerContent<T>(componentOrTemplateRef,
+    this._frontLayerRef = this._createFrontlayer<T>(componentOrTemplateRef,
       frontLayerContainer,
       overlayRef,
-      config);
+      _config);
 
-    this._overlayRef = overlayRef;
-    this._containerRef = frontLayerContainer;
-    this._lastFrontLayerRef = frontLayerRef;
-    this._openFrontLayers.push(frontLayerRef);
-    frontLayerRef.afterClosed().subscribe(() => this._removeOpenDialog(frontLayerRef));
+    this._frontLayerRef.afterClosed().subscribe(() =>
+      this._frontLayerRef = null!
+    );
 
-    return frontLayerRef;
-  }
-
-  /**
-   * Hides all front-layers except the currently opened one.
-   * @param currentlyOpenedFrontLayerRef The currently opened front-layer
-   */
-  private _hideNoneFocusedFrontLayers<T>(currentlyOpenedFrontLayerRef: FrontLayerRef<T>): void {
-    this._openFrontLayers.filter(layer => layer.id != currentlyOpenedFrontLayerRef.id)
-      .forEach(layer => layer.removeFocus());
-  }
-
-  /**
-   * Takes the next front-layer on the stack behind the currently opened one and makes it visible.
-   * @param currentlyOpenedFrontLayerRef The currently opened front-layer
-   */
-  private _unhideNextFrontLayerOnStack<T>(currentlyOpenedFrontLayerRef: FrontLayerRef<T>): void {
-    const hiddenFrontLayers = this._openFrontLayers.filter(layer => layer.id != currentlyOpenedFrontLayerRef.id);
-    if (hiddenFrontLayers.length >= 1) {
-      hiddenFrontLayers[hiddenFrontLayers.length - 1].focus();
-    }
-  }
-
-  /**
-   * Finds an open front-layer by its id.
-   * @param id ID to use when looking up the front-layer.
-   */
-  getFrontLayerById(id: string) {
-    return this._openFrontLayers.find(frontLayer => frontLayer.id === id);
+    return this._frontLayerRef;
   }
 
   /**
@@ -219,59 +160,54 @@ export abstract class _BackdropBase<C extends _FrontLayerContainerBase> {
   }
 
   /**
-  * Attaches the user-provided component to the already-created front-layer container.
-  * @param componentOrTemplateRef The type of component being loaded into the front-layer,
+  * Creates a new Frontlayer containing the given component type or template.
+  * @param componentOrTemplateRef The type of component being loaded into the frontlayer,
   *     or a TemplateRef to instantiate as the content.
-  * @param frontLayerContainer Reference to the wrapping front-layer container.
+  * @param frontLayerContainer Reference to the wrapping frontlayer container.
   * @param overlayRef Reference to the overlay in which the front-layer resides.
-  * @returns A promise resolving to the FrontLayerRef that should be returned to the user.
+  * @returns A FrontLayerRef that should be returned to the user.
   */
-  private _attachFrontLayerContent<T>(componentOrTemplateRef: ComponentType<T> | TemplateRef<T>,
+  private _createFrontlayer<T>(componentOrTemplateRef: ComponentType<T> | TemplateRef<T>,
     frontLayerContainer: C,
     overlayRef: OverlayRef,
     config: FrontLayerConfig): FrontLayerRef<T> {
 
-    const frontLayerRef = new FrontLayerRef<T>(overlayRef, config, frontLayerContainer, config.id);
+    let frontLayerRef = new FrontLayerRef<T>(overlayRef, config, frontLayerContainer, config.id);
+    this._attachFrontLayerContent<T>(componentOrTemplateRef, frontLayerRef);
+
+    return frontLayerRef;
+  }
+
+  /**
+   * Attaches a user-provided component to the specified frontlayer.
+   * @param componentOrTemplateRef The type of component being loaded into the frontlayer,
+  *     or a TemplateRef to instantiate as the content.
+   * @param frontLayerRef Reference to the wrapping frontlayer.
+   */
+  private _attachFrontLayerContent<T>(
+    componentOrTemplateRef: ComponentType<T> | TemplateRef<T>,
+    frontLayerRef: FrontLayerRef<T>) {
 
     if (componentOrTemplateRef instanceof TemplateRef) {
-      const viewRef = frontLayerContainer.attachTemplatePortal(
+      const viewRef = frontLayerRef._containerInstance.attachTemplatePortal(
         new TemplatePortal<T>(componentOrTemplateRef, null!,
-          <any>{ $implicit: config.data, frontLayerRef }));
+          <any>{ $implicit: frontLayerRef._config.data, frontLayerRef }));
       frontLayerRef.viewRef = viewRef;
     } else {
       // TODO: Testen und ViewContainerRef holen und Datenübergabe mit Injector - Frage: Wo kommt die Default Config her?
       // const injector = this._createInjector<T>(config, frontLayerRef, frontLayerContainer);
-      const contentRef = frontLayerContainer.attachComponentPortal<T>(
-        new ComponentPortal(componentOrTemplateRef, config.viewContainerRef, null));
+      const contentRef = frontLayerRef._containerInstance.attachComponentPortal<T>(
+        new ComponentPortal(componentOrTemplateRef, frontLayerRef._config.viewContainerRef, null));
       frontLayerRef.componentInstance = contentRef.instance;
-      frontLayerRef.viewRef = contentRef.hostView as EmbeddedViewRef<T>; // Does this work?
+      frontLayerRef.viewRef = contentRef.hostView as EmbeddedViewRef<T>;
     }
-
-    return frontLayerRef;
   }
 
   /**
    * Finds the current opened front-layer.
    */
   getOpenedFrontLayer(): FrontLayerRef<any> | undefined {
-    return this._lastFrontLayerRef;
-  }
-
-  /**
-   * Removes a front layer from the array of open front layers.
-   * @param dialogRef Dialog to be removed.
-   */
-  private _removeOpenDialog(frontLayerRef: FrontLayerRef<any>) {
-    let index = this._openFrontLayers.indexOf(frontLayerRef);
-
-    // reactivate next layer on the stack, if closing layer was a popover
-    if (frontLayerRef._config.elevation === true && index >= 1) {
-      this._lastFrontLayerRef = this._openFrontLayers[index - 1];
-    }
-
-    if (index > -1) {
-      this._openFrontLayers.splice(index, 1);
-    }
+    return this._frontLayerRef;
   }
 
 }

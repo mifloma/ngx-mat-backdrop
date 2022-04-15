@@ -1,25 +1,19 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
-import { Backdrop } from 'ngx-mat-backdrop';
+import { Backdrop, MatFrontlayer } from 'ngx-mat-backdrop';
 
 @Component({
   selector: 'app-document-details',
   templateUrl: './document-details.component.html',
   styleUrls: ['./document-details.component.scss']
 })
-export class DocumentDetailsComponent implements OnInit {
+export class DocumentDetailsComponent {
 
   constructor(
-    private _router: Router,
-    private _backdrop: Backdrop
+    private _router: Router
   ) { }
 
-  ngOnInit(): void {
-  }
-
   onBack() {
-    // let _frontlayer = this._backdrop.getOpenedFrontLayer()
-    // _frontlayer?.close();
     this._router.navigate(['']);
   }
 

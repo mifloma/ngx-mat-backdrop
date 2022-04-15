@@ -88,7 +88,10 @@ export abstract class _FrontLayerContainerBase extends BasePortalOutlet {
   templateUrl: './front-layer-container.html',
   styleUrls: ['./backdrop.scss'],
   encapsulation: ViewEncapsulation.None,
-  animations: [BackdropAnimations.frontLayerContainer, BackdropAnimations.frontLayerContainerOverlay],
+  animations: [
+    BackdropAnimations.frontLayerContainer,
+    BackdropAnimations.frontLayerContainerOverlay
+  ],
   host: {
     'class': 'mat-frontlayer-container',
     '[class.mat-frontlayer-container-elevation]': '_config.elevation',
