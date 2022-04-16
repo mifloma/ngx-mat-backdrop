@@ -137,30 +137,60 @@ A `Backlayer` button directive notifies you when it has finished concealing or r
 </mat-backlayer-title>
 ```
 
-### Angular Routing
+### Navigation
 
-If you use Angular Routing in your application there are two possibly strategies to deal with `Backdrops`:
+To support common browser functions, `MatBackdrop` navigation is based on Angular Routing. A `Frontlayer` is a global, static overlay element that can be used across page switches.
 
-#### 1. Close `Frontlayer` before navigation
+#### Parent child navigation
 
-Use this approach if you navigate to a different context, e.g. from customer-view to listing-view. Closing the `Frontlayer` before navigation conveys to the user that they are changing the view. The current `Frontlayer` fades out and a new one fades in:
+For navigating between parent and child views (e.g. between product-list-view and product-details-view) you can use Angular Routing. Place a `<mat-backdrop>` on every component that is involved in the workflow. `MatBackdrop` replaces the content of the `Frontlayer` after navigation.
+
+__ProTip:__ Avoid too many navigation levels. Rule of thumb: Two levels are ideal (parent -> child), three levels are the maximum (parent -> child -> child).
+
+#### Peer navigation
+
+For navigating between different contexts (e.g. between products-view and customers-view) you can also use Angular Routing. For a better user experience, it is advisable to close the `Frontlayer` before navigating. `MatBackdrop` opens a new `Frontlayer` on the next view, which gives the user a stronger signal of the context change:
 
 ```typescript
-constructor(
-  private _backdrop: Backdrop,
-  private _router: Router
-) {}
-
-onClick() {
-  this._backdrop.getOpenedFrontlayer()?.close();
-  this._router.navigate(['/home']);
+onOpenCustomers() {
+  this._backdrop.getOpenedFrontLayer()?.close();
+  this._router.navigate(['customers']);
 }
 ```
 
-#### 2. Create a stack of `Frontlayers`
+#### Popups
 
-Use this approach of you navigate to a different view within a context, e.g. from customer-list-view to customer-details-view. Opening a new `Frontlayer` without closing the current stacks up the different layers. When leaving the details-view you can close the opened layers one by one.
+Like demonstrated in the [Crane Case Study](https://material.io/design/material-studies/crane.html), `MatBackdrop` can show up a second `Frontlayer` as a popover. The popover works like a `MatDialog` and freezes all underlaying layers. Use this kind of navigation if you want to show some extra information to the user:
 
-### Angular Lazy Loading
+```typescript
+onOpenProductPricture() {
+  this._backdrop.open(productPrictureTemplate, { elevation: true });
+}
+```
 
-For navigating 
+__ProTip:__ A good workflow could be product-list-view (parent) -> product-details-view (child) -> product-picture (popover)
+
+### Angular Routing between (lazy loading) modules
+
+For navigation between views of different (lazy loading) modules, you must import the `MatBackdropModule` with `forRoot()` in your app-module and additionally in every other module:
+
+```typescript
+@NgModule({
+  declarations: [AppComponent],
+  imports: [MatBackdropModule.forRoot()],
+  bootstrap: [AppComponent]
+})
+export class AppModule { }
+
+@NgModule({
+  declarations: [CustomerListComponent, CustomerDetailsComponent],
+  imports: [MatBackdropModule]
+})
+export class CustomersModule { }
+
+@NgModule({
+  declarations: [ProductListComponent, ProductDetailsComponent],
+  imports: [MatBackdropModule]
+})
+export class ProductsModule { }
+```

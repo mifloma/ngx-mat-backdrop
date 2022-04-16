@@ -94,6 +94,26 @@ export class FrontLayerRef<T> {
         }, 225);
     }
 
+    updatePosition(top: string): void {
+        this._overlayRef.overlayElement.style.animation = 'none'; // remove last animation
+        void this._overlayRef.overlayElement.offsetHeight; // trigger DOM reflow
+        this._overlayRef.overlayElement.style.animation = null!;
+
+        const _oldTop = this._overlayRef.overlayElement.style.marginTop ? this._overlayRef.overlayElement.style.marginTop : '0px';
+        if (_oldTop < top) {
+            this._overlayRef.overlayElement.style.height = `calc(100vh - ${top})`;
+        }
+
+        this._overlayRef.overlayElement.style.setProperty('--s', _oldTop);
+        this._overlayRef.overlayElement.style.setProperty('--e', top);
+        this._overlayRef.overlayElement.style.animation = `move ${AnimationDurations.EXITING} ${AnimationCurves.STANDARD_CURVE}`;
+
+        setTimeout(() => {
+            this._overlayRef.overlayElement.style.marginTop = top;
+            this._overlayRef.overlayElement.style.height = `calc(100vh - ${top})`;
+        }, 195);
+    }
+
     updateDropPosition(offset: string): void {
         if (this._state == FrontLayerState.DROPED) {
             const top = this._overlayRef.overlayElement.style.marginTop ? this._overlayRef.overlayElement.style.marginTop : '0px';
@@ -105,20 +125,6 @@ export class FrontLayerRef<T> {
             // setTimeout(() => {
             // }, 195);
         }
-    }
-
-    /**
-     * Unhides the front-layer.
-     */
-    focus() {
-        this._overlayWrapper.style.display = '';
-    }
-
-    /**
-     * Hides the front-layer without destroying it.
-     */
-    removeFocus() {
-        this._overlayWrapper.style.display = 'none';
     }
 
     /**

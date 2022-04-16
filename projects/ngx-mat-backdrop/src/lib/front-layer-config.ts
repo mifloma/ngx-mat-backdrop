@@ -31,6 +31,7 @@ export class FrontLayerConfig<D = any> {
     /** When the back layer is revealed, the front layer content becomes inactive. */
     disableOnDrop?: boolean = true;
 
+    /** Merges the specified config with the default config */
     static merge(config: FrontLayerConfig): FrontLayerConfig {
         let _config = new FrontLayerConfig();
         return { ..._config, ...config };

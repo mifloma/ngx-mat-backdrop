@@ -1,6 +1,6 @@
 {
   "name": "ngx-mat-backdrop",
-  "version": "0.10.2",
+  "version": "0.11.0",
   "description": "Implementation of Material Design Backdrop for Angular",
   "author": {
     "name": "Michael Flottmann",

@@ -1,6 +1,6 @@
 import { AfterViewInit, Component, Directive, EventEmitter, Input, OnDestroy, OnInit, Output, TemplateRef, ViewChild } from "@angular/core";
 import { FrontLayerConfig } from "./front-layer-config";
-import { Subscription } from "rxjs";
+import { merge, Subscription } from "rxjs";
 import { delay, take } from "rxjs/operators";
 import { Backdrop } from "./backdrop";
 import { FrontLayerRef, FrontLayerState } from "./front-layer-ref";
@@ -62,20 +62,20 @@ export class MatBackdropTrigger implements AfterViewInit {
         '[class.mat-backlayer-accent]': 'color === "accent"'
     }
 })
-export class MatBacklayer implements OnInit, OnDestroy {
+export class MatBacklayer implements OnInit {
 
     showContextMenu: boolean = false;
-
-    private _afterOpenedSubscription: Subscription;
-    private _beforeClosedSubscription: Subscription;
 
     constructor(
         private _backdrop: Backdrop
     ) {
         // force refreshing UI in a seperate thread with delay() to avoid 'Expression has changed after it was checked' error
-        this._afterOpenedSubscription = this._backdrop.afterOpened().pipe(delay(0))
+        merge(this._backdrop.afterOpened(), this._backdrop.afterContentChanged())
+            .pipe(delay(0), take(1))
             .subscribe(() => this.showContextMenu = true);
-        this._beforeClosedSubscription = this._backdrop.beforeClosed()
+
+        this._backdrop.beforeClosed()
+            .pipe(take(1))
             .subscribe(() => this.showContextMenu = false);
     }
 
@@ -85,11 +85,6 @@ export class MatBacklayer implements OnInit, OnDestroy {
         //     .subscribe(() => this.showContextMenu = true);
         // this._beforeClosedSubscription = this._backdrop.beforeClosed()
         //     .subscribe(() => this.showContextMenu = false);
-    }
-
-    ngOnDestroy(): void {
-        this._afterOpenedSubscription.unsubscribe();
-        this._beforeClosedSubscription.unsubscribe();
     }
 
 }
@@ -158,29 +153,34 @@ export class MatBacklayerToggle implements OnInit {
     ngOnInit(): void {
         this._backdrop.afterOpened()
             .pipe(take(1))
-            .subscribe(() => {
-                this._frontLayerRef = this._backdrop.getOpenedFrontLayer();
+            .subscribe(() => this._init());
+        this._backdrop.afterContentChanged()
+            .pipe(take(1))
+            .subscribe(() => this._init());
+    }
 
-                this._frontLayerRef?.beforeDroped().subscribe(() => {
-                    this._state = 'opened';
-                });
+    private _init() {
+        this._frontLayerRef = this._backdrop.getOpenedFrontLayer();
 
-                this._frontLayerRef?.afterDroped().subscribe(() => {
-                    this.open.emit();
-                });
+        this._frontLayerRef?.beforeDroped().subscribe(() => {
+            this._state = 'opened';
+        });
 
-                this._frontLayerRef?.beforeLift().subscribe(() => {
-                    this._state = 'void';
-                });
+        this._frontLayerRef?.afterDroped().subscribe(() => {
+            this.open.emit();
+        });
 
-                this._frontLayerRef?.afterLift().subscribe(() => {
-                    this.close.emit();
-                });
+        this._frontLayerRef?.beforeLift().subscribe(() => {
+            this._state = 'void';
+        });
 
-                if (this.offset === 'full') {
-                    this.offset = 'calc(100vh - 56px)';
-                }
-            });
+        this._frontLayerRef?.afterLift().subscribe(() => {
+            this.close.emit();
+        });
+
+        if (this.offset === 'full') {
+            this.offset = 'calc(100vh - 56px)';
+        }
     }
 
     protected _getFrontLayer(): FrontLayerRef<any> | undefined {
@@ -243,21 +243,26 @@ export class MatBacklayerClose implements OnInit {
     ngOnInit(): void {
         this._backdrop.afterOpened()
             .pipe(take(1))
-            .subscribe(() => {
-                this._frontLayerRef = this._backdrop.getOpenedFrontLayer();
+            .subscribe(() => this._init);
+        this._backdrop.afterContentChanged()
+            .pipe(take(1))
+            .subscribe(() => this._init);
+    }
 
-                this._frontLayerRef?.beforeDroped().subscribe(() => {
-                    this._state = 'opened';
-                });
+    private _init() {
+        this._frontLayerRef = this._backdrop.getOpenedFrontLayer();
 
-                this._frontLayerRef?.beforeLift().subscribe(() => {
-                    this._state = 'void';
-                });
+        this._frontLayerRef?.beforeDroped().subscribe(() => {
+            this._state = 'opened';
+        });
 
-                this._frontLayerRef?.afterLift().subscribe(() => {
-                    this.close.emit();
-                });
-            });
+        this._frontLayerRef?.beforeLift().subscribe(() => {
+            this._state = 'void';
+        });
+
+        this._frontLayerRef?.afterLift().subscribe(() => {
+            this.close.emit();
+        });
     }
 
     _opened(): boolean {
