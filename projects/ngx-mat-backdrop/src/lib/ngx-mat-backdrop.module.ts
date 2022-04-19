@@ -42,8 +42,7 @@ import { MatFrontlayerContent, MatFrontlayerDrop, MatFrontlayerTitle } from './f
     MatBackdrop,
     MatFrontlayer,
     MatFrontlayerDrop
-  ],
-  providers: [Backdrop]
+  ]
 })
 export class MatBackdropModule {
   static forRoot(): ModuleWithProviders<MatBackdropModule> {
