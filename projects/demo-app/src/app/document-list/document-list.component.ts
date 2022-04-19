@@ -1,5 +1,5 @@
 
-import { Component, ElementRef, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Backdrop } from 'ngx-mat-backdrop';
@@ -28,7 +28,7 @@ const ITEMS: Document[] = [
   templateUrl: './document-list.component.html',
   styleUrls: ['./document-list.component.scss']
 })
-export class DocumentListComponent {
+export class DocumentListComponent implements AfterViewInit {
 
   @ViewChild('searchInput')
   searchInput!: ElementRef;
@@ -56,17 +56,13 @@ export class DocumentListComponent {
     );
   }
 
-  onOpenSearch(): void {
-    this._focusFrontLayer();
+  ngAfterViewInit(): void {
+    this._backdrop.getOpenedFrontLayer()?.afterDroped()
+      .subscribe(() => this.searchInput.nativeElement.focus());
   }
 
   onOpenSettings(): void {
     this.settingsOpened = true;
-    this._focusFrontLayer();
-  }
-
-  private _focusFrontLayer() {
-    this.searchInput.nativeElement.focus();
   }
 
   onOpenItem(document: Document) {

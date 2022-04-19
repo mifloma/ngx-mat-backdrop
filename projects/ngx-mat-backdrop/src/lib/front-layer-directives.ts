@@ -1,6 +1,6 @@
-import { Component, Directive, EventEmitter, Input, OnInit, Output } from "@angular/core";
+import { AfterContentInit, AfterViewInit, Component, Directive, EventEmitter, Input, OnInit, Output } from "@angular/core";
+import { pipe, take } from "rxjs";
 import { Backdrop } from "./backdrop";
-import { FrontLayerState } from "./front-layer-ref";
 
 /**
  * Scrollable content container of a front-layer.
@@ -30,31 +30,58 @@ export class MatFrontlayerContent {
  */
 @Directive({
     selector: `[mat-frontlayer-title], [matFrontLayerTitle]`,
-    host: { 'class': 'mat-frontlayer-title' }
+    host: {
+        'class': 'mat-frontlayer-title'
+    }
 })
 export class MatFrontlayerTitle { }
 
-@Directive({
-    selector: 'button[mat-frontlayer-close], button[matfrontlayerClose]',
+@Component({
+    selector: 'button[mat-frontlayer-drop], button[matFrontlayerDrop]',
+    template: `
+        <ng-container *ngIf="_show">
+            <ng-content></ng-content>
+        </ng-container>
+    `,
     host: {
-        'class': 'mat-frontlayer-close',
+        'class': 'mat-frontlayer-drop',
         '(click)': '_onClick()'
     }
 })
-export class MatFrontLayerClose {
+export class MatFrontlayerDrop implements OnInit {
 
-    @Output() close: EventEmitter<void> = new EventEmitter<void>();
+    @Input() offset: string | 'full' = '200px';
+
+    @Output() drop: EventEmitter<void> = new EventEmitter<void>();
+
+    _show: boolean = true;
 
     constructor(
         private _backdrop: Backdrop
     ) { }
 
+    ngOnInit(): void {
+        this._backdrop.afterOpened().pipe(take(1)).subscribe(() => {
+            this._init();
+        });
+        this._backdrop.afterContentChanged().pipe(take(1)).subscribe(() => {
+            this._init();
+        });
+    }
+
+    private _init(): void {
+        let _frontlayer = this._backdrop.getOpenedFrontLayer();
+        if (_frontlayer) {
+            _frontlayer.beforeDroped().subscribe(() => this._show = false);
+            _frontlayer.afterLift().subscribe(() => this._show = true);
+        }
+    }
+
     _onClick(): void {
         let _frontLayerRef = this._backdrop.getOpenedFrontLayer();
         if (_frontLayerRef) {
-            _frontLayerRef.close();
-            this.close.emit();
+            _frontLayerRef.drop(this.offset);
+            this.drop.emit();
         }
     }
 }
-

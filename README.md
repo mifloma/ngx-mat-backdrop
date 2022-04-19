@@ -104,7 +104,7 @@ The `mat-backlayer-close`-Directive enriches a user defined button with the abil
 
 #### Backlayer toggle
 
-The `mat-backlayer-toggle`-Directive enriches a user defined button with the ability to dynamically reveal or conceal the `<mat-backlayer-content>`-section, depending on its current state:
+The `<mat-backlayer-toggle>`-Directive enriches a user defined button with the ability to dynamically reveal or conceal the `<mat-backlayer-content>`-section, depending on its current state:
 
 ```html
 <mat-backlayer-title>
@@ -136,6 +136,44 @@ A `Backlayer` button directive notifies you when it has finished concealing or r
   </button>
 </mat-backlayer-title>
 ```
+
+### Frontlayer title
+
+With `<mat-frontlayer-title>` you can create a subtitle on the `Frontlayer`:
+
+```html
+<mat-frontlayer #frontlayer>
+  <h2 mat-frontlayer-title>Subtitle</h2>
+  <mat-frontlayer-content>
+    ...
+  </mat-frontlayer-content>
+</mat-frontlayer>
+```
+
+`<mat-frontlayer-title>` also gives the ability to add a rich header to the `Frontlayer`. `MatBackdrop` provides preset elements, a header can contain:
+
+#### Frontlayer drop
+
+The `<mat-frontlayer-drop>`-Directive enriches a user defined button with the ability to dynamically reveal or conceal the `<mat-backlayer-content>`-section, depending on its current state:
+
+```html
+<mat-frontlayer #frontlayer>
+  <mat-frontlayer-title>
+    <h2>Subtitle</h2>
+    <span style="flex: 1"></span>
+    <button mat-frontlayer-drop [offset]="250px">
+      <mat-icon>expand_more</mat-icon>
+    </button>
+  </mat-frontlayer-title>
+  <mat-frontlayer-content>
+    ...
+  </mat-frontlayer-content>
+</mat-frontlayer>
+```
+
+The `[offset]`-Parameter defines the new position of the `Frontlayer` after button click. If you give this parameter the value `'full'` the `Backlayer` gets fully revealed, means the `Frontlayer` moves to the bottom of the viewport.
+
+__ProTip:__ You can combine `<mat-frontlayer-drop>` with `<mat-backlayer-toggle>` or `<mat-backlayer-close>`.
 
 ### Navigation
 
