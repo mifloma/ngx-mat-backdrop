@@ -1,20 +1,14 @@
-@use '@angular/material' as mat;
-@use '../../ngx-mat-backdrop/theming' as backdrop;
+@use '@angular/material'as mat;
+@use '../../ngx-mat-backdrop/theming'as backdrop;
 
 @include mat.core();
 
 $my-primary: mat.define-palette(mat.$deep-purple-palette, 500);
 $my-accent: mat.define-palette(mat.$amber-palette, A200, A100, A400);
 
-$my-theme: mat.define-light-theme((
- color: (
-   primary: $my-primary,
-   accent: $my-accent
- ),
- typography: mat.define-typography-config(
-    $font-family: 'Roboto',
-  )
-));
+$my-theme: mat.define-light-theme((color: (primary: $my-primary,
+      accent: $my-accent),
+    typography: mat.define-typography-config($font-family: 'Roboto')));
 
 // Include theme styles for Angular Material components.
 @include mat.all-component-themes($my-theme);
@@ -28,6 +22,10 @@ body {
   height: 100%;
   margin: 0;
   scroll-behavior: smooth;
+}
+
+mat-backlayer {
+  color: white;
 }
 
 h2 {

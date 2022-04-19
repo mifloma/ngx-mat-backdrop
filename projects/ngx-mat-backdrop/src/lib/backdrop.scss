@@ -85,10 +85,11 @@ $padding: 16px;
 }
 
 .mat-frontlayer-content-divider {
-  border-top: 1px solid rgba(0, 0, 0, 0.12);
+  border-top: 1px solid rgb(224, 224, 224);
   position: sticky;
   top: 0;
   height: 0;
+  z-index: 2000;
 }
 
 .mat-frontlayer-title {
@@ -109,6 +110,21 @@ $padding: 16px;
 
   margin: 0 0 16px;
   display: block;
+}
+
+div.mat-frontlayer-title {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    margin: 0;
+  }
 }
 
 .mat-backlayer {
@@ -185,7 +201,7 @@ $padding: 16px;
   cursor: pointer;
 }
 
-.mat-frontlayer-close {
+.mat-frontlayer-drop {
   padding: 0;
   width: 24px;
   height: 24px;
@@ -197,6 +213,6 @@ $padding: 16px;
   outline: none;
 }
 
-.mat-frontlayer-close:hover {
+.mat-frontlayer-drop:hover {
   cursor: pointer;
 }
