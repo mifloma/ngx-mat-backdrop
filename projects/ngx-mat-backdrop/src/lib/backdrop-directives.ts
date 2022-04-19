@@ -112,7 +112,7 @@ export class MatFrontlayer {
 }
 
 @Component({
-    selector: 'button[mat-backlayer-toggle]',
+    selector: 'button[mat-backlayer-toggle], button[matBacklayerToggle]',
     animations: [BackdropAnimations.backdropButton],
     template: `
         <ng-container *ngIf="!_opened(); else close">
@@ -205,7 +205,7 @@ export class MatBacklayerToggle implements OnInit {
 }
 
 @Component({
-    selector: 'button[mat-backlayer-close]',
+    selector: 'button[mat-backlayer-close], button[matBacklayerClose]',
     animations: [BackdropAnimations.backdropButton],
     template: `
         <ng-container *ngIf="!_opened(); else close">
@@ -243,10 +243,10 @@ export class MatBacklayerClose implements OnInit {
     ngOnInit(): void {
         this._backdrop.afterOpened()
             .pipe(take(1))
-            .subscribe(() => this._init);
+            .subscribe(() => this._init());
         this._backdrop.afterContentChanged()
             .pipe(take(1))
-            .subscribe(() => this._init);
+            .subscribe(() => this._init());
     }
 
     private _init() {

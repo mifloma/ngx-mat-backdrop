@@ -111,6 +111,11 @@ $padding: 16px;
   display: block;
 }
 
+div .mat-frontlayer-title {
+  display: flex;
+  flex-direction: row;
+}
+
 .mat-backlayer {
   width: 100%;
   height: 100%;
@@ -185,7 +190,7 @@ $padding: 16px;
   cursor: pointer;
 }
 
-.mat-frontlayer-close {
+.mat-frontlayer-drop {
   padding: 0;
   width: 24px;
   height: 24px;
@@ -197,6 +202,6 @@ $padding: 16px;
   outline: none;
 }
 
-.mat-frontlayer-close:hover {
+.mat-frontlayer-drop:hover {
   cursor: pointer;
 }
