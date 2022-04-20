@@ -214,21 +214,21 @@ For navigation between views of different (lazy loading) modules, you must impor
 
 ```typescript
 @NgModule({
-  declarations: [AppComponent],
-  imports: [MatBackdropModule.forRoot()],
-  bootstrap: [AppComponent]
+  declarations: [ AppComponent ],
+  imports: [ MatBackdropModule.forRoot() ],
+  bootstrap: [ AppComponent ]
 })
 export class AppModule { }
 
 @NgModule({
-  declarations: [CustomerListComponent, CustomerDetailsComponent],
-  imports: [MatBackdropModule]
+  declarations: [ CustomerListComponent, CustomerDetailsComponent ],
+  imports: [ MatBackdropModule ]
 })
 export class CustomersModule { }
 
 @NgModule({
-  declarations: [ProductListComponent, ProductDetailsComponent],
-  imports: [MatBackdropModule]
+  declarations: [ ProductListComponent, ProductDetailsComponent ],
+  imports: [ MatBackdropModule ]
 })
 export class ProductsModule { }
 ```
