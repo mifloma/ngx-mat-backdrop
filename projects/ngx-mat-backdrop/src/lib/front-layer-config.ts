@@ -23,12 +23,12 @@ export class FrontLayerConfig<D = any> {
     top?: string = '56px';
 
     /** Show the front-layer with elevation throwing a shadow on the underlying surface. */
-    elevation?: boolean = false;
+    popover?: boolean = false;
 
     /** Show the front-layer with transparent background. **/
     transparent?: boolean = false;
 
-    /** When the back layer is revealed, the front layer content becomes inactive. */
+    /** When the backlayer is revealed, the frontlayer content becomes inactive. */
     disableOnDrop?: boolean = true;
 
     /** Merges the specified config with the default config */

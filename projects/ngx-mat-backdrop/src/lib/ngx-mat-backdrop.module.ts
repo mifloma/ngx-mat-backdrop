@@ -5,7 +5,7 @@ import { ModuleWithProviders, NgModule } from '@angular/core';
 import { Backdrop } from './backdrop';
 import { MatBackdrop, MatBackdropTrigger, MatBacklayer, MatBacklayerClose, MatBacklayerContent, MatBacklayerMove, MatBacklayerTitle, MatBacklayerToggle, MatFrontlayer } from './backdrop-directives';
 import { MatFrontLayerContainer } from './front-layer-container';
-import { MatFrontlayerContent, MatFrontlayerDrop, MatFrontlayerTitle } from './front-layer-directives';
+import { MatFrontLayerClose, MatFrontlayerContent, MatFrontlayerDrop, MatFrontlayerTitle } from './front-layer-directives';
 
 
 @NgModule({
@@ -22,7 +22,8 @@ import { MatFrontlayerContent, MatFrontlayerDrop, MatFrontlayerTitle } from './f
     MatFrontLayerContainer,
     MatFrontlayerContent,
     MatFrontlayerTitle,
-    MatFrontlayerDrop
+    MatFrontlayerDrop,
+    MatFrontLayerClose
   ],
   imports: [
     CommonModule,
@@ -41,7 +42,8 @@ import { MatFrontlayerContent, MatFrontlayerDrop, MatFrontlayerTitle } from './f
     MatFrontlayerTitle,
     MatBackdrop,
     MatFrontlayer,
-    MatFrontlayerDrop
+    MatFrontlayerDrop,
+    MatFrontLayerClose
   ]
 })
 export class MatBackdropModule {

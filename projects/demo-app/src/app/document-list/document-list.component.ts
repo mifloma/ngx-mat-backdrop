@@ -1,5 +1,5 @@
 
-import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Backdrop } from 'ngx-mat-backdrop';
@@ -29,6 +29,9 @@ const ITEMS: Document[] = [
   styleUrls: ['./document-list.component.scss']
 })
 export class DocumentListComponent implements AfterViewInit {
+
+  @ViewChild('popover', { read: TemplateRef })
+  _popover!: TemplateRef<any>;
 
   @ViewChild('searchInput')
   searchInput!: ElementRef;
@@ -66,7 +69,12 @@ export class DocumentListComponent implements AfterViewInit {
   }
 
   onOpenItem(document: Document) {
-    this._router.navigate(['details']);
+    // this._router.navigate(['details']);
+    this._backdrop.open(this._popover, {
+      id: 'concept-list',
+      top: '56px',
+      popover: true
+    })
   }
 
   onClose() {

@@ -1,5 +1,5 @@
-import { AfterContentInit, AfterViewInit, Component, Directive, EventEmitter, Input, OnInit, Output } from "@angular/core";
-import { pipe, take } from "rxjs";
+import { Component, Directive, EventEmitter, Input, OnInit, Output } from "@angular/core";
+import { take } from "rxjs";
 import { Backdrop } from "./backdrop";
 
 /**
@@ -44,7 +44,7 @@ export class MatFrontlayerTitle { }
         </ng-container>
     `,
     host: {
-        'class': 'mat-frontlayer-drop',
+        'class': 'mat-frontlayer-button',
         '(click)': '_onClick()'
     }
 })
@@ -82,6 +82,28 @@ export class MatFrontlayerDrop implements OnInit {
         if (_frontLayerRef) {
             _frontLayerRef.drop(this.offset);
             this.drop.emit();
+        }
+    }
+}
+
+@Directive({
+    selector: 'button[mat-frontlayer-close], button[matFrontlayerClose]',
+    exportAs: 'matFrontlayerClose',
+    host: {
+        'class': 'mat-frontlayer-button',
+        '(click)': '_onClick()'
+    }
+})
+export class MatFrontLayerClose {
+
+    constructor(
+        private _backdrop: Backdrop
+    ) { }
+
+    _onClick(): void {
+        let _frontLayerRef = this._backdrop.getOpenedFrontLayer();
+        if (_frontLayerRef) {
+            _frontLayerRef.close();
         }
     }
 }

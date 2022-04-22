@@ -13,7 +13,7 @@ import { FrontLayerRef } from './front-layer-ref';
 @Directive()
 export abstract class _BackdropBase<C extends _FrontLayerContainerBase> {
 
-  private _frontLayerRef!: FrontLayerRef<any>;
+  private _frontLayerRef: FrontLayerRef<any>[] = new Array<FrontLayerRef<any>>();
 
   /** Subject for notifying the user that the frontlayer has finished opening. */
   private readonly _afterOpened = new Subject<void>();
@@ -64,21 +64,21 @@ export abstract class _BackdropBase<C extends _FrontLayerContainerBase> {
     // merge config or create default config
     let _config = config ? FrontLayerConfig.merge(config) : new FrontLayerConfig();
 
-    if (this._frontLayerRef) {
-      this._frontLayerRef._containerInstance._animationStateChanged.pipe(
+    if (this._frontLayerRef.length > 0 && _config.popover === false) {
+      this._getFrontlayer()._containerInstance._animationStateChanged.pipe(
         filter(event => event.state === 'fading')
       ).subscribe(() => {
-        this._frontLayerRef._containerInstance.detach();
-        this._attachFrontLayerContent(componentOrTemplateRef, this._frontLayerRef);
+        this._getFrontlayer()._containerInstance.detach();
+        this._attachFrontLayerContent(componentOrTemplateRef, this._getFrontlayer());
 
-        this._frontLayerRef._config = _config;
-        this._frontLayerRef.updatePosition(_config.top!);
+        this._getFrontlayer()._config = _config;
+        this._getFrontlayer().updatePosition(_config.top!);
 
         this._afterContentChanged.next();
       });
 
-      this._frontLayerRef._containerInstance._startFadingAnimation();
-      return this._frontLayerRef;
+      this._getFrontlayer()._containerInstance._startFadingAnimation();
+      return this._getFrontlayer();
     }
 
     const overlayRef = this._createOverlay(_config);
@@ -90,21 +90,28 @@ export abstract class _BackdropBase<C extends _FrontLayerContainerBase> {
       if (frontLayerAnimationEvent.state === 'opened') {
         this._afterOpened.next();
       } else if (frontLayerAnimationEvent.state === 'closing') {
-        this._beforeClosed.next();
+        if (this._getFrontlayer()._config.popover === false) {
+          this._beforeClosed.next();
+        }
         animationStateSubscription.unsubscribe();
       }
     });
 
-    this._frontLayerRef = this._createFrontlayer<T>(componentOrTemplateRef,
+    let _frontLayerRef = this._createFrontlayer<T>(componentOrTemplateRef,
       frontLayerContainer,
       overlayRef,
       _config);
 
-    this._frontLayerRef.afterClosed().subscribe(() =>
-      this._frontLayerRef = null!
+    this._frontLayerRef.push(_frontLayerRef);
+    _frontLayerRef.afterClosed().subscribe(() =>
+      this._frontLayerRef.pop()
     );
 
-    return this._frontLayerRef;
+    return _frontLayerRef;
+  }
+
+  private _getFrontlayer(): FrontLayerRef<any> {
+    return this._frontLayerRef[this._frontLayerRef.length - 1];
   }
 
   /**
@@ -121,7 +128,7 @@ export abstract class _BackdropBase<C extends _FrontLayerContainerBase> {
    * @returns The overlay configuration.
    */
   private _getOverlayConfig(frontLayerConfig: FrontLayerConfig): OverlayConfig {
-    let top = frontLayerConfig.elevation ? `calc(${this.getOpenedFrontLayer()?._config.top} + ${frontLayerConfig.top})` : frontLayerConfig.top;
+    let top = frontLayerConfig.popover ? `calc(${this.getOpenedFrontLayer()?._config.top} + ${frontLayerConfig.top})` : frontLayerConfig.top;
 
     let _config = new OverlayConfig({
       width: '100%',
@@ -130,7 +137,7 @@ export abstract class _BackdropBase<C extends _FrontLayerContainerBase> {
       scrollStrategy: this._overlay.scrollStrategies.block()
     });
 
-    if (frontLayerConfig.elevation) {
+    if (frontLayerConfig.popover) {
       _config.hasBackdrop = true;
       _config.backdropClass = 'cdk-overlay-transparent-backdrop';
     }
@@ -207,7 +214,7 @@ export abstract class _BackdropBase<C extends _FrontLayerContainerBase> {
    * Finds the current opened front-layer.
    */
   getOpenedFrontLayer(): FrontLayerRef<any> | undefined {
-    return this._frontLayerRef;
+    return this._getFrontlayer();
   }
 
 }
