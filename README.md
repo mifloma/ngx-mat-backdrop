@@ -196,17 +196,54 @@ onOpenCustomers() {
 }
 ```
 
-#### Popups
+#### Popover
 
-Like demonstrated in the [Crane Case Study](https://material.io/design/material-studies/crane.html), `MatBackdrop` can show up a second `Frontlayer` as a popover. The popover works like a `MatDialog` and freezes all underlaying layers. Use this kind of navigation if you want to show some extra information to the user:
+Like demonstrated in the [Crane Case Study](https://material.io/design/material-studies/crane.html), `MatBackdrop` can show up a second `Frontlayer` as a popover. The popover works like a `MatDialog` and freezes all underlaying layers. Use this kind of navigation if you want to show some extra information to the user:  
+
+You can show a `<ng-template>` or a component on the popover `Frontlayer`:  
+
+```html
+<ng-template #picture>
+    <h2 mat-frontlayer-title>{{ product.name }}</h2>
+    <mat-frontlayer-content>
+      <img src="'{{ product.picture }}'">
+    </mat-frontlayer-content>
+</ng-template>
+```
+
+Next, inject the `TemplateRef` and launch it on a new `Frontlayer`. With the configuration property `popover` you can force `MatBackdrop` to open a second `Frontlayer`:
 
 ```typescript
+@ViewChild('picture', { read: TemplateRef })
+  _pictureTemplate!: TemplateRef<any>;
+
+...
+
 onOpenProductPricture() {
-  this._backdrop.open(productPrictureTemplate, { elevation: true });
+  this._backdrop.open(_pictureTemplate, { popup: true });
 }
 ```
 
 __ProTip:__ A good workflow could be product-list-view (parent) -> product-details-view (child) -> product-picture (popover)
+
+#### Close Popover
+
+The `<mat-frontlayer-close>`-Directive enriches a user defined button with the ability to close a popover `Frontlayer`:
+
+```html
+<ng-template #picture>
+    <div mat-frontlayer-title>
+        <h2>{{ product.name }}</h2>
+        <div style="flex: 1 1 auto"></div>
+        <button mat-frontlayer-close>
+            <mat-icon>expand_more</mat-icon>
+        </button>
+    </div>
+    <mat-frontlayer-content>
+      <img src="'{{ product.picture }}'">
+    </mat-frontlayer-content>
+</ng-template>
+```
 
 ### Angular Routing between (lazy loading) modules
 

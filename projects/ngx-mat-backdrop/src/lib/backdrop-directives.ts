@@ -1,10 +1,10 @@
-import { AfterViewInit, Component, Directive, EventEmitter, Input, OnDestroy, OnInit, Output, TemplateRef, ViewChild } from "@angular/core";
-import { FrontLayerConfig } from "./front-layer-config";
-import { merge, Subscription } from "rxjs";
+import { AfterViewInit, Component, Directive, EventEmitter, Input, OnInit, Output, TemplateRef, ViewChild } from "@angular/core";
+import { merge } from "rxjs";
 import { delay, take } from "rxjs/operators";
 import { Backdrop } from "./backdrop";
-import { FrontLayerRef, FrontLayerState } from "./front-layer-ref";
 import { BackdropAnimations } from "./backdrop-animations";
+import { FrontLayerConfig } from "./front-layer-config";
+import { FrontLayerRef, FrontLayerState } from "./front-layer-ref";
 
 @Component({
     selector: 'mat-backdrop',

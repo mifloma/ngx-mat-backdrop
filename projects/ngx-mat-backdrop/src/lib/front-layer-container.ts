@@ -94,7 +94,7 @@ export abstract class _FrontLayerContainerBase extends BasePortalOutlet {
   ],
   host: {
     'class': 'mat-frontlayer-container',
-    '[class.mat-frontlayer-container-elevation]': '_config.elevation',
+    '[class.mat-frontlayer-container-popover]': '_config.popover',
     '[class.mat-frontlayer-container-transparency]': '_config.transparent',
     '[@frontLayerContainer]': '_state',
     '(@frontLayerContainer.start)': '_onAnimationStart($event)',
