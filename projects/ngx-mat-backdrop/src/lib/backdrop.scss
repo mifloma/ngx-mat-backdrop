@@ -127,6 +127,35 @@ div.mat-frontlayer-title {
   }
 }
 
+.mat-frontlayer-actions {
+  padding-top: 8px;
+  display: flex;
+  flex-wrap: wrap;
+  // min-height: 52px;
+  align-items: center;
+
+  // Explicitly set a box-sizing since people commonly set `border-box`
+  // on all elements which will break the height of the dialog actions.
+  box-sizing: content-box;
+
+  margin-bottom: 8px;
+
+  &.mat-frontlayer-actions-align-center,
+  &[align='center'] {
+    justify-content: center;
+  }
+
+  &.mat-frontlayer-actions-align-end,
+  &[align='end'] {
+    justify-content: flex-end;
+  }
+
+  .mat-button-base+.mat-button-base,
+  .mat-mdc-button-base+.mat-mdc-button-base {
+    margin-left: 8px;
+  }
+}
+
 .mat-backlayer {
   width: 100%;
   height: 100%;

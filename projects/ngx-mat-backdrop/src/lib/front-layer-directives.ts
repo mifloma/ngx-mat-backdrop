@@ -36,6 +36,22 @@ export class MatFrontlayerContent {
 })
 export class MatFrontlayerTitle { }
 
+@Directive({
+    selector: `[mat-frontlayer-actions], mat-frontlayer-actions, [matFrontlayerActions]`,
+    host: {
+        'class': 'mat-frontlayer-actions',
+        '[class.mat-frontlayer-actions-align-center]': 'align === "center"',
+        '[class.mat-frontlayer-actions-align-end]': 'align === "end"',
+    }
+})
+export class MatFrontlayerActions {
+
+    /**
+    * Horizontal alignment of action buttons.
+    */
+    @Input() align?: 'start' | 'center' | 'end' = 'start';
+}
+
 @Component({
     selector: 'button[mat-frontlayer-drop], button[matFrontlayerDrop]',
     template: `

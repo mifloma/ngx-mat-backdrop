@@ -82,6 +82,7 @@ The most basic `Backdrop` needs only three elements: The `Backdrop-Container`, a
 | `<mat-backlayer-content>` | `Backlayer` content section, hidden by the `Frontlayer`. This section gets revealed due to a user action |
 | `<mat-frontlayer-title>` | Sticky `Frontlayer` title |
 | `<mat-frontlayer-content>` | Scrollable content of the `Frontlayer` |
+| `<mat-frontlayer-actions>`| Sticky container for action buttons at the bottom of the `Frontlayer` |
 
 ### Backlayer title
 
@@ -174,6 +175,23 @@ The `<mat-frontlayer-drop>`-Directive enriches a user defined button with the ab
 The `[offset]`-Parameter defines the new position of the `Frontlayer` after button click. If you give this parameter the value `'full'` the `Backlayer` gets fully revealed, means the `Frontlayer` moves to the bottom of the viewport.
 
 __ProTip:__ You can combine `<mat-frontlayer-drop>` with `<mat-backlayer-toggle>` or `<mat-backlayer-close>`.
+
+### Frontlayer actions
+
+Sticky container for action buttons at the bottom of the `Frontlayer`. Button alignment can be controlled via the `align` attribute which can be set to `end` and `center`:
+
+```html
+<mat-frontlayer #frontlayer>
+  <h2 mat-frontlayer-title>Subtitle</h2>
+  <mat-frontlayer-content>
+    ...
+  </mat-frontlayer-content>
+  <mat-frontlayer-actions>
+    <button mat-button (click)="onNext()">previous</button>
+    <button mat-button (click)="onPrev()">next</button>
+  </mat-frontlayer-actions>
+</mat-frontlayer>
+```
 
 ### Navigation
 

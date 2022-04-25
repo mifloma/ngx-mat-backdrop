@@ -1,6 +1,6 @@
 <mat-backdrop [matBackdropTriggerFor]="frontLayer">
 
-    <mat-backlayer [color]="backlayerColor">
+    <mat-backlayer [color]="settings.backlayerColor">
         <mat-backlayer-title>
             <button mat-backlayer-toggle [offset]="'250px'" (close)="onClose()">
                 <mat-icon>menu</mat-icon>
@@ -20,13 +20,7 @@
                 </mat-form-field>
             </div>
             <mat-divider class="divider"></mat-divider>
-            <div>
-                <label>Pick the Backlayer Color:</label>
-                <mat-radio-group class="example-radio-group" [(ngModel)]="backlayerColor">
-                    <mat-radio-button class="example-radio-button" [value]="'primary'">Primary</mat-radio-button>
-                    <mat-radio-button class="example-radio-button" [value]="'accent'">Accent</mat-radio-button>
-                </mat-radio-group>
-            </div>
+            <app-settings></app-settings>
         </mat-backlayer-content>
     </mat-backlayer>
 
@@ -53,14 +47,3 @@
     </mat-frontlayer>
 
 </mat-backdrop>
-
-<ng-template #popover>
-    <div mat-frontlayer-title>
-        <h2>test</h2>
-        <div style="flex: 1 1 auto"></div>
-        <button mat-frontlayer-close>
-            <mat-icon>expand_more</mat-icon>
-        </button>
-    </div>
-    <mat-frontlayer-content>test</mat-frontlayer-content>
-</ng-template>

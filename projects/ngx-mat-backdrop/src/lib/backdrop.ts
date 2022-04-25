@@ -65,20 +65,20 @@ export abstract class _BackdropBase<C extends _FrontLayerContainerBase> {
     let _config = config ? FrontLayerConfig.merge(config) : new FrontLayerConfig();
 
     if (this._frontLayerRef.length > 0 && _config.popover === false) {
-      this._getFrontlayer()._containerInstance._animationStateChanged.pipe(
+      this._getClosestFrontlayer()._containerInstance._animationStateChanged.pipe(
         filter(event => event.state === 'fading')
       ).subscribe(() => {
-        this._getFrontlayer()._containerInstance.detach();
-        this._attachFrontLayerContent(componentOrTemplateRef, this._getFrontlayer());
+        this._getClosestFrontlayer()._containerInstance.detach();
+        this._attachFrontLayerContent(componentOrTemplateRef, this._getClosestFrontlayer());
 
-        this._getFrontlayer()._config = _config;
-        this._getFrontlayer().updatePosition(_config.top!);
+        this._getClosestFrontlayer()._config = _config;
+        this._getClosestFrontlayer().updatePosition(_config.top!);
 
         this._afterContentChanged.next();
       });
 
-      this._getFrontlayer()._containerInstance._startFadingAnimation();
-      return this._getFrontlayer();
+      this._getClosestFrontlayer()._containerInstance._startFadingAnimation();
+      return this._getClosestFrontlayer();
     }
 
     const overlayRef = this._createOverlay(_config);
@@ -90,7 +90,7 @@ export abstract class _BackdropBase<C extends _FrontLayerContainerBase> {
       if (frontLayerAnimationEvent.state === 'opened') {
         this._afterOpened.next();
       } else if (frontLayerAnimationEvent.state === 'closing') {
-        if (this._getFrontlayer()._config.popover === false) {
+        if (this._getClosestFrontlayer()._config.popover === false) {
           this._beforeClosed.next();
         }
         animationStateSubscription.unsubscribe();
@@ -110,7 +110,11 @@ export abstract class _BackdropBase<C extends _FrontLayerContainerBase> {
     return _frontLayerRef;
   }
 
-  private _getFrontlayer(): FrontLayerRef<any> {
+  /**
+   * Finds the closest FrontLayerRef by looking at the internal stack of layers.
+   * @returns A FrontLayerRef
+   */
+  private _getClosestFrontlayer(): FrontLayerRef<any> {
     return this._frontLayerRef[this._frontLayerRef.length - 1];
   }
 
@@ -214,7 +218,7 @@ export abstract class _BackdropBase<C extends _FrontLayerContainerBase> {
    * Finds the current opened front-layer.
    */
   getOpenedFrontLayer(): FrontLayerRef<any> | undefined {
-    return this._getFrontlayer();
+    return this._getClosestFrontlayer();
   }
 
 }

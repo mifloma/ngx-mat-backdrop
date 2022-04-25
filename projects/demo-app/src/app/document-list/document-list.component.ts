@@ -1,9 +1,10 @@
 
-import { AfterViewInit, Component, ElementRef, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Backdrop } from 'ngx-mat-backdrop';
 import { BehaviorSubject, combineLatest, map, Observable, startWith } from 'rxjs';
+import { SettingsService } from '../settings/settings.service';
 
 export interface Document {
   title: string,
@@ -30,9 +31,6 @@ const ITEMS: Document[] = [
 })
 export class DocumentListComponent implements AfterViewInit {
 
-  @ViewChild('popover', { read: TemplateRef })
-  _popover!: TemplateRef<any>;
-
   @ViewChild('searchInput')
   searchInput!: ElementRef;
 
@@ -42,12 +40,12 @@ export class DocumentListComponent implements AfterViewInit {
   public filter: FormControl;
   public filteredDocuments$: Observable<Document[]>;
 
-  backlayerColor: 'primary' | 'accent' = 'primary';
   settingsOpened: boolean = false;
 
   constructor(
     private _router: Router,
-    private _backdrop: Backdrop
+    private _backdrop: Backdrop,
+    public settings: SettingsService
   ) {
     this.filter = new FormControl('');
     this._filter$ = this.filter.valueChanges.pipe(startWith(''));
@@ -69,12 +67,7 @@ export class DocumentListComponent implements AfterViewInit {
   }
 
   onOpenItem(document: Document) {
-    // this._router.navigate(['details']);
-    this._backdrop.open(this._popover, {
-      id: 'concept-list',
-      top: '56px',
-      popover: true
-    })
+    this._router.navigate(['details']);
   }
 
   onClose() {
