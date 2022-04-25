@@ -82,6 +82,7 @@ The most basic `Backdrop` needs only three elements: The `Backdrop-Container`, a
 | `<mat-backlayer-content>` | `Backlayer` content section, hidden by the `Frontlayer`. This section gets revealed due to a user action |
 | `<mat-frontlayer-title>` | Sticky `Frontlayer` title |
 | `<mat-frontlayer-content>` | Scrollable content of the `Frontlayer` |
+| `<mat-frontlayer-actions>`| Sticky container for action buttons at the bottom of the `Frontlayer` |
 
 ### Backlayer title
 
@@ -175,6 +176,23 @@ The `[offset]`-Parameter defines the new position of the `Frontlayer` after butt
 
 __ProTip:__ You can combine `<mat-frontlayer-drop>` with `<mat-backlayer-toggle>` or `<mat-backlayer-close>`.
 
+### Frontlayer actions
+
+Sticky container for action buttons at the bottom of the `Frontlayer`. Button alignment can be controlled via the `align` attribute which can be set to `end` and `center`:
+
+```html
+<mat-frontlayer #frontlayer>
+  <h2 mat-frontlayer-title>Subtitle</h2>
+  <mat-frontlayer-content>
+    ...
+  </mat-frontlayer-content>
+  <mat-frontlayer-actions>
+    <button mat-button (click)="onNext()">previous</button>
+    <button mat-button (click)="onPrev()">next</button>
+  </mat-frontlayer-actions>
+</mat-frontlayer>
+```
+
 ### Navigation
 
 To support common browser functions, `MatBackdrop` navigation is based on Angular Routing. A `Frontlayer` is a global, static overlay element that can be used across page switches.
@@ -220,7 +238,7 @@ Next, inject the `TemplateRef` and launch it on a new `Frontlayer`. With the con
 ...
 
 onOpenProductPricture() {
-  this._backdrop.open(_pictureTemplate, { top: '56px', popup: true });
+  this._backdrop.open(_pictureTemplate, { popup: true });
 }
 ```
 

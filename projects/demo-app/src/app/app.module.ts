@@ -17,6 +17,7 @@ import { DocumentDetailsComponent } from './document-details/document-details.co
 import { RouterModule, Routes } from '@angular/router';
 import { DocumentListComponent } from './document-list/document-list.component';
 import { MatRippleModule } from '@angular/material/core';
+import { SettingsComponent } from './settings/settings.component';
 
 const routes: Routes = [
   { path: '', component: DocumentListComponent },
@@ -28,7 +29,8 @@ const routes: Routes = [
     AppComponent,
     ItemDetailsComponent,
     DocumentDetailsComponent,
-    DocumentListComponent
+    DocumentListComponent,
+    SettingsComponent
   ],
   imports: [
     BrowserModule,
