@@ -1,16 +1,54 @@
-import { AfterViewInit, Component, Directive, EventEmitter, Input, OnInit, Output, TemplateRef, ViewChild } from "@angular/core";
+import { AfterViewInit, Component, ContentChild, Directive, EventEmitter, Input, OnInit, Output, TemplateRef, ViewChild } from "@angular/core";
 import { merge } from "rxjs";
 import { delay, take } from "rxjs/operators";
 import { Backdrop } from "./backdrop";
 import { BackdropAnimations } from "./backdrop-animations";
 import { FrontLayerConfig } from "./front-layer-config";
+import { MatFrontlayerGroup } from "./front-layer-directives";
 import { FrontLayerRef, FrontLayerState } from "./front-layer-ref";
+
+@Component({
+    selector: 'mat-frontlayer',
+    template: `<ng-template><ng-content></ng-content></ng-template>`
+})
+export class MatFrontlayer {
+    @ViewChild(TemplateRef) templateRef!: TemplateRef<any>;
+    @Input() name!: string;
+    @Input() topPosition!: string;
+}
 
 @Component({
     selector: 'mat-backdrop',
     template: `<ng-content select="mat-backlayer"></ng-content>`,
 })
-export class MatBackdrop { }
+export class MatBackdrop implements AfterViewInit {
+
+    // @ContentChild(MatFrontlayer) _frontlayer!: MatFrontlayer;
+    @ContentChild(MatFrontlayerGroup) _frontlayerGroup!: MatFrontlayerGroup;
+
+    constructor(
+        private _backdrop: Backdrop
+    ) { }
+
+    ngAfterViewInit(): void {
+        let _config: FrontLayerConfig = new FrontLayerConfig();
+        let _frontLayerRefs = this._frontlayerGroup._allTabs.map(element => element.templateRef);
+        this._backdrop.openGroup(_frontLayerRefs, this._frontlayerGroup.active, _config);
+
+        // if (this._frontlayer?.templateRef) {
+        //     let _config: FrontLayerConfig = new FrontLayerConfig();
+
+        //     if (this._frontlayer.name) {
+        //         _config.id = this._frontlayer.name;
+        //     }
+        //     if (this._frontlayer.topPosition) {
+        //         _config.top = this._frontlayer.topPosition;
+        //     }
+
+        //     this._backdrop.open(this._frontlayer.templateRef, _config);
+        // }
+    }
+}
 
 @Directive({
     selector: `mat-backdrop[matBackdropTriggerFor], mat-backdrop[mat-backdrop-trigger-for]`,
@@ -18,14 +56,14 @@ export class MatBackdrop { }
 })
 export class MatBackdropTrigger implements AfterViewInit {
 
-    private _frontLayer: MatFrontlayer | null = null;
+    private _frontLayer: MatFrontlayer | MatFrontlayerGroup | null = null;
 
     /** References the front layer instance that the trigger is associated with. */
     @Input('matBackdropTriggerFor')
-    get frontLayer(): MatFrontlayer | null {
+    get frontLayer(): MatFrontlayer | MatFrontlayerGroup | null {
         return this._frontLayer;
     }
-    set frontLayer(frontLayer: MatFrontlayer | null) {
+    set frontLayer(frontLayer: MatFrontlayer | MatFrontlayerGroup | null) {
         this._frontLayer = frontLayer;
     }
 
@@ -34,17 +72,24 @@ export class MatBackdropTrigger implements AfterViewInit {
     ) { }
 
     ngAfterViewInit(): void {
-        if (this._frontLayer?.templateRef) {
-            let _config: FrontLayerConfig = new FrontLayerConfig();
+        // if (this._frontLayer instanceof MatFrontlayerGroup) {
+        //     let _config: FrontLayerConfig = new FrontLayerConfig();
+        //     let _frontLayerRefs = this._frontLayer._allTabs.map(element => element.templateRef);
+        //     this._backdrop.openGroup(_frontLayerRefs, this._frontLayer.active, _config);
+        // } else {
+        if (this._frontLayer instanceof MatFrontlayer) {
+            if (this._frontLayer?.templateRef) {
+                let _config: FrontLayerConfig = new FrontLayerConfig();
 
-            if (this._frontLayer.name) {
-                _config.id = this._frontLayer.name;
-            }
-            if (this._frontLayer.topPosition) {
-                _config.top = this._frontLayer.topPosition;
-            }
+                if (this._frontLayer.name) {
+                    _config.id = this._frontLayer.name;
+                }
+                if (this._frontLayer.topPosition) {
+                    _config.top = this._frontLayer.topPosition;
+                }
 
-            this._backdrop.open(this._frontLayer.templateRef, _config);
+                this._backdrop.open(this._frontLayer.templateRef, _config);
+            }
         }
     }
 }
@@ -102,16 +147,6 @@ export class MatBacklayerTitle { }
 export class MatBacklayerContent { }
 
 @Component({
-    selector: 'mat-frontlayer',
-    template: `<ng-template><ng-content></ng-content></ng-template>`
-})
-export class MatFrontlayer {
-    @ViewChild(TemplateRef) templateRef!: TemplateRef<any>;
-    @Input() name!: string;
-    @Input() topPosition!: string;
-}
-
-@Component({
     selector: 'button[mat-backlayer-toggle], button[matBacklayerToggle]',
     animations: [BackdropAnimations.backdropButton],
     template: `
@@ -154,6 +189,7 @@ export class MatBacklayerToggle implements OnInit {
         this._backdrop.afterOpened()
             .pipe(take(1))
             .subscribe(() => this._init());
+        this._backdrop.afterTabChanged().subscribe(() => this._init());
         this._backdrop.afterContentChanged()
             .pipe(take(1))
             .subscribe(() => this._init());
@@ -313,5 +349,27 @@ export class MatBacklayerMove implements OnInit {
             }
             this.move.emit();
         }
+    }
+}
+
+@Directive({
+    selector: 'button[mat-backlayer-switch-tab], button[matBacklayerSwitchTab]',
+    host: {
+        '(click)': '_onClick()'
+    }
+})
+export class MatBacklayerSwitchTab {
+
+    private _active!: number;
+
+    @Input('mat-backlayer-switch-tab')
+    set active(active: number) {
+        this._active = active;
+    }
+
+    constructor(private _backdrop: Backdrop) { }
+
+    _onClick(): void {
+        this._backdrop.getOpenFrontLayerGroup()?.switch(this._active);
     }
 }

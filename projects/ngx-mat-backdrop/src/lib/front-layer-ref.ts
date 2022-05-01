@@ -64,6 +64,50 @@ export class FrontLayerRef<T> {
         this._overlayWrapper = _overlayRef.hostElement;
     }
 
+    moveLeft() {
+        this._overlayRef.overlayElement.style.animation = 'none'; // remove last animation
+        void this._overlayRef.overlayElement.offsetHeight; // trigger DOM reflow
+        this._overlayRef.overlayElement.style.animation = null!;
+
+        this._overlayRef.overlayElement.style.setProperty('--s', '0');
+        this._overlayRef.overlayElement.style.setProperty('--e', '-110%');
+        this._overlayRef.overlayElement.style.animation = `translate ${AnimationDurations.ENTERING} ${AnimationCurves.STANDARD_CURVE}`;
+        this._overlayRef.overlayElement.style.transform = 'translateX(-110%)';
+    }
+
+    centerFromRight() {
+        this._overlayRef.overlayElement.style.animation = 'none'; // remove last animation
+        void this._overlayRef.overlayElement.offsetHeight; // trigger DOM reflow
+        this._overlayRef.overlayElement.style.animation = null!;
+
+        this._overlayRef.overlayElement.style.setProperty('--s', '110%');
+        this._overlayRef.overlayElement.style.setProperty('--e', '0');
+        this._overlayRef.overlayElement.style.animation = `translate ${AnimationDurations.ENTERING} ${AnimationCurves.STANDARD_CURVE}`;
+        this._overlayRef.overlayElement.style.transform = 'none';
+    }
+
+    centerFromLeft() {
+        this._overlayRef.overlayElement.style.animation = 'none'; // remove last animation
+        void this._overlayRef.overlayElement.offsetHeight; // trigger DOM reflow
+        this._overlayRef.overlayElement.style.animation = null!;
+
+        this._overlayRef.overlayElement.style.setProperty('--s', '-110%');
+        this._overlayRef.overlayElement.style.setProperty('--e', '0');
+        this._overlayRef.overlayElement.style.animation = `translate ${AnimationDurations.ENTERING} ${AnimationCurves.STANDARD_CURVE}`;
+        this._overlayRef.overlayElement.style.transform = 'none';
+    }
+
+    moveRight() {
+        this._overlayRef.overlayElement.style.animation = 'none'; // remove last animation
+        void this._overlayRef.overlayElement.offsetHeight; // trigger DOM reflow
+        this._overlayRef.overlayElement.style.animation = null!;
+
+        this._overlayRef.overlayElement.style.setProperty('--s', '0');
+        this._overlayRef.overlayElement.style.setProperty('--e', '110%');
+        this._overlayRef.overlayElement.style.animation = `translate ${AnimationDurations.ENTERING} ${AnimationCurves.STANDARD_CURVE}`;
+        this._overlayRef.overlayElement.style.transform = 'translateX(110%)';
+    }
+
     /**
      * Move the front-layer by the specified offset
      * @param offset The distance by which the plane is to be moved

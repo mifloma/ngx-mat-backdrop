@@ -3,9 +3,9 @@ import { PortalModule } from '@angular/cdk/portal';
 import { CommonModule } from '@angular/common';
 import { ModuleWithProviders, NgModule } from '@angular/core';
 import { Backdrop } from './backdrop';
-import { MatBackdrop, MatBackdropTrigger, MatBacklayer, MatBacklayerClose, MatBacklayerContent, MatBacklayerMove, MatBacklayerTitle, MatBacklayerToggle, MatFrontlayer } from './backdrop-directives';
+import { MatBackdrop, MatBackdropTrigger, MatBacklayer, MatBacklayerClose, MatBacklayerContent, MatBacklayerMove, MatBacklayerSwitchTab, MatBacklayerTitle, MatBacklayerToggle, MatFrontlayer } from './backdrop-directives';
 import { MatFrontLayerContainer } from './front-layer-container';
-import { MatFrontlayerActions, MatFrontLayerClose, MatFrontlayerContent, MatFrontlayerDrop, MatFrontlayerTitle } from './front-layer-directives';
+import { MatFrontlayerActions, MatFrontLayerClose, MatFrontlayerContent, MatFrontlayerDrop, MatFrontlayerGroup, MatFrontlayerTitle } from './front-layer-directives';
 
 
 @NgModule({
@@ -17,8 +17,10 @@ import { MatFrontlayerActions, MatFrontLayerClose, MatFrontlayerContent, MatFron
     MatBacklayerToggle,
     MatBacklayerClose,
     MatBacklayerMove,
+    MatBacklayerSwitchTab,
     MatBacklayerContent,
     MatFrontlayer,
+    MatFrontlayerGroup,
     MatFrontLayerContainer,
     MatFrontlayerContent,
     MatFrontlayerTitle,
@@ -38,12 +40,14 @@ import { MatFrontlayerActions, MatFrontLayerClose, MatFrontlayerContent, MatFron
     MatBacklayerToggle,
     MatBacklayerClose,
     MatBacklayerMove,
+    MatBacklayerSwitchTab,
     MatBacklayerContent,
     MatFrontlayerContent,
     MatFrontlayerTitle,
     MatFrontlayerActions,
     MatBackdrop,
     MatFrontlayer,
+    MatFrontlayerGroup,
     MatFrontlayerDrop,
     MatFrontLayerClose
   ]

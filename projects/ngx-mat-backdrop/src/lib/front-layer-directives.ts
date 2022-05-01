@@ -1,6 +1,7 @@
-import { Component, Directive, EventEmitter, Input, OnInit, Output } from "@angular/core";
+import { AfterContentInit, AfterViewInit, Component, ContentChild, ContentChildren, Directive, EventEmitter, Input, OnInit, Output, QueryList, TemplateRef, ViewChild, ViewChildren } from "@angular/core";
 import { take } from "rxjs";
 import { Backdrop } from "./backdrop";
+import { MatFrontlayer } from "./backdrop-directives";
 
 /**
  * Scrollable content container of a front-layer.
@@ -122,4 +123,13 @@ export class MatFrontLayerClose {
             _frontLayerRef.close();
         }
     }
+}
+
+@Component({
+    selector: 'mat-frontlayer-group',
+    template: `<ng-content></ng-content>`
+})
+export class MatFrontlayerGroup {
+    @ContentChildren(MatFrontlayer, { descendants: true }) _allTabs!: QueryList<MatFrontlayer>;
+    @Input() active: number = 0;
 }
