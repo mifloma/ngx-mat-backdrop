@@ -26,7 +26,7 @@ export function throwNoFrontLayerContentAttachedError() {
 @Directive()
 export abstract class _FrontLayerContainerBase extends BasePortalOutlet {
 
-  /** Starts the front-layer exit animation. */
+  /** Starts the front-layer exit animation */
   abstract _startExitAnimation(): void;
 
   /** Starts the front-layer drop animation  **/
@@ -35,6 +35,7 @@ export abstract class _FrontLayerContainerBase extends BasePortalOutlet {
   /** Starts the front-layer fading animation (fade out)  **/
   abstract _startFadingAnimation(): void;
 
+  /** Starts the frontlayer enter animation */
   abstract _startEnterAnimation(): void;
 
   /** Emits when an animation state changes. */

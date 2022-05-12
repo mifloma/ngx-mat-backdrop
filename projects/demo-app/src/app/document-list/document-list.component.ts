@@ -1,8 +1,8 @@
 
-import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ContentChild, ElementRef, TemplateRef, ViewChild } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { Router } from '@angular/router';
-import { Backdrop } from 'ngx-mat-backdrop';
+import { Backdrop, FrontLayerGroupRef, MatFrontlayerGroup } from 'ngx-mat-backdrop';
 import { BehaviorSubject, combineLatest, map, Observable, startWith } from 'rxjs';
 import { SettingsService } from '../settings/settings.service';
 
@@ -31,6 +31,18 @@ const ITEMS: Document[] = [
 })
 export class DocumentListComponent implements AfterViewInit {
 
+  // @ViewChild('frontlayerTabs', { read: MatFrontlayerGroup, static: true })
+  // _frontlayerGroup!: MatFrontlayerGroup;
+
+  // @ViewChild('frontlayer1', { read: TemplateRef })
+  // _frontlayer1!: TemplateRef<any>;
+
+  // @ViewChild('frontlayer2', { read: TemplateRef })
+  // _frontlayer2!: TemplateRef<any>;
+
+  // @ViewChild('frontlayer3', { read: TemplateRef })
+  // _frontlayer3!: TemplateRef<any>;
+
   @ViewChild('searchInput')
   searchInput!: ElementRef;
 
@@ -41,6 +53,7 @@ export class DocumentListComponent implements AfterViewInit {
   public filteredDocuments$: Observable<Document[]>;
 
   settingsOpened: boolean = false;
+  private _group!: FrontLayerGroupRef;
 
   constructor(
     private _router: Router,
@@ -57,10 +70,23 @@ export class DocumentListComponent implements AfterViewInit {
     );
   }
 
+  // toggle() {
+  //   if (this._group) {
+  //     this._group.close();
+  //     this._group = null!;
+  //   } else {
+  //     this._group = this._backdrop.openGroup(this._frontlayerGroup._allTabs.map(element => element.templateRef), 1);
+  //   }
+  // }
+
   ngAfterViewInit(): void {
     this._backdrop.getOpenedFrontLayer()?.afterDroped()
       .subscribe(() => this.searchInput.nativeElement.focus());
   }
+
+  // openPopover() {
+  //   this._backdrop.open(this._frontlayer3, { popover: true });
+  // }
 
   onOpenSettings(): void {
     this.settingsOpened = true;

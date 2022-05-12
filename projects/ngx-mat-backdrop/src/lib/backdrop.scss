@@ -75,6 +75,16 @@ $padding: 16px;
   }
 }
 
+@keyframes move-horizontal {
+  from {
+    transform: translateX(var(--s, 0));
+  }
+
+  to {
+    transform: translateX(var(--e, -110%));
+  }
+}
+
 .mat-frontlayer-content {
   margin: 0 $padding * -1;
   padding: 0 $padding $padding $padding;

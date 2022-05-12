@@ -1,10 +1,21 @@
-import { AfterViewInit, Component, Directive, EventEmitter, Input, OnInit, Output, TemplateRef, ViewChild } from "@angular/core";
+import { AfterViewInit, Component, ContentChild, Directive, EventEmitter, Input, OnInit, Output, TemplateRef, ViewChild } from "@angular/core";
 import { merge } from "rxjs";
 import { delay, take } from "rxjs/operators";
 import { Backdrop } from "./backdrop";
 import { BackdropAnimations } from "./backdrop-animations";
 import { FrontLayerConfig } from "./front-layer-config";
+import { MatFrontlayerGroup } from "./front-layer-directives";
 import { FrontLayerRef, FrontLayerState } from "./front-layer-ref";
+
+@Component({
+    selector: 'mat-frontlayer',
+    template: `<ng-template><ng-content></ng-content></ng-template>`
+})
+export class MatFrontlayer {
+    @ViewChild(TemplateRef) templateRef!: TemplateRef<any>;
+    @Input() name!: string;
+    @Input() topPosition!: string;
+}
 
 @Component({
     selector: 'mat-backdrop',
@@ -34,6 +45,12 @@ export class MatBackdropTrigger implements AfterViewInit {
     ) { }
 
     ngAfterViewInit(): void {
+        // if (this._frontLayer instanceof MatFrontlayerGroup) {
+        //     let _config: FrontLayerConfig = new FrontLayerConfig();
+        //     let _frontLayerRefs = this._frontLayer._allTabs.map(element => element.templateRef);
+        //     this._backdrop.openGroup(_frontLayerRefs, this._frontLayer.active, _config);
+        // } else {
+        // if (this._frontLayer instanceof MatFrontlayer) {
         if (this._frontLayer?.templateRef) {
             let _config: FrontLayerConfig = new FrontLayerConfig();
 
@@ -46,6 +63,7 @@ export class MatBackdropTrigger implements AfterViewInit {
 
             this._backdrop.open(this._frontLayer.templateRef, _config);
         }
+        // }
     }
 }
 
@@ -65,18 +83,27 @@ export class MatBackdropTrigger implements AfterViewInit {
 export class MatBacklayer implements OnInit {
 
     showContextMenu: boolean = false;
+    private _frontlayer!: FrontLayerRef<any>;
 
     constructor(
         private _backdrop: Backdrop
     ) {
         // force refreshing UI in a seperate thread with delay() to avoid 'Expression has changed after it was checked' error
-        merge(this._backdrop.afterOpened(), this._backdrop.afterContentChanged())
-            .pipe(delay(0), take(1))
-            .subscribe(() => this.showContextMenu = true);
+        // merge(this._backdrop.afterOpened(), this._backdrop.afterContentChanged())
+        //     .pipe(delay(0), take(1))
+        //     .subscribe(() => this.showContextMenu = true);
 
-        this._backdrop.beforeClosed()
-            .pipe(take(1))
-            .subscribe(() => this.showContextMenu = false);
+        // this._backdrop.beforeClosed()
+        //     .pipe(take(1))
+        //     .subscribe(() => this.showContextMenu = false);
+
+        merge(this._backdrop.afterOpened(), this._backdrop.afterContentChanged(), this._backdrop.afterTabChanged())
+            .pipe(delay(0))
+            .subscribe(() => {
+                let _frontlayer = this._backdrop.getOpenedFrontLayer();
+                _frontlayer?.beforeDroped().subscribe(() => this.showContextMenu = true);
+                _frontlayer?.afterLift().subscribe(() => this.showContextMenu = false);
+            });
     }
 
     ngOnInit(): void {
@@ -100,16 +127,6 @@ export class MatBacklayerTitle { }
     host: { 'class': 'mat-backlayer-content' }
 })
 export class MatBacklayerContent { }
-
-@Component({
-    selector: 'mat-frontlayer',
-    template: `<ng-template><ng-content></ng-content></ng-template>`
-})
-export class MatFrontlayer {
-    @ViewChild(TemplateRef) templateRef!: TemplateRef<any>;
-    @Input() name!: string;
-    @Input() topPosition!: string;
-}
 
 @Component({
     selector: 'button[mat-backlayer-toggle], button[matBacklayerToggle]',
@@ -154,6 +171,7 @@ export class MatBacklayerToggle implements OnInit {
         this._backdrop.afterOpened()
             .pipe(take(1))
             .subscribe(() => this._init());
+        this._backdrop.afterTabChanged().subscribe(() => this._init());
         this._backdrop.afterContentChanged()
             .pipe(take(1))
             .subscribe(() => this._init());
@@ -231,6 +249,7 @@ export class MatBacklayerToggle implements OnInit {
 export class MatBacklayerClose implements OnInit {
 
     @Output() close: EventEmitter<void> = new EventEmitter<void>();
+    @Output() default: EventEmitter<void> = new EventEmitter<void>();
 
     _state: 'void' | 'opened' = 'void';
 
@@ -276,6 +295,8 @@ export class MatBacklayerClose implements OnInit {
     _onClick(): void {
         if (this._state === 'opened') {
             this._frontLayerRef?.lift();
+        } else {
+            this.default.emit();
         }
     }
 }
@@ -313,5 +334,27 @@ export class MatBacklayerMove implements OnInit {
             }
             this.move.emit();
         }
+    }
+}
+
+@Directive({
+    selector: 'button[mat-backlayer-switch-tab], button[matBacklayerSwitchTab]',
+    host: {
+        '(click)': '_onClick()'
+    }
+})
+export class MatBacklayerSwitchTab {
+
+    private _active!: number;
+
+    @Input('mat-backlayer-switch-tab')
+    set active(active: number) {
+        this._active = active;
+    }
+
+    constructor(private _backdrop: Backdrop) { }
+
+    _onClick(): void {
+        this._backdrop.getOpenFrontLayerGroup()?.switch(this._active);
     }
 }

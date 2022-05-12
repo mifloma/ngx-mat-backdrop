@@ -7,4 +7,5 @@ export * from './lib/backdrop-directives';
 export * from './lib/front-layer-config';
 export * from './lib/front-layer-directives';
 export * from './lib/front-layer-ref';
+export * from './lib/front-layer-group-ref';
 export { BackdropAnimations } from './lib/backdrop-animations';

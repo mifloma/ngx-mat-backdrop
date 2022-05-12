@@ -1,6 +1,6 @@
-import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { Component, TemplateRef, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
-import { Backdrop, FrontLayerState, MatFrontlayer } from 'ngx-mat-backdrop';
+import { Backdrop } from 'ngx-mat-backdrop';
 import { SettingsService } from '../settings/settings.service';
 
 @Component({
@@ -37,10 +37,7 @@ export class DocumentDetailsComponent {
   }
 
   onBack() {
-    let _frontLayer = this._backdrop.getOpenedFrontLayer();
-    if (_frontLayer?.getState() !== FrontLayerState.DROPED) {
-      this._router.navigate(['']);
-    }
+    this._router.navigate(['']);
   }
 
 }

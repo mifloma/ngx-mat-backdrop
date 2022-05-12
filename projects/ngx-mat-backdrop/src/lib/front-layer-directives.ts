@@ -1,6 +1,7 @@
-import { Component, Directive, EventEmitter, Input, OnInit, Output } from "@angular/core";
+import { Component, ContentChildren, Directive, EventEmitter, Input, OnInit, Output, QueryList } from "@angular/core";
 import { take } from "rxjs";
 import { Backdrop } from "./backdrop";
+import { MatFrontlayer } from "./backdrop-directives";
 
 /**
  * Scrollable content container of a front-layer.
@@ -8,7 +9,7 @@ import { Backdrop } from "./backdrop";
 @Component({
     selector: `[mat-frontlayer-content], mat-frontlayer-content, [matFrontLayerContent]`,
     template: `
-        <div class="mat-frontlayer-content-divider" *ngIf="_scrolling"></div>
+        <div class="mat-frontlayer-content-divider" *ngIf="showDividerOnScroll && _scrolling"></div>
         <ng-content></ng-content>
     `,
     host: {
@@ -17,6 +18,8 @@ import { Backdrop } from "./backdrop";
     }
 })
 export class MatFrontlayerContent {
+
+    @Input() showDividerOnScroll: boolean = true;
 
     _scrolling: boolean = false;
 
@@ -122,4 +125,13 @@ export class MatFrontLayerClose {
             _frontLayerRef.close();
         }
     }
+}
+
+@Component({
+    selector: 'mat-frontlayer-group',
+    template: `<ng-content></ng-content>`
+})
+export class MatFrontlayerGroup {
+    @ContentChildren(MatFrontlayer, { descendants: true }) _allTabs!: QueryList<MatFrontlayer>;
+    @Input() active: number = 0;
 }

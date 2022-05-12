@@ -92,11 +92,14 @@ The most basic `Backdrop` needs only three elements: The `Backdrop-Container`, a
 
 #### Backlayer close
 
-The `mat-backlayer-close`-Directive enriches a user defined button with the ability to conceal the `<mat-backlayer-content>`-section:
+The `<mat-backlayer-close>`-Directive enriches a user defined button with the ability to conceal the `<mat-backlayer-content>`-section. If `<mat-backlayer-content>`-section is not revealed the button triggers the user-defined default function. `<mat-backlayer-close>` defines two events:
+
+1. `close` - The button has been clicked while `<mat-backlayer-content>`-section was revealed
+2. `default` - The button has been clicked while `<mat-backlayer-content>`-section was NOT revealed. Execute your default functionality here.
 
 ```html
 <mat-backlayer-title>
-  <button mat-backlayer-close (click)="onOpenMenu()">
+  <button mat-backlayer-close (default)="onNavigateBack()" (close)="onAfterRevealing()">
     <mat-icon>menu</mat-icon>
   </button>
 </mat-backlayer-title>
@@ -288,4 +291,49 @@ export class CustomersModule { }
   imports: [ MatBackdropModule ]
 })
 export class ProductsModule { }
+```
+
+## Experimental
+
+### Peer navigation without routing
+
+With `<mat-frontlayer-group>` a frontlayer can contain multiple tabs like demonstrated in the [Crane Case Study](https://material.io/design/material-studies/crane.html). Each  The user can navigate between the tabs without leaving the current view:  
+
+```html
+<mat-frontlayer-group #frontlayerGroup>
+    <mat-frontlayer>
+        <!-- content of tab 1 -->
+    </mat-frontlayer>
+    <mat-frontlayer>
+        <!-- content of tab 2 -->
+    </mat-frontlayer>
+    <mat-frontlayer>
+        <!-- content of tab 3 -->
+    </mat-frontlayer>
+</mat-frontlayer-group>
+```
+
+You can create the `FrontlayerGroup` after the view has been initialized. You have to unwrap all tabs and open them as a group of `Frontlayer`. The second paramenter specifies the index of the default tab that gets focused first:  
+
+```typescript
+@ViewChild('frontlayerGroup', { read: MatFrontlayerGroup, static: true })
+private _frontlayerGroup!: MatFrontlayerGroup;
+
+ngAfterViewInit(): void {
+    this._backdrop.openGroup(this._frontlayerGroup._allTabs.map(tab => tab.templateRef), 1);
+}
+```
+
+#### Switch tab
+
+The `<mat-backlayer-switch-tab>`-Directive enriches a user defined button with the ability to switch between the tabs of a `Frontlayer Group`:  
+
+```html
+<mat-backlayer [color]="settings.backlayerColor">
+    <mat-backlayer-title>
+        <button mat-button [mat-backlayer-switch-tab]="0">Products</button>
+        <button mat-button [mat-backlayer-switch-tab]="1">Customers</button>
+        <button mat-button [mat-backlayer-switch-tab]="2">Delivery</button>
+    </mat-backlayer-title>
+</mat-backlayer>
 ```

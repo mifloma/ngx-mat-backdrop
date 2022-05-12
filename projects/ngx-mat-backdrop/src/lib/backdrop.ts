@@ -5,6 +5,7 @@ import { Observable, Subject } from 'rxjs';
 import { filter } from 'rxjs/operators';
 import { FrontLayerConfig } from './front-layer-config';
 import { MatFrontLayerContainer, _FrontLayerContainerBase } from './front-layer-container';
+import { FrontLayerGroupRef } from './front-layer-group-ref';
 import { FrontLayerRef } from './front-layer-ref';
 
 /**
@@ -14,6 +15,7 @@ import { FrontLayerRef } from './front-layer-ref';
 export abstract class _BackdropBase<C extends _FrontLayerContainerBase> {
 
   private _frontLayerRef: FrontLayerRef<any>[] = new Array<FrontLayerRef<any>>();
+  private _frontLayerGroupRef!: FrontLayerGroupRef;
 
   /** Subject for notifying the user that the frontlayer has finished opening. */
   private readonly _afterOpened = new Subject<void>();
@@ -23,6 +25,9 @@ export abstract class _BackdropBase<C extends _FrontLayerContainerBase> {
 
   /** Subject for notifiying the user that the content of the frontlayer has been replaced. */
   private readonly _afterContentChanged = new Subject<void>();
+
+  /** Subject for notifiying the user that the content of the frontlayer has been replaced. */
+  private readonly _afterTabChanged = new Subject<void>();
 
   /**
    * Gets an observable that is notified when the front-layer is finished opening.
@@ -43,6 +48,13 @@ export abstract class _BackdropBase<C extends _FrontLayerContainerBase> {
    */
   afterContentChanged(): Observable<void> {
     return this._afterContentChanged;
+  }
+
+  /**
+   * Gets an observable that is notified when the content the frontlayer has been changed.
+   */
+  afterTabChanged(): Observable<void> {
+    return this._afterTabChanged;
   }
 
   constructor(
@@ -108,6 +120,64 @@ export abstract class _BackdropBase<C extends _FrontLayerContainerBase> {
     );
 
     return _frontLayerRef;
+  }
+
+  openGroup<D = any>(templateRefs: TemplateRef<any>[], active: number, config?: FrontLayerConfig<D>): FrontLayerGroupRef {
+
+    console.warn('Caution: You are using an EXPERIMENTAL feature of ngx-mat-backdrop.');
+
+    let _frontlayers = new Array<FrontLayerRef<any>>();
+    let _config = config ? FrontLayerConfig.merge(config) : new FrontLayerConfig();
+
+    templateRefs.forEach((templateRef, index) => {
+
+      let overlayRef = this._createOverlay(_config);
+      if (index < active) {
+        overlayRef.overlayElement.style.transform = 'translateX(calc(-100% - 24px))';
+      } else if (index > active) {
+        overlayRef.overlayElement.style.transform = 'translateX(calc(100% + 24px))';
+      }
+
+      const frontLayerContainer = this._attachFrontLayerContainer(overlayRef, _config);
+
+      if (index === active) {
+        const animationStateSubscription = frontLayerContainer._animationStateChanged.pipe(
+          filter(event => event.state === 'opened' || event.state === 'closing'),
+        ).subscribe(frontLayerAnimationEvent => {
+          if (frontLayerAnimationEvent.state === 'opened') {
+            this._afterOpened.next();
+          } else if (frontLayerAnimationEvent.state === 'closing') {
+            if (this._getClosestFrontlayer()._config.popover === false) {
+              this._beforeClosed.next();
+            }
+            animationStateSubscription.unsubscribe();
+          }
+        });
+      }
+
+      let _frontLayerRef = this._createFrontlayer<any>(templateRef,
+        frontLayerContainer,
+        overlayRef,
+        _config);
+
+      _frontlayers.push(_frontLayerRef);
+
+      if (index === active) {
+        this._frontLayerRef.push(_frontLayerRef);
+      }
+    });
+
+    let _frontLayerGroup = new FrontLayerGroupRef(_frontlayers, active);
+    _frontLayerGroup.afterSwitch().subscribe(_frontLayer => {
+      this._frontLayerRef.pop();
+      this._frontLayerRef.push(_frontLayer);
+      this._afterTabChanged.next();
+    });
+
+    this._frontLayerGroupRef = _frontLayerGroup;
+    this._frontLayerGroupRef.beforeClose().subscribe(() => _frontLayerGroup = null!);
+
+    return _frontLayerGroup;
   }
 
   /**
@@ -219,6 +289,13 @@ export abstract class _BackdropBase<C extends _FrontLayerContainerBase> {
    */
   getOpenedFrontLayer(): FrontLayerRef<any> | undefined {
     return this._getClosestFrontlayer();
+  }
+
+  /**
+   * Finds the current opend frontlayer group
+   */
+  getOpenFrontLayerGroup(): FrontLayerGroupRef {
+    return this._frontLayerGroupRef;
   }
 
 }
