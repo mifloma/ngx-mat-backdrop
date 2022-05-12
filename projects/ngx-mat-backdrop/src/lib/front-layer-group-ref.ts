@@ -14,6 +14,10 @@ export class FrontLayerGroupRef {
         private _active: number
     ) { }
 
+    selectedIndex(): number {
+        return this._active;
+    }
+
     switch(active: number): void {
         if (this._frontlayers[this._active].getState() === FrontLayerState.DROPED) {
             this._frontlayers[this._active].afterLift().pipe(take(1)).subscribe(() => this._switch(active));

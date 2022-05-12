@@ -21,34 +21,7 @@ export class MatFrontlayer {
     selector: 'mat-backdrop',
     template: `<ng-content select="mat-backlayer"></ng-content>`,
 })
-export class MatBackdrop implements AfterViewInit {
-
-    // @ContentChild(MatFrontlayer) _frontlayer!: MatFrontlayer;
-    @ContentChild(MatFrontlayerGroup) _frontlayerGroup!: MatFrontlayerGroup;
-
-    constructor(
-        private _backdrop: Backdrop
-    ) { }
-
-    ngAfterViewInit(): void {
-        let _config: FrontLayerConfig = new FrontLayerConfig();
-        let _frontLayerRefs = this._frontlayerGroup._allTabs.map(element => element.templateRef);
-        this._backdrop.openGroup(_frontLayerRefs, this._frontlayerGroup.active, _config);
-
-        // if (this._frontlayer?.templateRef) {
-        //     let _config: FrontLayerConfig = new FrontLayerConfig();
-
-        //     if (this._frontlayer.name) {
-        //         _config.id = this._frontlayer.name;
-        //     }
-        //     if (this._frontlayer.topPosition) {
-        //         _config.top = this._frontlayer.topPosition;
-        //     }
-
-        //     this._backdrop.open(this._frontlayer.templateRef, _config);
-        // }
-    }
-}
+export class MatBackdrop { }
 
 @Directive({
     selector: `mat-backdrop[matBackdropTriggerFor], mat-backdrop[mat-backdrop-trigger-for]`,
@@ -110,18 +83,27 @@ export class MatBackdropTrigger implements AfterViewInit {
 export class MatBacklayer implements OnInit {
 
     showContextMenu: boolean = false;
+    private _frontlayer!: FrontLayerRef<any>;
 
     constructor(
         private _backdrop: Backdrop
     ) {
         // force refreshing UI in a seperate thread with delay() to avoid 'Expression has changed after it was checked' error
-        merge(this._backdrop.afterOpened(), this._backdrop.afterContentChanged())
-            .pipe(delay(0), take(1))
-            .subscribe(() => this.showContextMenu = true);
+        // merge(this._backdrop.afterOpened(), this._backdrop.afterContentChanged())
+        //     .pipe(delay(0), take(1))
+        //     .subscribe(() => this.showContextMenu = true);
 
-        this._backdrop.beforeClosed()
-            .pipe(take(1))
-            .subscribe(() => this.showContextMenu = false);
+        // this._backdrop.beforeClosed()
+        //     .pipe(take(1))
+        //     .subscribe(() => this.showContextMenu = false);
+
+        merge(this._backdrop.afterOpened(), this._backdrop.afterContentChanged(), this._backdrop.afterTabChanged())
+            .pipe(delay(0))
+            .subscribe(() => {
+                let _frontlayer = this._backdrop.getOpenedFrontLayer();
+                _frontlayer?.beforeDroped().subscribe(() => this.showContextMenu = true);
+                _frontlayer?.afterLift().subscribe(() => this.showContextMenu = false);
+            });
     }
 
     ngOnInit(): void {
@@ -267,6 +249,7 @@ export class MatBacklayerToggle implements OnInit {
 export class MatBacklayerClose implements OnInit {
 
     @Output() close: EventEmitter<void> = new EventEmitter<void>();
+    @Output() default: EventEmitter<void> = new EventEmitter<void>();
 
     _state: 'void' | 'opened' = 'void';
 
@@ -312,6 +295,8 @@ export class MatBacklayerClose implements OnInit {
     _onClick(): void {
         if (this._state === 'opened') {
             this._frontLayerRef?.lift();
+        } else {
+            this.default.emit();
         }
     }
 }

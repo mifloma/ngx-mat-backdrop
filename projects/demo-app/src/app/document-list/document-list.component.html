@@ -1,15 +1,14 @@
-<!-- <mat-backdrop [matBackdropTriggerFor]="frontlayer"> -->
-<mat-backdrop>
+<mat-backdrop [matBackdropTriggerFor]="frontlayer">
 
     <mat-backlayer [color]="settings.backlayerColor">
         <mat-backlayer-title>
             <button mat-backlayer-toggle [offset]="'250px'" (close)="onClose()">
                 <mat-icon>menu</mat-icon>
             </button>
-            <button mat-button [mat-backlayer-switch-tab]="0">tab0</button>
+            <!-- <button mat-button [mat-backlayer-switch-tab]="0">tab0</button>
             <button mat-button [mat-backlayer-switch-tab]="1">tab1</button>
             <button mat-button [mat-backlayer-switch-tab]="2">tab2</button>
-            <button mat-button (click)="toggle()">toggle</button>
+            <button mat-button (click)="toggle()">toggle</button> -->
             <div style="flex: 1 1 auto;"></div>
             <button *ngIf="!settingsOpened" mat-backlayer-move [offset]="'full'" (move)="onOpenSettings()">
                 <mat-icon>tune</mat-icon>
@@ -29,7 +28,7 @@
         </mat-backlayer-content>
     </mat-backlayer>
 
-    <!-- <mat-frontlayer #frontlayer>
+    <mat-frontlayer #frontlayer>
         <div mat-frontlayer-title>
             <h2>Documents</h2>
             <span style="flex: 1;"></span>
@@ -49,9 +48,9 @@
                 </mat-list>
             </ng-container>
         </mat-frontlayer-content>
-    </mat-frontlayer> -->
+    </mat-frontlayer>
 
-    <mat-frontlayer-group #frontlayerTabs>
+    <!-- <mat-frontlayer-group #frontlayerTabs>
         <mat-frontlayer>
             <h2 mat-frontlayer-title>frontlayer 0</h2>
             <mat-frontlayer-content>
@@ -72,30 +71,6 @@
             </div>
             <mat-frontlayer-content>frontlayer 2</mat-frontlayer-content>
         </mat-frontlayer>
-    </mat-frontlayer-group>
+    </mat-frontlayer-group> -->
 
 </mat-backdrop>
-
-<ng-template #frontlayer1>
-    <h2 mat-frontlayer-title>test 0</h2>
-    <mat-frontlayer-content>
-        test 0
-        <button mat-button (click)="openPopover()">popover</button>
-    </mat-frontlayer-content>
-</ng-template>
-
-<ng-template #frontlayer2>
-    <h2 mat-frontlayer-title>test 1</h2>
-    <mat-frontlayer-content>test 1</mat-frontlayer-content>
-</ng-template>
-
-<ng-template #frontlayer3>
-    <div mat-frontlayer-title>
-        <h2>test 2</h2>
-        <div style="flex: 1 1 auto;"></div>
-        <button mat-icon-button mat-frontlayer-close>
-            <mat-icon>expand_more</mat-icon>
-        </button>
-    </div>
-    <mat-frontlayer-content>test 2</mat-frontlayer-content>
-</ng-template>

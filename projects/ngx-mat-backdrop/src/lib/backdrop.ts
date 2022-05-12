@@ -124,6 +124,8 @@ export abstract class _BackdropBase<C extends _FrontLayerContainerBase> {
 
   openGroup<D = any>(templateRefs: TemplateRef<any>[], active: number, config?: FrontLayerConfig<D>): FrontLayerGroupRef {
 
+    console.warn('Caution: You are using an EXPERIMENTAL feature of ngx-mat-backdrop.');
+
     let _frontlayers = new Array<FrontLayerRef<any>>();
     let _config = config ? FrontLayerConfig.merge(config) : new FrontLayerConfig();
 
@@ -131,9 +133,9 @@ export abstract class _BackdropBase<C extends _FrontLayerContainerBase> {
 
       let overlayRef = this._createOverlay(_config);
       if (index < active) {
-        overlayRef.overlayElement.style.transform = 'translateX(-110%)';
+        overlayRef.overlayElement.style.transform = 'translateX(calc(-100% - 24px))';
       } else if (index > active) {
-        overlayRef.overlayElement.style.transform = 'translateX(110%)';
+        overlayRef.overlayElement.style.transform = 'translateX(calc(100% + 24px))';
       }
 
       const frontLayerContainer = this._attachFrontLayerContainer(overlayRef, _config);

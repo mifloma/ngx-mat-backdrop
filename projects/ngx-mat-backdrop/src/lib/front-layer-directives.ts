@@ -1,4 +1,4 @@
-import { AfterContentInit, AfterViewInit, Component, ContentChild, ContentChildren, Directive, EventEmitter, Input, OnInit, Output, QueryList, TemplateRef, ViewChild, ViewChildren } from "@angular/core";
+import { Component, ContentChildren, Directive, EventEmitter, Input, OnInit, Output, QueryList } from "@angular/core";
 import { take } from "rxjs";
 import { Backdrop } from "./backdrop";
 import { MatFrontlayer } from "./backdrop-directives";
@@ -9,7 +9,7 @@ import { MatFrontlayer } from "./backdrop-directives";
 @Component({
     selector: `[mat-frontlayer-content], mat-frontlayer-content, [matFrontLayerContent]`,
     template: `
-        <div class="mat-frontlayer-content-divider" *ngIf="_scrolling"></div>
+        <div class="mat-frontlayer-content-divider" *ngIf="showDividerOnScroll && _scrolling"></div>
         <ng-content></ng-content>
     `,
     host: {
@@ -18,6 +18,8 @@ import { MatFrontlayer } from "./backdrop-directives";
     }
 })
 export class MatFrontlayerContent {
+
+    @Input() showDividerOnScroll: boolean = true;
 
     _scrolling: boolean = false;
 

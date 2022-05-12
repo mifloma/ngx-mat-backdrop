@@ -31,17 +31,17 @@ const ITEMS: Document[] = [
 })
 export class DocumentListComponent implements AfterViewInit {
 
-  @ViewChild('frontlayerTabs', { read: MatFrontlayerGroup, static: true })
-  _frontlayerGroup!: MatFrontlayerGroup;
+  // @ViewChild('frontlayerTabs', { read: MatFrontlayerGroup, static: true })
+  // _frontlayerGroup!: MatFrontlayerGroup;
 
-  @ViewChild('frontlayer1', { read: TemplateRef })
-  _frontlayer1!: TemplateRef<any>;
+  // @ViewChild('frontlayer1', { read: TemplateRef })
+  // _frontlayer1!: TemplateRef<any>;
 
-  @ViewChild('frontlayer2', { read: TemplateRef })
-  _frontlayer2!: TemplateRef<any>;
+  // @ViewChild('frontlayer2', { read: TemplateRef })
+  // _frontlayer2!: TemplateRef<any>;
 
-  @ViewChild('frontlayer3', { read: TemplateRef })
-  _frontlayer3!: TemplateRef<any>;
+  // @ViewChild('frontlayer3', { read: TemplateRef })
+  // _frontlayer3!: TemplateRef<any>;
 
   @ViewChild('searchInput')
   searchInput!: ElementRef;
@@ -70,23 +70,23 @@ export class DocumentListComponent implements AfterViewInit {
     );
   }
 
-  toggle() {
-    if (this._group) {
-      this._group.close();
-      this._group = null!;
-    } else {
-      this._group = this._backdrop.openGroup(this._frontlayerGroup._allTabs.map(element => element.templateRef), 1);
-    }
-  }
+  // toggle() {
+  //   if (this._group) {
+  //     this._group.close();
+  //     this._group = null!;
+  //   } else {
+  //     this._group = this._backdrop.openGroup(this._frontlayerGroup._allTabs.map(element => element.templateRef), 1);
+  //   }
+  // }
 
   ngAfterViewInit(): void {
     this._backdrop.getOpenedFrontLayer()?.afterDroped()
       .subscribe(() => this.searchInput.nativeElement.focus());
   }
 
-  openPopover() {
-    this._backdrop.open(this._frontlayer3, { popover: true });
-  }
+  // openPopover() {
+  //   this._backdrop.open(this._frontlayer3, { popover: true });
+  // }
 
   onOpenSettings(): void {
     this.settingsOpened = true;
