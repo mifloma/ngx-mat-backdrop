@@ -29,14 +29,14 @@ export class MatBackdrop { }
 })
 export class MatBackdropTrigger implements AfterViewInit {
 
-    private _frontLayer: MatFrontlayer | MatFrontlayerGroup | null = null;
+    private _frontLayer: MatFrontlayer | null = null;
 
     /** References the front layer instance that the trigger is associated with. */
     @Input('matBackdropTriggerFor')
-    get frontLayer(): MatFrontlayer | MatFrontlayerGroup | null {
+    get frontLayer(): MatFrontlayer | null {
         return this._frontLayer;
     }
-    set frontLayer(frontLayer: MatFrontlayer | MatFrontlayerGroup | null) {
+    set frontLayer(frontLayer: MatFrontlayer | null) {
         this._frontLayer = frontLayer;
     }
 
@@ -50,20 +50,20 @@ export class MatBackdropTrigger implements AfterViewInit {
         //     let _frontLayerRefs = this._frontLayer._allTabs.map(element => element.templateRef);
         //     this._backdrop.openGroup(_frontLayerRefs, this._frontLayer.active, _config);
         // } else {
-        if (this._frontLayer instanceof MatFrontlayer) {
-            if (this._frontLayer?.templateRef) {
-                let _config: FrontLayerConfig = new FrontLayerConfig();
+        // if (this._frontLayer instanceof MatFrontlayer) {
+        if (this._frontLayer?.templateRef) {
+            let _config: FrontLayerConfig = new FrontLayerConfig();
 
-                if (this._frontLayer.name) {
-                    _config.id = this._frontLayer.name;
-                }
-                if (this._frontLayer.topPosition) {
-                    _config.top = this._frontLayer.topPosition;
-                }
-
-                this._backdrop.open(this._frontLayer.templateRef, _config);
+            if (this._frontLayer.name) {
+                _config.id = this._frontLayer.name;
             }
+            if (this._frontLayer.topPosition) {
+                _config.top = this._frontLayer.topPosition;
+            }
+
+            this._backdrop.open(this._frontLayer.templateRef, _config);
         }
+        // }
     }
 }
 

@@ -22,19 +22,13 @@ export const BackdropAnimations: {
     frontLayerContainer: trigger('frontLayerContainer', [
         state('void, exit', style({ transform: 'translateY(100%)' })),
         state('enter', style({ transform: 'none' })),
-        state('fadeLeft', style({ transform: 'translateX(-110%)' })),
-        state('fadeRight', style({ transform: 'translateX(110%)' })),
         transition('* => enter', animate(`${AnimationDurations.EXITING} ${AnimationCurves.DECELERATION_CURVE}`,
             style({ transform: 'none' }))),
         transition('* => void, * => exit',
             animate(`${AnimationDurations.COMPLEX} ${AnimationCurves.ACCELERATION_CURVE}`)),
         transition('* => fading', query('@fade', [
             animate(`${AnimationDurations.EXITING} ${AnimationCurves.STANDARD_CURVE}`, style({ opacity: 1 }))
-        ])),
-        transition('* <=> fadeLeft', animate(`${AnimationDurations.EXITING} ${AnimationCurves.DECELERATION_CURVE}`,
-            style({ transform: 'translateX(-110%)' }))),
-        transition('* <=> fadeRight', animate(`${AnimationDurations.EXITING} ${AnimationCurves.DECELERATION_CURVE}`,
-            style({ transform: 'translateX(110%)' })))
+        ]))
     ]),
     frontLayerContainerOverlay: trigger('fade', [
     ]),

@@ -25,11 +25,8 @@ export function throwNoFrontLayerContentAttachedError() {
 
 @Directive()
 export abstract class _FrontLayerContainerBase extends BasePortalOutlet {
-  hide() {
 
-  }
-
-  /** Starts the front-layer exit animation. */
+  /** Starts the front-layer exit animation */
   abstract _startExitAnimation(): void;
 
   /** Starts the front-layer drop animation  **/
@@ -38,11 +35,8 @@ export abstract class _FrontLayerContainerBase extends BasePortalOutlet {
   /** Starts the front-layer fading animation (fade out)  **/
   abstract _startFadingAnimation(): void;
 
+  /** Starts the frontlayer enter animation */
   abstract _startEnterAnimation(): void;
-
-  abstract _startFadeLeftAnimation(): void;
-
-  abstract _startFadeRightAnimation(): void;
 
   /** Emits when an animation state changes. */
   _animationStateChanged = new EventEmitter<FrontLayerAnimationEvent>();
@@ -111,7 +105,7 @@ export abstract class _FrontLayerContainerBase extends BasePortalOutlet {
 export class MatFrontLayerContainer extends _FrontLayerContainerBase {
 
   /** State of the dialog animation. */
-  _state: 'void' | 'enter' | 'droped' | 'fading' | 'fadeLeft' | 'fadeRight' | 'exit' = 'enter';
+  _state: 'void' | 'enter' | 'droped' | 'fading' | 'exit' = 'enter';
 
   /** Callback, invoked whenever an animation on the host completes. */
   _onAnimationDone(event: AnimationEvent) {
@@ -149,14 +143,6 @@ export class MatFrontLayerContainer extends _FrontLayerContainerBase {
 
   _startEnterAnimation(): void {
     this._state = 'enter';
-  }
-
-  _startFadeLeftAnimation(): void {
-    this._state = 'fadeLeft';
-  }
-
-  _startFadeRightAnimation(): void {
-    this._state = 'fadeRight';
   }
 
 }

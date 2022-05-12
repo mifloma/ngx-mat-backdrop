@@ -75,7 +75,7 @@ $padding: 16px;
   }
 }
 
-@keyframes translate {
+@keyframes move-horizontal {
   from {
     transform: translateX(var(--s, 0));
   }

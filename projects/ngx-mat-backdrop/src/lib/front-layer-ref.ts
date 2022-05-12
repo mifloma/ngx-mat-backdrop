@@ -69,7 +69,7 @@ export class FrontLayerRef<T> {
 
         this._overlayRef.overlayElement.style.setProperty('--s', '0');
         this._overlayRef.overlayElement.style.setProperty('--e', 'calc(-100% - 24px)');
-        this._overlayRef.overlayElement.style.animation = `translate ${AnimationDurations.ENTERING} ${AnimationCurves.STANDARD_CURVE}`;
+        this._overlayRef.overlayElement.style.animation = `move-horizontal ${AnimationDurations.ENTERING} ${AnimationCurves.STANDARD_CURVE}`;
         this._overlayRef.overlayElement.style.transform = 'translateX(calc(-100% - 24px))';
     }
 
@@ -78,7 +78,7 @@ export class FrontLayerRef<T> {
 
         this._overlayRef.overlayElement.style.setProperty('--s', 'calc(100% + 24px)');
         this._overlayRef.overlayElement.style.setProperty('--e', '0');
-        this._overlayRef.overlayElement.style.animation = `translate ${AnimationDurations.ENTERING} ${AnimationCurves.STANDARD_CURVE}`;
+        this._overlayRef.overlayElement.style.animation = `move-horizontal ${AnimationDurations.ENTERING} ${AnimationCurves.STANDARD_CURVE}`;
         this._overlayRef.overlayElement.style.transform = 'none';
     }
 
@@ -87,7 +87,7 @@ export class FrontLayerRef<T> {
 
         this._overlayRef.overlayElement.style.setProperty('--s', 'calc(-100% - 24px)');
         this._overlayRef.overlayElement.style.setProperty('--e', '0');
-        this._overlayRef.overlayElement.style.animation = `translate ${AnimationDurations.ENTERING} ${AnimationCurves.STANDARD_CURVE}`;
+        this._overlayRef.overlayElement.style.animation = `move-horizontal ${AnimationDurations.ENTERING} ${AnimationCurves.STANDARD_CURVE}`;
         this._overlayRef.overlayElement.style.transform = 'none';
     }
 
@@ -96,7 +96,7 @@ export class FrontLayerRef<T> {
 
         this._overlayRef.overlayElement.style.setProperty('--s', '0');
         this._overlayRef.overlayElement.style.setProperty('--e', 'calc(100% + 24px)');
-        this._overlayRef.overlayElement.style.animation = `translate ${AnimationDurations.ENTERING} ${AnimationCurves.STANDARD_CURVE}`;
+        this._overlayRef.overlayElement.style.animation = `move-horizontal ${AnimationDurations.ENTERING} ${AnimationCurves.STANDARD_CURVE}`;
         this._overlayRef.overlayElement.style.transform = 'translateX(calc(100% + 24px))';
     }
 
