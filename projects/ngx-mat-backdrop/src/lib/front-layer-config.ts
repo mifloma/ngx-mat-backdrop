@@ -1,5 +1,8 @@
 import { ComponentFactoryResolver, ViewContainerRef } from "@angular/core";
 
+/** Valid ARIA roles for a dialog element. */
+export type DialogRole = 'dialog' | 'alertdialog';
+
 export class FrontLayerConfig<D = any> {
 
     /**
@@ -12,6 +15,9 @@ export class FrontLayerConfig<D = any> {
 
     /** ID for the front-layer. If omitted, a unique one will be generated. */
     id?: string;
+
+    /** The ARIA role of the dialog element. */
+    role?: DialogRole = 'dialog';
 
     /** Alternate `ComponentFactoryResolver` to use when resolving the associated component. */
     componentFactoryResolver?: ComponentFactoryResolver;

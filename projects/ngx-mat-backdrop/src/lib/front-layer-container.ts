@@ -94,6 +94,7 @@ export abstract class _FrontLayerContainerBase extends BasePortalOutlet {
     BackdropAnimations.frontLayerContainerOverlay
   ],
   host: {
+    '[attr.role]': '_config.role',
     'class': 'mat-frontlayer-container',
     '[class.mat-frontlayer-container-popover]': '_config.popover',
     '[class.mat-frontlayer-container-transparency]': '_config.transparent',
