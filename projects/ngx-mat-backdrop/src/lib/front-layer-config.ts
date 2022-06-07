@@ -1,7 +1,10 @@
 import { ComponentFactoryResolver, ViewContainerRef } from "@angular/core";
 
 /** Valid ARIA roles for a dialog element. */
-export type DialogRole = 'dialog' | 'alertdialog';
+export type DialogRole = 'main' | 'dialog' | 'alertdialog';
+
+/** Options for where to set focus to automatically on dialog open */
+export type RestoreFocusTarget = 'first-tabbable' | 'first-heading';
 
 export class FrontLayerConfig<D = any> {
 
@@ -16,8 +19,11 @@ export class FrontLayerConfig<D = any> {
     /** ID for the front-layer. If omitted, a unique one will be generated. */
     id?: string;
 
-    /** The ARIA role of the dialog element. */
-    role?: DialogRole = 'dialog';
+    /** The ARIA role of the frontlayer element. */
+    role?: DialogRole = 'main';
+
+    /** Aria label to assign to the frontlayer element. */
+    ariaLabel?: string | null = null;
 
     /** Alternate `ComponentFactoryResolver` to use when resolving the associated component. */
     componentFactoryResolver?: ComponentFactoryResolver;
@@ -36,6 +42,19 @@ export class FrontLayerConfig<D = any> {
 
     /** When the backlayer is revealed, the frontlayer content becomes inactive. */
     disableOnDrop?: boolean = true;
+
+
+    autoFocus?: string | boolean = true;
+
+    /**
+    * Whether the dialog should restore focus to the previously-focused element upon closing.
+    * Has the following behavior based on the type that is passed in:
+    * - `boolean` - when true, will return focus to the element that was focused before the dialog
+    *    was opened, otherwise won't restore focus at all.
+    * - `string` - focus will be restored to the first element that matches the CSS selector.
+    * - `HTMLElement` - focus will be restored to the specific element.
+    */
+    restoreFocus?: string | boolean = true;
 
     /** Merges the specified config with the default config */
     static merge(config: FrontLayerConfig): FrontLayerConfig {

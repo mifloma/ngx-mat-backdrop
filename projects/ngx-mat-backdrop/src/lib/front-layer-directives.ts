@@ -1,7 +1,8 @@
-import { Component, ContentChildren, Directive, EventEmitter, Input, OnInit, Output, QueryList } from "@angular/core";
+import { FocusMonitor } from "@angular/cdk/a11y";
+import { Component, ContentChildren, Directive, ElementRef, EventEmitter, Input, OnInit, Output, QueryList } from "@angular/core";
 import { take } from "rxjs";
 import { Backdrop } from "./backdrop";
-import { MatFrontlayer } from "./backdrop-directives";
+import { MatFrontlayer, _MatBacklayerButton } from "./backdrop-directives";
 
 /**
  * Scrollable content container of a front-layer.
@@ -14,7 +15,9 @@ import { MatFrontlayer } from "./backdrop-directives";
     `,
     host: {
         'class': 'mat-frontlayer-content',
-        '(scroll)': '_onScroll($event)'
+        '(scroll)': '_onScroll($event)',
+        '[attr.role]': '"region"',
+        '[attr.aria-label]': '"content"'
     }
 })
 export class MatFrontlayerContent {
@@ -45,6 +48,8 @@ export class MatFrontlayerTitle { }
         'class': 'mat-frontlayer-actions',
         '[class.mat-frontlayer-actions-align-center]': 'align === "center"',
         '[class.mat-frontlayer-actions-align-end]': 'align === "end"',
+        '[attr.role]': '"footer"',
+        '[attr.aria-label]': '"content actions"'
     }
 })
 export class MatFrontlayerActions {
@@ -59,7 +64,8 @@ export class MatFrontlayerActions {
     selector: 'button[mat-frontlayer-drop], button[matFrontlayerDrop]',
     template: `
         <ng-container *ngIf="_show">
-            <ng-content></ng-content>
+            <span class="mat-backdrop-button-wrapper"><ng-content></ng-content></span>
+            <span class="mat-frontlayer-button-focus-overlay"></span>
         </ng-container>
     `,
     host: {
@@ -67,17 +73,23 @@ export class MatFrontlayerActions {
         '(click)': '_onClick()'
     }
 })
-export class MatFrontlayerDrop implements OnInit {
+export class MatFrontlayerDrop extends _MatBacklayerButton implements OnInit {
 
     @Input() offset: string | 'full' = '200px';
+    @Input() autoFocus!: string | boolean;
+    @Input() restoreFocus!: string | boolean;
 
     @Output() drop: EventEmitter<void> = new EventEmitter<void>();
 
     _show: boolean = true;
 
     constructor(
-        private _backdrop: Backdrop
-    ) { }
+        private _backdrop: Backdrop,
+        private elementRef: ElementRef,
+        private focusMonitor: FocusMonitor,
+    ) {
+        super(elementRef, focusMonitor);
+    }
 
     ngOnInit(): void {
         this._backdrop.afterOpened().pipe(take(1)).subscribe(() => {
@@ -99,7 +111,7 @@ export class MatFrontlayerDrop implements OnInit {
     _onClick(): void {
         let _frontLayerRef = this._backdrop.getOpenedFrontLayer();
         if (_frontLayerRef) {
-            _frontLayerRef.drop(this.offset);
+            _frontLayerRef.drop(this.offset, this.autoFocus, this.restoreFocus);
             this.drop.emit();
         }
     }
@@ -110,7 +122,8 @@ export class MatFrontlayerDrop implements OnInit {
     exportAs: 'matFrontlayerClose',
     host: {
         'class': 'mat-frontlayer-button',
-        '(click)': '_onClick()'
+        '(click)': '_onClick()',
+        '[attr.aria-label]': '"Conceal context menu"'
     }
 })
 export class MatFrontLayerClose {

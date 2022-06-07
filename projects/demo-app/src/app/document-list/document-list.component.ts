@@ -80,8 +80,8 @@ export class DocumentListComponent implements AfterViewInit {
   // }
 
   ngAfterViewInit(): void {
-    this._backdrop.getOpenedFrontLayer()?.afterDroped()
-      .subscribe(() => this.searchInput.nativeElement.focus());
+    // this._backdrop.getOpenedFrontLayer()?.afterDroped()
+    //   .subscribe(() => this.searchInput.nativeElement.focus());
   }
 
   // openPopover() {

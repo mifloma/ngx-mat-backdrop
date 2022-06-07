@@ -3,7 +3,7 @@ import { EmbeddedViewRef } from "@angular/core";
 import { Observable, Subject } from "rxjs";
 import { filter, take } from 'rxjs/operators';
 import { AnimationCurves, AnimationDurations } from "./backdrop-animations";
-import { FrontLayerConfig } from "./front-layer-config";
+import { FrontLayerConfig, RestoreFocusTarget } from "./front-layer-config";
 import { _FrontLayerContainerBase } from "./front-layer-container";
 
 // Counter for unique dialog ids.
@@ -104,7 +104,9 @@ export class FrontLayerRef<T> {
      * Move the front-layer by the specified offset
      * @param offset The distance by which the plane is to be moved
      */
-    drop(offset: string): void {
+    drop(offset: string, autoFocus?: string | boolean, restoreFocus?: string | boolean): void {
+        this._config.autoFocus = autoFocus ? autoFocus : true;
+        this._config.restoreFocus = restoreFocus ? restoreFocus : true;
         this._beforeDroped.next();
 
         if (this._config.disableOnDrop) {
