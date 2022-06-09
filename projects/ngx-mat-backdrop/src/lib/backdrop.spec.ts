@@ -1,16 +1,13 @@
-import { TestBed } from '@angular/core/testing';
-
-import { Backdrop } from './backdrop';
+import { render, screen } from '@testing-library/angular'
 
 describe('Backdrop', () => {
-  let service: Backdrop;
 
-  beforeEach(() => {
-    TestBed.configureTestingModule({});
-    service = TestBed.inject(Backdrop);
+  it('should run', async () => {
+    // arrange
+    await render('<h2 data-testid="test">test</h2>');
+    // assert
+    const heading = await screen.findByTestId('test');
+    expect(heading).not.toBeNull();
   });
 
-  // it('should be created', () => {
-  //   expect(service).toBeTruthy();
-  // });
 });
