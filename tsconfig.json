@@ -37,5 +37,8 @@
     "strictInjectionParameters": true,
     "strictInputAccessModifiers": true,
     "strictTemplates": true
-  }
+  },
+  "include": [
+    "./setup-jest.ts"
+  ]
 }

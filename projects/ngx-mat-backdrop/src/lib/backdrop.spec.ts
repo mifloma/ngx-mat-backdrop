@@ -6,8 +6,9 @@ describe('Backdrop', () => {
     // arrange
     await render('<h2 data-testid="test">test</h2>');
     // assert
-    const heading = await screen.findByTestId('test');
-    expect(heading).not.toBeNull();
+    // const heading = await screen.findByTestId('test');
+    const heading = await screen.findByRole('heading');
+    expect(heading).toBeInTheDocument();
   });
 
 });
