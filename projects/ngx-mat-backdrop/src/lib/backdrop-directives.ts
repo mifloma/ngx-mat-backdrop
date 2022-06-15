@@ -1,13 +1,12 @@
-import { FocusableOption, FocusMonitor, FocusOrigin, FocusTrap, FocusTrapFactory, LiveAnnouncer, AriaLivePoliteness } from "@angular/cdk/a11y";
+import { FocusableOption, FocusMonitor, FocusOrigin, FocusTrap, FocusTrapFactory, LiveAnnouncer } from "@angular/cdk/a11y";
 import { _getFocusedElementPierceShadowDom } from "@angular/cdk/platform";
 import { DOCUMENT } from "@angular/common";
-import { AfterViewInit, Component, ContentChild, Directive, ElementRef, EventEmitter, Inject, Input, NgZone, OnDestroy, OnInit, Optional, Output, TemplateRef, ViewChild } from "@angular/core";
+import { AfterViewInit, Component, Directive, ElementRef, EventEmitter, Inject, Input, OnDestroy, OnInit, Optional, Output, TemplateRef, ViewChild } from "@angular/core";
 import { merge, race, Subscription } from "rxjs";
 import { delay, take } from "rxjs/operators";
 import { Backdrop } from "./backdrop";
 import { BackdropAnimations } from "./backdrop-animations";
-import { FrontLayerConfig, RestoreFocusTarget } from "./front-layer-config";
-import { MatFrontlayerGroup } from "./front-layer-directives";
+import { FrontLayerConfig } from "./front-layer-config";
 import { FrontLayerRef, FrontLayerState } from "./front-layer-ref";
 
 @Component({
@@ -130,9 +129,7 @@ export class MatBacklayer implements OnInit {
                     this.showContextMenu = true;
                     // FIXME: you can'ct rely on setTImeout, there is no guarantee the DOM will be rendered when the setTImeout callback is called
                     // See: https://stackoverflow.com/questions/50743396/get-children-of-parent-element-after-ngif-angular-5
-                    setTimeout(() => {
-                        this._trapFocus(_frontlayer!);
-                    });
+                    setTimeout(() => this._trapFocus(_frontlayer!));
                 });
                 _frontlayer?.afterLift().subscribe(() => {
                     this._liveAnnouncer.announce('Context menu concealed');
