@@ -1,5 +1,8 @@
 import { ComponentFactoryResolver, ViewContainerRef } from "@angular/core";
 
+/** Valid ARIA roles for a dialog element. */
+export type DialogRole = 'main' | 'dialog' | 'alertdialog';
+
 export class FrontLayerConfig<D = any> {
 
     /**
@@ -12,6 +15,12 @@ export class FrontLayerConfig<D = any> {
 
     /** ID for the front-layer. If omitted, a unique one will be generated. */
     id?: string;
+
+    /** The ARIA role of the frontlayer element. */
+    role?: DialogRole = 'main';
+
+    /** Aria label to assign to the frontlayer element. */
+    ariaLabel?: string | null = null;
 
     /** Alternate `ComponentFactoryResolver` to use when resolving the associated component. */
     componentFactoryResolver?: ComponentFactoryResolver;
@@ -30,6 +39,10 @@ export class FrontLayerConfig<D = any> {
 
     /** When the backlayer is revealed, the frontlayer content becomes inactive. */
     disableOnDrop?: boolean = true;
+
+    autoFocus?: string | boolean = true;
+
+    restoreFocus?: string | boolean = true;
 
     /** Merges the specified config with the default config */
     static merge(config: FrontLayerConfig): FrontLayerConfig {

@@ -1,5 +1,5 @@
 import { BasePortalOutlet, CdkPortalOutlet, ComponentPortal, TemplatePortal } from '@angular/cdk/portal';
-import { Component, ComponentRef, Directive, EmbeddedViewRef, EventEmitter, ViewChild, ViewEncapsulation } from '@angular/core';
+import { Component, ComponentRef, Directive, ElementRef, EmbeddedViewRef, EventEmitter, ViewChild, ViewEncapsulation } from '@angular/core';
 import { BackdropAnimations } from './backdrop-animations';
 import { AnimationEvent } from '@angular/animations';
 import { FrontLayerConfig } from './front-layer-config';
@@ -46,7 +46,8 @@ export abstract class _FrontLayerContainerBase extends BasePortalOutlet {
 
   constructor(
     /** The dialog configuration. */
-    public _config: FrontLayerConfig
+    public _config: FrontLayerConfig,
+    public _elementRef: ElementRef
   ) {
     super();
   }
@@ -94,6 +95,9 @@ export abstract class _FrontLayerContainerBase extends BasePortalOutlet {
     BackdropAnimations.frontLayerContainerOverlay
   ],
   host: {
+    'tabindex': '-1',
+    '[attr.role]': '_config.role',
+    '[attr.aria-label]': '_config.ariaLabel',
     'class': 'mat-frontlayer-container',
     '[class.mat-frontlayer-container-popover]': '_config.popover',
     '[class.mat-frontlayer-container-transparency]': '_config.transparent',

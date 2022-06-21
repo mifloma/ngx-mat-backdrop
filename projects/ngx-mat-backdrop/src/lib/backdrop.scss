@@ -175,10 +175,7 @@ div.mat-frontlayer-title {
 
 .mat-backlayer-title {
   flex: 0 0 56px;
-  padding-top: 16px;
-  padding-bottom: 16px;
-  padding-left: $padding-side;
-  padding-right: $padding-side;
+  padding: 8px 5px 8px 5px;
 
   width: 100%;
   display: flex;
@@ -204,24 +201,62 @@ div.mat-frontlayer-title {
 }
 
 .mat-backdrop-button-wrapper {
-  width: 24px;
-  height: 24px;
+  width: 40px;
+  height: 40px;
 }
 
 .mat-backdrop-button {
   padding: 0;
-  width: 24px;
-  height: 24px;
+  width: 40px;
+  height: 40px;
+  line-height: 40px;
   color: unset;
   background-color: transparent;
   background-repeat: no-repeat;
   border: none;
   overflow: hidden;
   outline: none;
+  border-radius: 50%;
+
+  text-align: center;
+  box-sizing: border-box;
+  position: relative;
+
+  .mat-icon {
+    line-height: 24px;
+  }
+
+  &.cdk-keyboard-focused,
+  &.cdk-program-focused {
+    .mat-backdrop-button-focus-overlay {
+      opacity: 0.12;
+    }
+  }
+
+  &:hover {
+    cursor: pointer;
+  }
 }
 
-.mat-backdrop-button:hover {
-  cursor: pointer;
+.mat-backdrop-button {
+  .mat-backdrop-button-wrapper>* {
+    vertical-align: middle;
+  }
+}
+
+.mat-backdrop-button-focus-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  pointer-events: none;
+  border-radius: inherit;
+  background-color: black;
+  opacity: 0;
+
+  transition: opacity 200ms cubic-bezier(0.25, 0.8, 0.25, 1), background-color 200ms cubic-bezier(0.25, 0.8, 0.25, 1);
+
 }
 
 .mat-backlayer-move {
@@ -248,10 +283,37 @@ div.mat-frontlayer-title {
   background-color: transparent;
   background-repeat: no-repeat;
   border: none;
-  overflow: hidden;
+  // overflow: hidden;
   outline: none;
+
+  border-radius: 50%;
+  position: relative;
+
+  &.cdk-keyboard-focused,
+  &.cdk-program-focused {
+    .mat-frontlayer-button-focus-overlay {
+      opacity: 0.12;
+    }
+  }
+
+  &:hover {
+    cursor: pointer;
+  }
 }
 
-.mat-frontlayer-button:hover {
-  cursor: pointer;
+.mat-frontlayer-button-focus-overlay {
+  position: absolute;
+  width: 40px;
+  height: 40px;
+  top: -8px;
+  left: -8px;
+  right: 0;
+  bottom: 0;
+  pointer-events: none;
+  border-radius: inherit;
+  background-color: black;
+  opacity: 0;
+
+  transition: opacity 200ms cubic-bezier(0.25, 0.8, 0.25, 1), background-color 200ms cubic-bezier(0.25, 0.8, 0.25, 1);
+
 }

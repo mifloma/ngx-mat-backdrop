@@ -25,11 +25,9 @@
           "defaultConfiguration": "production"
         },
         "test": {
-          "builder": "@angular-devkit/build-angular:karma",
+          "builder": "@angular-builders/jest:run",
           "options": {
-            "main": "projects/ngx-mat-backdrop/src/test.ts",
-            "tsConfig": "projects/ngx-mat-backdrop/tsconfig.spec.json",
-            "karmaConfig": "projects/ngx-mat-backdrop/karma.conf.js"
+            "tsConfig": "tsconfig.spec.json"
           }
         }
       }
@@ -118,13 +116,15 @@
           }
         },
         "test": {
-          "builder": "@angular-devkit/build-angular:karma",
+          "builder": "@angular-builders/jest:run",
           "options": {
-            "main": "projects/demo-app/src/test.ts",
-            "polyfills": "projects/demo-app/src/polyfills.ts",
-            "tsConfig": "projects/demo-app/tsconfig.spec.json",
-            "karmaConfig": "projects/demo-app/karma.conf.js",
-            "inlineStyleLanguage": "scss",
+            "polyfills": [
+              "src/polyfills.ts"
+            ],
+            "tsConfig": "tsconfig.spec.json",
+            "inlineStyleLanguage": [
+              "scss"
+            ],
             "assets": [
               "projects/demo-app/src/favicon.ico",
               "projects/demo-app/src/assets"

@@ -2,23 +2,24 @@
 
     <mat-backlayer [color]="settings.backlayerColor">
         <mat-backlayer-title>
-            <button mat-backlayer-toggle [offset]="'250px'" (close)="onClose()">
+            <button mat-backlayer-toggle [offset]="'250px'" [autoFocus]="'#search'" (close)="onClose()">
                 <mat-icon>menu</mat-icon>
             </button>
             <!-- <button mat-button [mat-backlayer-switch-tab]="0">tab0</button>
             <button mat-button [mat-backlayer-switch-tab]="1">tab1</button>
             <button mat-button [mat-backlayer-switch-tab]="2">tab2</button>
             <button mat-button (click)="toggle()">toggle</button> -->
-            <div style="flex: 1 1 auto;"></div>
-            <button *ngIf="!settingsOpened" mat-backlayer-move [offset]="'full'" (move)="onOpenSettings()">
+            <span style="flex: 1 1 auto;"></span>
+            <button *ngIf="!settingsOpened" mat-backlayer-move aria-label="Open settings" [offset]="'full'"
+                [autoFocus]="'#search'" (move)="onOpenSettings()">
                 <mat-icon>tune</mat-icon>
             </button>
         </mat-backlayer-title>
         <mat-backlayer-content fxLayout="column">
-            <div fxLayoutAlign="center center">
+            <div aria-role="group" aria-label="Search Document" fxLayoutAlign="center center">
                 <mat-form-field class="search-input" appearance="fill" color="accent">
                     <mat-label>Search</mat-label>
-                    <input #searchInput matInput [formControl]="filter" autocomplete="off"
+                    <input id="search" matInput [formControl]="filter" autocomplete="off"
                         (keydown.enter)="onEnter($event)">
                     <mat-icon matSuffix>search</mat-icon>
                 </mat-form-field>
@@ -30,15 +31,15 @@
 
     <mat-frontlayer #frontlayer>
         <div mat-frontlayer-title>
-            <h2>Documents</h2>
+            <h2 tabindex="1" aria-level="1">Documents</h2>
             <span style="flex: 1;"></span>
-            <button mat-frontlayer-drop [offset]="'250px'">
+            <button tabindex="2" mat-frontlayer-drop [offset]="'250px'" [autoFocus]="'#search'">
                 <mat-icon>expand_more</mat-icon>
             </button>
         </div>
         <mat-frontlayer-content>
             <ng-container *ngIf="filteredDocuments$ | async as documents">
-                <mat-list>
+                <mat-list id="documentList" tabindex="3">
                     <mat-list-item matRipple class="list-item" *ngFor="let document of documents"
                         (click)="onOpenItem(document)">
                         <mat-icon mat-list-icon>description</mat-icon>

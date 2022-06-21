@@ -104,7 +104,9 @@ export class FrontLayerRef<T> {
      * Move the front-layer by the specified offset
      * @param offset The distance by which the plane is to be moved
      */
-    drop(offset: string): void {
+    drop(offset: string, autoFocus?: string | boolean, restoreFocus?: string | boolean): void {
+        this._config.autoFocus = autoFocus ? autoFocus : true;
+        this._config.restoreFocus = restoreFocus ? restoreFocus : true;
         this._beforeDroped.next();
 
         if (this._config.disableOnDrop) {

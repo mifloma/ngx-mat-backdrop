@@ -3,13 +3,15 @@
   "extends": "../../tsconfig.json",
   "compilerOptions": {
     "outDir": "../../out-tsc/spec",
+    "module": "CommonJs",
     "types": [
-      "jasmine"
-    ]
+      "jest",
+      "@testing-library/jest-dom"
+    ],
+    "esModuleInterop": true,
+    "emitDecoratorMetadata": true
   },
-  "files": [
-    "src/test.ts"
-  ],
+  "files": [],
   "include": [
     "**/*.spec.ts",
     "**/*.d.ts"
