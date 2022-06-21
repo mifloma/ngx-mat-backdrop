@@ -293,6 +293,44 @@ export class CustomersModule { }
 export class ProductsModule { }
 ```
 
+## Accessibility
+
+`MatBackdrop` creates its elements with a default ARIA Pattern.
+
+| Element | Role |
+| ------- | ---- |
+| MatBacklayerTitle | navigation |
+| MatBacklayerContent | menu |
+| MatFrontlayer | main |
+| MatFrontlayerTitle | heading |
+| MatFrontlayerContent | region |
+
+You can change the `MatFrontlayers` role to `dialog` or `alertdialog` via `MatFrontLayerConfig`.  
+
+All elements have also default accessible labels. You can change them by setting the `ariaLabel` or `ariaLabeledBy` properties. For changing the accesibility label of `MatFrontlayer` you can set `ariaLabel` property of `MatFrontLayerConfig`.
+
+### Focus management
+
+When `MatBacklayerContent` is revealed, `MatBackdrop` traps browsers focus such that it cannot escape the `MatBacklayer`. With this behavior it navigates the user through the revealed context menu. If the user conceales the menu browsers focus switches back to the main region (`MatFrontlayer`).  
+
+By default, the first tabbable element on the `MatBacklayer` receives focus. You can customize which element receives focus with the `autoFocus` property of `MatFrontLayerConfig`, which supports the following values:
+
+| Value | Behavior |
+| ----- | -------- |
+| true | Focus the first tabbable element. This is the default setting. |
+| false | Focus stays on last focused element. |
+| Any CSS selector | Focus the first element matching the given selector. |
+
+### Focus restoration
+
+When `MatBacklayerContent` reveales, `MatFrontlayerTitle` receives focus. If no `MatFrontLayerTitle` element exists, the first tabbable element on the `MatFrontlayer` recieves focus. You can customize which element receives focus with the `autoFocus` property of `MatFrontLayerConfig`, which supports the following values:
+
+| Value | Behavior |
+| ----- | -------- |
+| true | Focus the frontlayer heading or the first tabbable element. This is the default setting. |
+| false | Focus stays on last focused element. |
+| Any CSS selector | Focus the first element matching the given selector. |
+
 ## Experimental
 
 ### Peer navigation without routing

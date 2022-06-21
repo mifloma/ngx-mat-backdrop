@@ -92,7 +92,7 @@ export class MatBacklayer implements OnInit {
     private _focusTrap!: FocusTrap;
 
     /** Element that was focused before the backlayer was revealed. Save this to restore upon close. */
-    private _elementFocusedBeforeDialogWasOpened: HTMLElement | null = null;
+    // private _elementFocusedBeforeDialogWasOpened: HTMLElement | null = null;
 
     /**
    * Type of interaction that led to the dialog being closed. This is used to determine
@@ -143,9 +143,9 @@ export class MatBacklayer implements OnInit {
         this._focusTrap = this._focusTrapFactory.create(this._element.nativeElement);
 
         // Save the previously focused element. This element will be re-focused when the backlayer conceales
-        if (this._document) {
-            this._elementFocusedBeforeDialogWasOpened = _getFocusedElementPierceShadowDom();
-        }
+        // if (this._document) {
+        //     this._elementFocusedBeforeDialogWasOpened = _getFocusedElementPierceShadowDom();
+        // }
 
         let _autoFocus = _frontlayer._config.autoFocus;
         if (typeof _autoFocus === 'string') {

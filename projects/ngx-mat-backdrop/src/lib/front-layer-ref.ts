@@ -3,7 +3,7 @@ import { EmbeddedViewRef } from "@angular/core";
 import { Observable, Subject } from "rxjs";
 import { filter, take } from 'rxjs/operators';
 import { AnimationCurves, AnimationDurations } from "./backdrop-animations";
-import { FrontLayerConfig, RestoreFocusTarget } from "./front-layer-config";
+import { FrontLayerConfig } from "./front-layer-config";
 import { _FrontLayerContainerBase } from "./front-layer-container";
 
 // Counter for unique dialog ids.
